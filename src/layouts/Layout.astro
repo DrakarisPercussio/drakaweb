@@ -1,3 +1,11 @@
+---
+import Header from '../pages/Header.astro';
+import Footer from '../pages/Footer.astro';
+import '../styles/global.css';
+---
+
+
+
 <!doctype html>
 <html lang="en">
 	<head>
@@ -8,7 +16,13 @@
 		<title>Astro Basics</title>
 	</head>
 	<body>
-		<slot />
+		<div class="layout-wrapper">
+			<Header />
+			<main class="layout-main">
+				<slot />
+			</main>
+			<Footer />
+		</div>
 	</body>
 </html>
 

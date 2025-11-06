@@ -1,0 +1,14 @@
+:root {
+  --palette-1: #232323;   /* negro suave */
+  --palette-2: aliceblue;   /* gris oscuro */
+  --palette-3: #575757;   /* gris medio */
+  --palette-4: #bdbdbd;   /* gris claro */
+  --palette-5: #181818;   /* negro menos puro */
+  --palette-6: #2c2c2c;   /* gris profundo */
+  --palette-7: #242424;   /* gris oscuro extra */
+  --palette-8: #e0e0e0;   /* gris muy claro */
+  --palette-9: #f7f7f7;   /* casi blanco */
+
+  --text-color: var(--palette-8);
+  --background-color: var(--palette-5);
+}

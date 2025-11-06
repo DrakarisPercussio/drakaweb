@@ -1,0 +1,213 @@
+---
+import NavButton from '../components/utils/NavButton.astro';
+import HamburgerMenu from '../components/utils/HamburgerMenu.jsx';
+import cvPdf from '../../assets/SergioCV.pdf';
+
+const navButtons = [
+  { label: 'Home', href: '/#home' },
+  { label: 'Who', href: '/#who' },
+  { label: 'Historia', href: '/#historia' },
+  { label: 'Agenda', href: '/#agenda' },
+  { label: 'Nostres Actes', href: '/#nostres-actes' },
+  { label: 'Shop', href: '/#shop' },
+];
+---
+<header class="header-responsive">
+  <nav class="desktop-nav">
+    <ul class="nav-list">
+      {navButtons.map(btn => (
+        <li>
+          <NavButton href={btn.href} label={btn.label} />
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <div class="mobile-nav">
+    <HamburgerMenu navButtons={navButtons} client:only="react" />
+  </div>
+</header>
+
+<script>
+  declare global {
+    interface Window {
+      forceShowHeader?: () => void;
+    }
+  }
+  let headerScrollListener: (() => void) | null = null;
+  Object.defineProperty(window, 'headerScrollListener', {
+    get() { return headerScrollListener; },
+    set(v) { headerScrollListener = v; }
+  });
+  
+  window.forceShowHeader = function() {
+    const header = document.querySelector('.header-responsive');
+    if (header) {
+      header.classList.remove('header-hidden');
+    }
+  }
+
+  function updateHeaderOffset() {
+    const header = document.querySelector('.header-responsive');
+    if (header) {
+      const height = header.getBoundingClientRect().height;
+      document.documentElement.style.setProperty('--header-offset', `${height}px`);
+    }
+  }
+
+  function scrollToCurrentHash() {
+    if (!location.hash) return;
+    const target = document.getElementById(location.hash.slice(1));
+    if (target) {
+      // Reposicionar tras actualizar el offset del header
+      requestAnimationFrame(() => target.scrollIntoView({ behavior: 'auto', block: 'start' }));
+    }
+  }
+
+  function initHeaderScroll() {
+    let lastScrollTop = 0;
+    const header = document.querySelector('.header-responsive');
+    
+    if (header) {
+      header.classList.remove('header-hidden');
+
+      if (headerScrollListener) {
+        window.removeEventListener('scroll', headerScrollListener);
+      }
+
+      headerScrollListener = () => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop > lastScrollTop && scrollTop > 100) {
+          header.classList.add('header-hidden');
+        } else {
+          header.classList.remove('header-hidden');
+        }
+        
+        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+      };
+      
+      window.addEventListener('scroll', headerScrollListener);
+    }
+  }
+
+  function handleLogoClick() {
+    const logoLink = document.querySelector('.header-logo');
+    
+    if (logoLink) {
+      logoLink.addEventListener('click', (e) => {
+        const href = logoLink.getAttribute('data-href');
+        const currentPath = window.location.pathname;
+
+        if (href === currentPath) {
+          e.preventDefault();
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }
+      });
+    }
+  }
+
+  function initHeader() {
+    initHeaderScroll();
+    handleLogoClick();
+    updateHeaderOffset();
+
+    const header = document.querySelector('.header-responsive');
+    if (header && 'ResizeObserver' in window) {
+      new ResizeObserver(() => updateHeaderOffset()).observe(header);
+    }
+    if ('fonts' in document && 'ready' in document.fonts) {
+      // Recalcula cuando las fuentes terminen de cargar (puede cambiar la altura)
+      document.fonts.ready.then(() => {
+        updateHeaderOffset();
+        scrollToCurrentHash();
+      });
+    }
+    // Ajusta posición si la navegación entra con hash
+    scrollToCurrentHash();
+  }
+
+  initHeader();
+  window.addEventListener('resize', () => { updateHeaderOffset(); scrollToCurrentHash(); });
+  window.addEventListener('load', () => { updateHeaderOffset(); scrollToCurrentHash(); });
+  window.addEventListener('hashchange', () => { setTimeout(scrollToCurrentHash, 0); });
+  document.addEventListener('astro:page-load', initHeader);
+</script>
+
+<style>
+  .header-responsive {
+    width: 100%;
+    background: var(--background-color, #181818);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* raised above any content layers */
+    transition: transform 0.3s ease-in-out;
+    padding: 1rem 5rem;
+    box-sizing: border-box;
+  }
+  .header-responsive.header-hidden {
+    transform: translateY(-100%);
+  }
+  .desktop-nav {
+    width: 100%;
+    text-align: center;
+  }
+  .nav-list {
+    display: inline-flex;
+    gap: 1rem;
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+  }
+  .mobile-nav {
+    display: none;
+    width: 100%;
+    justify-content: center;
+    text-align: left;
+  }
+
+  /* Social links under menu */
+  .social-links {
+    display: flex;
+    justify-content: center;
+    gap: .6rem;
+    margin-top: .5rem;
+  }
+  .social-link {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    color: inherit;
+    background-color: #383d63d5;
+    border: 1px solid color-mix(in oklab, #383d63d5 92%, white);
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    text-decoration: none;
+  }
+  .social-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 14px rgba(0,0,0,.25);
+    border-color: rgba(255,255,255,.18);
+  }
+  .social-link svg { width: 20px; height: 20px; fill: currentColor; }
+
+  @media (max-width: 767px) {
+    .header-responsive { padding: 1rem 1.2rem; }
+    .desktop-nav { display: none; }
+    .mobile-nav { display: block; width: 100%; text-align: left; }
+    .social-links { margin-top: .6rem; }
+  }
+
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) {
+    animation-duration: 0.5s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+</style>
