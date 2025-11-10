@@ -13,4 +13,5 @@
   --text-menu-color: var(--background-color);
   --background-color: var(--palette-1);
   --background-header: var(--palette-2);
+  --white-background: var(--palette-9);
 }
