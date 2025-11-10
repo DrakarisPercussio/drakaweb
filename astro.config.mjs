@@ -7,6 +7,13 @@ import react from '@astrojs/react';
 export default defineConfig({
   integrations: [react()],
   site: 'https://drakarispercussio.github.io',
-  base: '/drakaweb',
-  trailingSlash: 'always'
+  base: process.env.GITHUB_PAGES ? '/drakaweb' : undefined,
+  build: {
+    assets: '_astro'
+  },
+  vite: {
+    build: {
+      assetsInlineLimit: 0
+    }
+  }
 });
