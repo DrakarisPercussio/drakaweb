@@ -1,0 +1,77 @@
+---
+import drakarisLogo from '../assets/LOGOS/drakarisFront.png';
+---
+
+<section id="qui-som" class="who-section">
+    <div class="who-container">
+        <div class="who-image">
+            <img src={drakarisLogo.src} alt="Drakaris Percussió" />
+        </div>
+        <div class="who-content">
+            <h1>QUI SOM?</h1>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing 
+                elit, sed do eiusmod tempor incididunt ut labore et 
+                dolore magna aliqua. Ut enim ad minim veniam, 
+                quis nostrud exercitation ullamco laboris nisi ut 
+                aliquip ex ea commodo consequat. Duis aute irure 
+                dolor in reprehenderit in voluptate velit esse cillum 
+                dolore eu fugiat nulla pariatur. Excepteur sint 
+                occaecat cupidatat non proident, sunt
+            </p>
+        </div>
+    </div>
+</section>
+
+<style>
+.who-section {
+    min-height: 100vh;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.who-container {
+    margin-top: 200px;
+    max-width: 1200px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.who-image img {
+    width: 100%;
+    height: auto;
+    max-width: 400px;
+}
+
+.who-content h2 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #00d4aa;
+    margin-bottom: 2rem;
+    letter-spacing: 2px;
+}
+
+.who-content p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .who-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+    
+    .who-content h2 {
+        font-size: 2rem;
+    }
+}
+</style>

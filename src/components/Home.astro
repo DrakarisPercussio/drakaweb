@@ -1,0 +1,41 @@
+---
+import rakata from '../assets/LOGOS/drakarisFront.png';
+---
+<section id="home" class="hero">
+    <div class="hero-subheading">
+        <img src={rakata.src} alt="Project 1 Screenshot" width="800"/>
+    </div>
+  <div class="scroll-arrow">
+    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 5V19M12 19L19 12M12 19L5 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+  </div>
+</section>
+<style>
+.scroll-arrow {
+    display: flex;
+    justify-content: center;
+    margin-top: 200px;
+    animation: bounce 1.2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+.hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    text-align: center;
+    scroll-margin-top: var(--header-offset, 0px);
+}
+  
+.hero-subheading {
+    margin-top: 20%;
+
+}
+</style>
