@@ -1,0 +1,216 @@
+---
+// Component for displaying our events with photo carousels
+---
+
+<section class="nostres-actes">
+  <div class="container">
+    <h2 class="section-title">ELS NOSTRES ACTES</h2>
+    
+    <!-- LA DRAKAFESTA -->
+    <div class="event-row">
+      <div class="event-content">
+        <h3 class="event-title">LA DRAKAFESTA</h3>
+        <p class="event-description">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+          incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+          exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
+          dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt 
+          mollit anim id laborum.
+        </p>
+      </div>
+      <div class="photo-carousel" data-carousel="drakafesta">
+        <div class="carousel-container">
+          <div class="carousel-track">
+            <!-- Add your photos here -->
+            <div class="photo-placeholder">FOTOS</div>
+            <div class="photo-placeholder">FOTOS</div>
+            <div class="photo-placeholder">FOTOS</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EL KORREBARS -->
+    <div class="event-row">
+      <div class="photo-carousel" data-carousel="korrebars">
+        <div class="carousel-container">
+          <div class="carousel-track">
+            <!-- Add your photos here -->
+            <div class="photo-placeholder">FOTOS</div>
+            <div class="photo-placeholder">FOTOS</div>
+            <div class="photo-placeholder">FOTOS</div>
+          </div>
+        </div>
+      </div>
+      <div class="event-content">
+        <h3 class="event-title">EL KORREBARS</h3>
+        <p class="event-description">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+          incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+          exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
+          dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt 
+          mollit anim id laborum.
+        </p>
+      </div>
+    </div>
+
+    <!-- LA FESTA DE TARDOR -->
+    <div class="event-row">
+      <div class="event-content">
+        <h3 class="event-title">LA FESTA DE TARDOR</h3>
+        <p class="event-description">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+          incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+          exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
+          dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt 
+          mollit anim id laborum.
+        </p>
+      </div>
+      <div class="photo-carousel" data-carousel="festa-tardor">
+        <div class="carousel-container">
+          <div class="carousel-track">
+            <!-- Add your photos here -->
+            <div class="photo-placeholder">FOTOS</div>
+            <div class="photo-placeholder">FOTOS</div>
+            <div class="photo-placeholder">FOTOS</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .nostres-actes {
+    background-color: var(--background-color);
+    color: white;
+    padding: 80px 0;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 80px;
+    color: var(--title-color);
+    letter-spacing: 2px;
+  }
+
+  .event-row {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    margin-bottom: 200px;
+  }
+
+  .event-row.reverse {
+    flex-direction: row-reverse;
+  }
+
+  .event-content {
+    flex: 1;
+    max-width: 700px;
+  }
+
+  .event-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--title-color);
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+
+  .event-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #ccc;
+  }
+
+  .photo-carousel {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+  }
+
+  .carousel-container {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 8px;
+    background-color: #a67c7c;
+    position: relative;
+  }
+
+  .carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.5s ease;
+  }
+
+  .photo-placeholder {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .carousel-dots {
+    display: none;
+  }
+
+  .dot {
+    display: none;
+  }
+
+  .dot.active {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .event-row,
+    .event-row.reverse {
+      flex-direction: column;
+      gap: 30px;
+      text-align: center;
+      margin-bottom: 100px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 50px;
+    }
+
+    .event-title {
+      font-size: 1.5rem;
+    }
+
+    .photo-carousel {
+      max-width: 100%;
+    }
+
+    .carousel-container {
+      height: 250px;
+    }
+  }
+</style>
+
+<script>
+  import { initializeCarousels } from './utils/InfiniteCarousel.js';
+  
+  // Initialize carousels
+  initializeCarousels();
+</script>

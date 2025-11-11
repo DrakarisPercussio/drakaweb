@@ -3,7 +3,7 @@
   --palette-2: #19875d;   /* gris oscuro */
   --palette-3: #e5e53e;   /* gris medio */
   --palette-4: #bdbdbd;   /* gris claro */
-  --palette-5: #181818;   /* negro menos puro */
+  --palette-5: #32c28b;   /* negro menos puro */
   --palette-6: #2c2c2c;   /* gris profundo */
   --palette-7: #242424;   /* gris oscuro extra */
   --palette-8: #e0e0e0;   /* gris muy claro */
@@ -14,4 +14,5 @@
   --background-color: var(--palette-1);
   --background-header: var(--palette-2);
   --white-background: var(--palette-9);
+  --title-color: var(--palette-5);
 }
