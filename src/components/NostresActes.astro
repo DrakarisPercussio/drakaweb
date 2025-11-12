@@ -87,21 +87,21 @@
   .nostres-actes {
     background-color: var(--background-color);
     color: white;
-    padding: 80px 0;
+    padding: clamp(60px, 10vw, 80px) 0;
     min-height: 100vh;
   }
 
   .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 clamp(1rem, 4vw, 2rem);
   }
 
   .section-title {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 5vw, 2.5rem);
     font-weight: bold;
     text-align: center;
-    margin-bottom: 80px;
+    margin-bottom: clamp(60px, 12vw, 80px);
     color: var(--title-color);
     letter-spacing: 2px;
   }
@@ -109,8 +109,8 @@
   .event-row {
     display: flex;
     align-items: center;
-    gap: 60px;
-    margin-bottom: 200px;
+    gap: clamp(30px, 8vw, 60px);
+    margin-bottom: clamp(100px, 20vw, 200px);
   }
 
   .event-row.reverse {
@@ -123,28 +123,28 @@
   }
 
   .event-title {
-    font-size: 1.8rem;
+    font-size: clamp(1.4rem, 3.5vw, 1.8rem);
     font-weight: bold;
     color: var(--title-color);
-    margin-bottom: 20px;
+    margin-bottom: clamp(15px, 3vw, 20px);
     letter-spacing: 1px;
   }
 
   .event-description {
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2.2vw, 1rem);
     line-height: 1.6;
     color: #ccc;
   }
 
   .photo-carousel {
     flex: 1;
-    max-width: 400px;
+    max-width: min(400px, 90vw);
     position: relative;
   }
 
   .carousel-container {
     width: 100%;
-    height: 300px;
+    height: clamp(200px, 35vw, 300px);
     overflow: hidden;
     border-radius: 8px;
     background-color: #a67c7c;
@@ -163,21 +163,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 4vw, 2rem);
     font-weight: bold;
     color: #333;
   }
 
-  .carousel-dots {
-    display: none;
-  }
-
-  .dot {
-    display: none;
-  }
-
-  .dot.active {
-    display: none;
+  @media (max-width: 900px) {
+    .event-row {
+      gap: 25px;
+      margin-bottom: 80px;
+    }
   }
 
   @media (max-width: 768px) {
@@ -186,31 +181,29 @@
       flex-direction: column;
       gap: 30px;
       text-align: center;
-      margin-bottom: 100px;
-    }
-
-    .section-title {
-      font-size: 2rem;
-      margin-bottom: 50px;
-    }
-
-    .event-title {
-      font-size: 1.5rem;
+      margin-bottom: 60px;
     }
 
     .photo-carousel {
       max-width: 100%;
     }
+  }
 
+  @media (max-width: 480px) {
     .carousel-container {
-      height: 250px;
+      height: 180px;
+    }
+    
+    .event-row {
+      margin-bottom: 50px;
     }
   }
 </style>
 
 <script>
   import { initializeCarousels } from './utils/InfiniteCarousel.js';
-  
-  // Initialize carousels
-  initializeCarousels();
+
+  document.addEventListener('DOMContentLoaded', function() {
+    initializeCarousels();
+  });
 </script>

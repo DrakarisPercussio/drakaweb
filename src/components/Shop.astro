@@ -41,7 +41,7 @@ const instagramDM = "https://www.instagram.com/direct/t/103285997737912";
   .shop-section {
     background-color: var(--background-color);
     color: var(--text-color);
-    padding: 2rem;
+    padding: clamp(1.5rem, 4vw, 2rem);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -50,19 +50,19 @@ const instagramDM = "https://www.instagram.com/direct/t/103285997737912";
 
   .shop-title {
     color: var(--title-color);
-    font-size: 3rem;
+    font-size: clamp(2rem, 6vw, 3rem);
     font-weight: bold;
-    margin-bottom: 2rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
     text-align: center;
   }
 
   .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(clamp(160px, 20vw, 200px), 1fr));
+    gap: clamp(0.5rem, 2vw, 1rem);
     width: 100%;
     max-width: 800px;
-    margin-bottom: 2rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
   }
 
   .product-card {
@@ -70,6 +70,7 @@ const instagramDM = "https://www.instagram.com/direct/t/103285997737912";
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.3s ease;
+    min-height: clamp(200px, 30vw, 250px);
   }
 
   .product-card:hover {
@@ -78,7 +79,7 @@ const instagramDM = "https://www.instagram.com/direct/t/103285997737912";
 
   .product-image {
     width: 100%;
-    height: 150px;
+    height: clamp(100px, 20vw, 150px);
     background-color: #b19494;
     display: flex;
     align-items: center;
@@ -92,31 +93,31 @@ const instagramDM = "https://www.instagram.com/direct/t/103285997737912";
   }
 
   .product-info {
-    padding: 1rem;
+    padding: clamp(0.8rem, 2vw, 1rem);
     color: #000;
   }
 
   .product-name {
     font-weight: bold;
-    font-size: 1.1rem;
-    margin: 0 0 0.5rem 0;
+    font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+    margin: 0 0 clamp(0.3rem, 1vw, 0.5rem) 0;
   }
 
   .product-price {
     font-weight: bold;
-    font-size: 1rem;
+    font-size: clamp(0.8rem, 2vw, 1rem);
     margin: 0;
   }
 
   .buy-button-container {
-    margin-top: 1rem;
+    margin-top: clamp(1rem, 2vw, 1rem);
   }
 
   .buy-button {
     background-color: var(--title-color);
     color: #000;
-    padding: 1rem 2rem;
-    font-size: 1.2rem;
+    padding: clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
     font-weight: bold;
     text-decoration: none;
     border-radius: 4px;
@@ -128,18 +129,20 @@ const instagramDM = "https://www.instagram.com/direct/t/103285997737912";
     background-color: #2aac7a;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 600px) {
     .products-grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: 0.5rem;
     }
-    
-    .shop-title {
-      font-size: 2rem;
+  }
+  
+  @media (max-width: 400px) {
+    .products-grid {
+      grid-template-columns: 1fr;
+      max-width: 300px;
     }
     
     .product-card {
-      font-size: 0.9rem;
+      min-height: 220px;
     }
   }
 </style>

@@ -1,52 +1,47 @@
-export class InfiniteCarousel {
-  constructor(element) {
-    this.carousel = element;
-    this.track = element.querySelector('.carousel-track');
-    this.dots = element.querySelectorAll('.dot');
-    this.currentIndex = 0;
-    this.totalSlides = this.track.children.length; // Count actual slides instead of dots
-    this.autoplayInterval = null;
-    
-    this.init();
-  }
-
-  init() {
-    this.startAutoplay();
-    
-    // Pause on hover
-    this.carousel.addEventListener('mouseenter', () => this.pauseAutoplay());
-    this.carousel.addEventListener('mouseleave', () => this.startAutoplay());
-  }
-
-  nextSlide() {
-    this.currentIndex = (this.currentIndex + 1) % this.totalSlides;
-    this.updateCarousel();
-  }
-
-  updateCarousel() {
-    const translateX = -this.currentIndex * 100;
-    this.track.style.transform = `translateX(${translateX}%)`;
-  }
-
-  startAutoplay() {
-    this.autoplayInterval = setInterval(() => {
-      this.nextSlide();
-    }, 3500);
-  }
-
-  pauseAutoplay() {
-    if (this.autoplayInterval) {
-      clearInterval(this.autoplayInterval);
-    }
-  }
-}
-
-// Initialize carousels when DOM is loaded
 export function initializeCarousels() {
-  document.addEventListener('DOMContentLoaded', () => {
-    const carousels = document.querySelectorAll('.photo-carousel');
-    carousels.forEach(carousel => {
-      new InfiniteCarousel(carousel);
+  const carousels = document.querySelectorAll('.photo-carousel');
+  
+  carousels.forEach(carousel => {
+    const track = carousel.querySelector('.carousel-track');
+    if (!track) return;
+    
+    const cards = track.querySelectorAll('.photo-placeholder');
+    let currentIndex = 0;
+    const totalCards = cards.length;
+    let isTransitioning = false;
+
+    function updateCardWidth() {
+      const firstCard = cards[0];
+      if (firstCard) {
+        const cardRect = firstCard.getBoundingClientRect();
+        return cardRect.width;
+      }
+      return 300;
+    }
+
+    let cardWidth = updateCardWidth();
+    
+    function moveCarousel() {
+      if (isTransitioning || totalCards <= 1) return;
+      
+      isTransitioning = true;
+      currentIndex = (currentIndex + 1) % totalCards;
+      
+      cardWidth = updateCardWidth();
+      const translateX = -currentIndex * cardWidth;
+      track.style.transform = `translateX(${translateX}px)`;
+      
+      setTimeout(() => {
+        isTransitioning = false;
+      }, 500);
+    }
+    
+    setInterval(moveCarousel, 4000);
+
+    window.addEventListener('resize', function() {
+      cardWidth = updateCardWidth();
+      const translateX = -currentIndex * cardWidth;
+      track.style.transform = `translateX(${translateX}px)`;
     });
   });
 }

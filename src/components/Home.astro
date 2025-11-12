@@ -15,8 +15,13 @@ import rakata from '../assets/LOGOS/drakarisFront.png';
 .scroll-arrow {
     display: flex;
     justify-content: center;
-    margin-top: 200px;
+    margin-top: clamp(50px, 20vh, 200px);
     animation: bounce 1.2s ease-in-out infinite;
+}
+
+.scroll-arrow svg {
+    width: clamp(60px, 12vw, 80px);
+    height: clamp(60px, 12vw, 80px);
 }
 
 @keyframes bounce {
@@ -32,10 +37,28 @@ import rakata from '../assets/LOGOS/drakarisFront.png';
     height: 100vh;
     text-align: center;
     scroll-margin-top: var(--header-offset, 0px);
+    padding: 0 1rem;
 }
   
 .hero-subheading {
-    margin-top: 20%;
+    margin-top: clamp(10%, 15vh, 20%);
+}
 
+.hero-subheading img {
+    width: 100%;
+    max-width: clamp(300px, 60vw, 800px);
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-subheading {
+        margin-top: 5%;
+    }
 }
 </style>

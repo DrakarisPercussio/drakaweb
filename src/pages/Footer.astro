@@ -40,7 +40,7 @@ const currentYear = new Date().getFullYear();
 <style>
   .footer {
     background: var(--background-header);
-    padding: 4rem 2rem 2rem;
+    padding: clamp(3rem, 8vw, 4rem) clamp(1rem, 4vw, 2rem) 2rem;
     text-align: center;
     color: #2c3e50;
     min-height: 400px;
@@ -55,15 +55,15 @@ const currentYear = new Date().getFullYear();
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2.5rem;
+    gap: clamp(1.5rem, 4vw, 2.5rem);
   }
 
   .logo-container {
-    margin-bottom: 1rem;
+    margin-bottom: clamp(0.5rem, 2vw, 1rem);
   }
 
   .logo {
-    width: 120px;
+    width: clamp(80px, 15vw, 120px);
     height: auto;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
   }
@@ -72,11 +72,11 @@ const currentYear = new Date().getFullYear();
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: clamp(0.5rem, 2vw, 1rem);
   }
 
   .contact-title {
-    font-size: 3rem;
+    font-size: clamp(2rem, 6vw, 3rem);
     font-weight: 900;
     letter-spacing: 0.1em;
     margin: 0;
@@ -85,7 +85,7 @@ const currentYear = new Date().getFullYear();
   }
 
   .email-link {
-    font-size: 1.5rem;
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
     font-weight: 600;
     color: #2c3e50;
     text-decoration: none;
@@ -101,9 +101,10 @@ const currentYear = new Date().getFullYear();
 
   .social-media {
     display: flex;
-    gap: 2rem;
+    gap: clamp(1rem, 4vw, 2rem);
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   .social-link {
@@ -114,6 +115,11 @@ const currentYear = new Date().getFullYear();
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .social-link svg {
+    width: clamp(24px, 6vw, 32px);
+    height: clamp(24px, 6vw, 32px);
   }
 
   .social-link:hover {
@@ -130,29 +136,18 @@ const currentYear = new Date().getFullYear();
 
   .copyright p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
     opacity: 0.8;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 480px) {
     .footer {
-      padding: 3rem 1rem 1.5rem;
-    }
-    
-    .contact-title {
-      font-size: 2.5rem;
-    }
-    
-    .email-link {
-      font-size: 1.2rem;
+      min-height: 350px;
+      padding: 2rem 1rem 1.5rem;
     }
     
     .social-media {
-      gap: 1.5rem;
-    }
-    
-    .logo {
-      width: 100px;
+      gap: 1rem;
     }
   }
 </style>

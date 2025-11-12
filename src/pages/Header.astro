@@ -144,9 +144,9 @@ const navButtons = [
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1000; /* raised above any content layers */
+    z-index: 1000;
     transition: transform 0.3s ease-in-out;
-    padding: 1rem 5rem;
+    padding: 1rem clamp(1rem, 5vw, 5rem);
     box-sizing: border-box;
   }
   .header-responsive.header-hidden {
@@ -158,10 +158,12 @@ const navButtons = [
   }
   .nav-list {
     display: inline-flex;
-    gap: 1rem;
+    gap: clamp(0.5rem, 2vw, 1rem);
     list-style: none;
     margin: 0 auto;
     padding: 0;
+    flex-wrap: wrap;
+    justify-content: center;
   }
   .mobile-nav {
     display: none;
@@ -170,11 +172,36 @@ const navButtons = [
     text-align: left;
   }
 
+  @media (max-width: 1200px) {
+    .header-responsive { 
+      padding: 0.8rem clamp(1rem, 3vw, 3rem); 
+    }
+  }
+
+  @media (max-width: 900px) {
+    .header-responsive { 
+      padding: 0.8rem 1.5rem; 
+    }
+    .nav-list {
+      gap: 0.8rem;
+    }
+  }
+
   @media (max-width: 767px) {
-    .header-responsive { padding: 1rem 1.2rem; }
-    .desktop-nav { display: none; }
-    .mobile-nav { display: block; width: 100%; text-align: left; }
-    .social-links { margin-top: .6rem; }
+    .header-responsive { 
+      padding: 1rem 1.2rem; 
+    }
+    .desktop-nav { 
+      display: none; 
+    }
+    .mobile-nav { 
+      display: block; 
+      width: 100%; 
+      text-align: left; 
+    }
+    .social-links { 
+      margin-top: .6rem; 
+    }
   }
 
   @view-transition { navigation: auto; }

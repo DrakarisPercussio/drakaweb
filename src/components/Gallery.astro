@@ -57,7 +57,7 @@ const bottomRowImages = [
   .gallery-section {
     position: relative;
     background-color: var(--white-background);
-    padding: 80px 0;
+    padding: clamp(60px, 10vw, 80px) 0;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -69,10 +69,10 @@ const bottomRowImages = [
   .gallery-section::before {
     content: '';
     position: absolute;
-    top: -120px;
+    top: clamp(-80px, -15vw, -120px);
     left: 0;
     width: 100%;
-    height: 120px;
+    height: clamp(80px, 15vw, 120px);
     background: var(--background-color);
     transform: skewY(2deg);
     transform-origin: top left;
@@ -82,10 +82,10 @@ const bottomRowImages = [
   .gallery-section::after {
     content: '';
     position: absolute;
-    bottom: -120px;
+    bottom: clamp(-80px, -15vw, -120px);
     left: 0;
     width: 100%;
-    height: 120px;
+    height: clamp(80px, 15vw, 120px);
     background: var(--background-color);
     transform: skewY(-2deg);
     transform-origin: bottom left;
@@ -94,13 +94,13 @@ const bottomRowImages = [
   
   .gallery-header {
     text-align: center;
-    padding: 4rem 0 2rem 0;
+    padding: clamp(2rem, 6vw, 4rem) 0 clamp(1rem, 3vw, 2rem) 0;
     position: relative;
     z-index: 2;
   }
   
   .gallery-header h2 {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 5vw, 2.5rem);
     font-weight: bold;
     color: var(--title-color);
     letter-spacing: 2px;
@@ -108,7 +108,7 @@ const bottomRowImages = [
   }
   
   .photo-gallery {
-    padding: 2rem 0;
+    padding: clamp(1rem, 3vw, 2rem) 0;
     position: relative;
     z-index: 2;
     width: 100%;
@@ -117,12 +117,12 @@ const bottomRowImages = [
   .photo-row {
     overflow: hidden;
     white-space: nowrap;
-    margin-bottom: 2rem;
+    margin-bottom: clamp(1rem, 3vw, 2rem);
   }
   
   .photo-track {
     display: inline-flex;
-    animation-duration: 60s;
+    animation-duration: clamp(40s, 60s, 80s);
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     will-change: transform;
@@ -138,9 +138,9 @@ const bottomRowImages = [
   
   .photo-item {
     position: relative;
-    width: 300px;
-    height: 200px;
-    margin-right: 20px;
+    width: clamp(200px, 25vw, 300px);
+    height: clamp(133px, 17vw, 200px);
+    margin-right: clamp(10px, 2.5vw, 20px);
     flex-shrink: 0;
     overflow: hidden;
     background: #a08a8a;
@@ -159,7 +159,7 @@ const bottomRowImages = [
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 1.5rem;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
     font-weight: bold;
     color: #333;
     text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
@@ -185,34 +185,20 @@ const bottomRowImages = [
   }
   
   @media (max-width: 768px) {
-    .gallery-header h2 {
-      font-size: 2rem;
-    }
-    
-    .photo-item {
-      width: 200px;
-      height: 150px;
-      margin-right: 15px;
-    }
-    
     .photo-track {
       animation-duration: 45s;
     }
   }
   
   @media (max-width: 480px) {
-    .photo-item {
-      width: 150px;
-      height: 112px;
-      margin-right: 10px;
-    }
-    
     .photo-track {
       animation-duration: 35s;
     }
-    
-    .photo-placeholder {
-      font-size: 1rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .photo-track {
+      animation: none;
     }
   }
 </style>

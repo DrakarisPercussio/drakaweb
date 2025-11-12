@@ -63,15 +63,15 @@ import drakarisLogo from '../assets/LOGOS/logoblancinegredrakaris.png';
   .agenda-section {
     background-color: var(--background-color);
     color: white;
-    padding: 60px 20px;
+    padding: clamp(40px, 8vw, 60px) clamp(1rem, 4vw, 2rem);
     text-align: center;
   }
 
   .agenda-title {
-    font-size: 3rem;
+    font-size: clamp(2rem, 6vw, 3rem);
     font-weight: bold;
     color: var(--title-color);
-    margin-bottom: 50px;
+    margin-bottom: clamp(30px, 6vw, 50px);
     letter-spacing: 2px;
   }
 
@@ -85,17 +85,17 @@ import drakarisLogo from '../assets/LOGOS/logoblancinegredrakaris.png';
   .carousel-track {
     display: flex;
     transition: transform 0.8s ease-in-out;
-    gap: 20px;
+    gap: clamp(10px, 3vw, 20px);
   }
 
   .agenda-card {
-    flex: 0 0 280px;
+    flex: 0 0 clamp(220px, 35vw, 280px);
     background-color: #999;
     color: #000;
-    padding: 30px 20px;
+    padding: clamp(20px, 4vw, 30px) clamp(15px, 3vw, 20px);
     text-align: center;
     position: relative;
-    min-height: 300px;
+    min-height: clamp(250px, 40vw, 300px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -118,9 +118,9 @@ import drakarisLogo from '../assets/LOGOS/logoblancinegredrakaris.png';
   }
 
   .date {
-    font-size: 3rem;
+    font-size: clamp(2rem, 5vw, 3rem);
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: clamp(15px, 3vw, 20px);
     position: relative;
     z-index: 2;
   }
@@ -128,35 +128,36 @@ import drakarisLogo from '../assets/LOGOS/logoblancinegredrakaris.png';
   .event-details {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: clamp(4px, 1.5vw, 8px);
     position: relative;
     z-index: 2;
     text-align: center;
   }
 
   .location {
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
     font-weight: bold;
   }
 
   .time {
-    font-size: 1.1rem;
+    font-size: clamp(0.9rem, 2.2vw, 1.1rem);
     color: #444;
   }
 
   .organizer {
-    font-size: 1rem;
+    font-size: clamp(0.8rem, 2vw, 1rem);
     color: #666;
     font-style: italic;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 480px) {
     .agenda-card {
-      flex: 0 0 250px;
+      flex: 0 0 200px;
+      min-height: 220px;
     }
     
-    .agenda-title {
-      font-size: 2rem;
+    .carousel-track {
+      gap: 8px;
     }
   }
 </style>
