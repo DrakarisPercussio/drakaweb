@@ -1,0 +1,338 @@
+---
+import rakata from '../assets/LOGOS/rakata.webp';
+---
+
+<section class="hero-section">
+  <div class="container">
+    <div class="content-wrapper">
+      <!-- Left side - Parallax Image -->
+      <div class="image-container">
+        <img 
+          src={rakata.src} 
+          alt="Rakatà performer"
+          class="parallax-image"
+          width={rakata.width}
+          height={rakata.height}
+        />
+      </div>
+      <div class="text-content">
+        <h1 class="main-title">
+          TENIM EL
+          <br />
+          RAKATÀ
+          <br />
+          QUE BUSQUES
+        </h1>
+        <p class="description">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-section {
+    height: 150vh;
+    position: relative;
+    background: #f8f8f8;
+    padding: 8rem 2rem 4rem 2rem;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 100%;
+    padding: 0 1rem;
+    position: relative;
+  }
+
+  .content-wrapper {
+    display: flex;
+    align-items: flex-start;
+    padding-top: 10vh;
+    gap: 3rem;
+    width: 100%;
+  }
+
+  .image-container {
+    flex: 0 0 auto;
+    width: 35%;
+    height: 70vh;
+    position: relative;
+  }
+
+  .parallax-image {
+    width: 100%;
+    height: 70vh;
+    object-fit: contain;
+    object-position: center;
+    position: fixed;
+    top: 2.5vh;
+    transition: none;
+    will-change: transform;
+  }
+
+  .parallax-image.transitioning {
+    transition: top 0.3s ease-out;
+  }
+
+  .parallax-image.stuck-top {
+    position: absolute;
+    top: 8rem;
+    left: 0;
+    transition: none;
+  }
+
+  .parallax-image.stuck-bottom {
+    position: absolute;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    transition: none;
+  }
+
+  .text-content {
+    flex: 1;
+    padding-left: 0;
+    padding-top: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 4rem;
+  }
+
+  .main-title {
+    font-size: clamp(4rem, 10vw, 12rem);
+    font-weight: 900;
+    line-height: 0.85;
+    margin: 0;
+    color: var(--title-color);
+    opacity: 0.3;
+    letter-spacing: -0.02em;
+    background: linear-gradient(45deg, #2dd4bf, #14b8a6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    text-transform: uppercase;
+    position: relative;
+  }
+
+  .main-title::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('/path-to-your-video-thumbnail.jpg') center/cover;
+    opacity: 0.1;
+    z-index: -1;
+    mix-blend-mode: overlay;
+  }
+
+  .description {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: #666;
+    margin: 0;
+    max-width: 600px;
+  }
+
+  .cta-button {
+    margin: 0;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem 3rem;
+    background: #2dd4bf;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn:hover {
+    background: #14b8a6;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .hero-section {
+      height: auto;
+      min-height: 120vh;
+    }
+
+    .container {
+      position: relative;
+      height: auto;
+      padding: 4rem 2rem;
+    }
+
+    .content-wrapper {
+      flex-direction: column;
+      gap: 4rem;
+      padding-top: 0;
+    }
+
+    .image-container {
+      height: 60vh;
+      width: 100%;
+      flex: 1;
+    }
+
+    .parallax-image {
+      position: relative !important;
+      top: auto !important;
+      max-width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .text-content {
+      padding-left: 0;
+      padding-top: 0;
+      text-align: center;
+      gap: 3rem;
+    }
+
+    .main-title {
+      font-size: clamp(2.5rem, 15vw, 6rem);
+    }
+
+    .description {
+      font-size: 1.1rem;
+    }
+  }
+</style>
+
+<script>
+  function initParallax() {
+    const image = document.querySelector('.parallax-image') as HTMLElement;
+    const section = document.querySelector('.hero-section') as HTMLElement;
+    const imageContainer = document.querySelector('.image-container') as HTMLElement;
+    
+    if (!image || !section || !imageContainer) return;
+    if (window.innerWidth <= 768) return;
+
+    const containerWidth = imageContainer.offsetWidth;
+    const imageHeight = window.innerHeight * 0.7;
+    
+    image.style.width = `${containerWidth}px`;
+    image.style.height = `${imageHeight}px`;
+
+    let currentState = 'fixed';
+    let lastScrollY = window.scrollY;
+    let isTransitioning = false;
+
+    function updateParallax() {
+      const sectionRect = section.getBoundingClientRect();
+      const containerRect = imageContainer.getBoundingClientRect();
+      
+      const viewportHeight = window.innerHeight;
+      const paddingTop = parseFloat(getComputedStyle(section).paddingTop);
+      const paddingBottom = parseFloat(getComputedStyle(section).paddingBottom);
+      
+      const fixedImageTop = viewportHeight * 0.025;
+      const imageTopRelativeToSection = fixedImageTop - sectionRect.top;
+      
+      const topThreshold = paddingTop;
+      const bottomThreshold = sectionRect.height - paddingBottom - imageHeight;
+      
+      let newState = 'fixed';
+      
+      if (imageTopRelativeToSection <= topThreshold) {
+        newState = 'stuck-top';
+      } else if (imageTopRelativeToSection >= bottomThreshold) {
+        newState = 'stuck-bottom';
+      }
+      
+      const currentScrollY = window.scrollY;
+      const isScrollingDown = currentScrollY > lastScrollY;
+      lastScrollY = currentScrollY;
+      
+      if (newState !== currentState) {
+        const previousState = currentState;
+        
+        if (previousState === 'stuck-top' && newState === 'fixed') {
+          if (imageTopRelativeToSection < topThreshold + 10) {
+            newState = 'stuck-top';
+          }
+        }
+        
+        if (previousState === 'stuck-bottom' && newState === 'fixed') {
+          if (imageTopRelativeToSection > bottomThreshold - 10) {
+            newState = 'stuck-bottom';
+          }
+        }
+        
+        if (newState !== currentState && !isTransitioning) {
+          isTransitioning = true;
+          currentState = newState;
+          
+          // Añadir clase de transición
+          image.classList.add('transitioning');
+          image.classList.remove('stuck-top', 'stuck-bottom');
+          
+          if (newState === 'stuck-top') {
+            image.classList.add('stuck-top');
+            image.style.position = 'absolute';
+            image.style.top = `${paddingTop}px`;
+            image.style.left = '0';
+          } else if (newState === 'stuck-bottom') {
+            image.classList.add('stuck-bottom');
+            image.style.position = 'absolute';
+            image.style.top = `${bottomThreshold}px`;
+            image.style.bottom = 'auto';
+            image.style.left = '0';
+          } else {
+            image.style.position = 'fixed';
+            image.style.top = `${fixedImageTop}px`;
+            image.style.left = `${containerRect.left}px`;
+          }
+          
+          // Remover transición después de completarse
+          setTimeout(() => {
+            image.classList.remove('transitioning');
+            isTransitioning = false;
+          }, 300);
+        }
+      } else if (newState === 'fixed') {
+        image.style.left = `${containerRect.left}px`;
+      }
+    }
+
+    let ticking = false;
+    function handleScroll() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateParallax();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    function handleResize() {
+      const containerWidth = imageContainer.offsetWidth;
+      const imageHeight = window.innerHeight * 0.7;
+      
+      image.style.width = `${containerWidth}px`;
+      image.style.height = `${imageHeight}px`;
+      currentState = '';
+      lastScrollY = window.scrollY;
+      updateParallax();
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize);
+    updateParallax();
+  }
+
+  document.addEventListener('DOMContentLoaded', initParallax);
+</script>
