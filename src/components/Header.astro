@@ -1,0 +1,404 @@
+---
+import { Image } from 'astro:assets';
+import ring from '../assets/brand/dragon-ring.webp';
+import Icon from './Icon.astro';
+import LangSwitcher from './LangSwitcher.astro';
+import { sections, site } from '../data/site';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const links = [
+  { id: sections.about, label: t.nav.about },
+  { id: sections.events, label: t.nav.events },
+  { id: sections.agenda, label: t.nav.agenda },
+  { id: sections.gallery, label: t.nav.gallery },
+  { id: sections.shop, label: t.nav.shop },
+];
+const menuLinks = [...links, { id: sections.contact, label: t.nav.contact }];
+---
+
+<header class="site-header" data-header>
+  <div class="bar container">
+    <a class="brand" href="#inici" aria-label={t.a11y.home}>
+      <Image src={ring} alt="" width={72} height={84} loading="eager" class="brand-mark" />
+      <span class="brand-name">Drakaris</span>
+    </a>
+
+    <nav class="nav" aria-label={t.a11y.mainNav}>
+      <ul class="nav-list">
+        {
+          links.map((link) => (
+            <li>
+              <a href={`#${link.id}`} data-nav-link>
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="actions">
+      <LangSwitcher lang={lang} label={t.a11y.language} animated />
+      <a class="btn btn--primary btn--sm header-cta" href={`#${sections.contact}`}>{t.nav.cta}</a>
+      <button
+        class="menu-btn"
+        type="button"
+        aria-expanded="false"
+        aria-controls="menu"
+        aria-label={t.a11y.menuOpen}
+        data-menu-btn
+        data-label-open={t.a11y.menuOpen}
+        data-label-close={t.a11y.menuClose}
+      >
+        <span class="menu-btn-bars" aria-hidden="true"><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="menu" id="menu" data-menu inert>
+  <nav aria-label={t.a11y.mainNav}>
+    <ul class="menu-links">
+      {
+        menuLinks.map((link, i) => (
+          <li style={`--i:${i}`}>
+            <a href={`#${link.id}`} data-menu-link>
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  <div class="menu-foot" style={`--i:${menuLinks.length}`}>
+    <ul class="menu-social">
+      {
+        site.socials.map((social) => (
+          <li>
+            <a href={social.url} target="_blank" rel="noopener noreferrer" aria-label={`${social.label} (${t.a11y.newTab})`}>
+              <Icon name={social.id} size={22} />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="menu-city">{site.city}</p>
+  </div>
+</div>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 100;
+    height: var(--header-h);
+    color: var(--bone);
+    background-color: transparent;
+    box-shadow: 0 1px 0 transparent;
+    transition:
+      background-color 200ms ease,
+      box-shadow 200ms ease;
+  }
+
+  /* Al bajar, la cabecera gana fondo para que el menú siga siendo legible */
+  .site-header[data-scrolled] {
+    background-color: rgb(12 16 12 / 0.86);
+    box-shadow: 0 1px 0 rgb(232 232 226 / 0.1);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    backdrop-filter: blur(14px) saturate(1.4);
+  }
+
+  .site-header[data-menu-open] {
+    background-color: var(--ink);
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .bar {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .brand {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    transition: transform 160ms var(--ease-out);
+  }
+
+  .brand:active {
+    transform: scale(0.97);
+  }
+
+  .brand-mark {
+    width: 2.125rem;
+    height: auto;
+  }
+
+  .brand-name {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .nav-list {
+    display: flex;
+    gap: clamp(0.25rem, 1vw, 0.75rem);
+  }
+
+  .nav-list a {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #b4bcb5;
+    transition: color 150ms ease;
+  }
+
+  /* Punto verde bajo la sección que se está viendo */
+  .nav-list a::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 4px;
+    height: 4px;
+    margin-left: -2px;
+    border-radius: 50%;
+    background: var(--green);
+    opacity: 0;
+    transform: scale(0.5);
+    transition:
+      opacity 200ms ease,
+      transform 200ms var(--ease-out);
+  }
+
+  .nav-list a[aria-current] {
+    color: var(--bone);
+  }
+
+  .nav-list a[aria-current]::after {
+    opacity: 1;
+    transform: none;
+  }
+
+  .actions {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .menu-btn {
+    display: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-right: -0.625rem;
+    place-items: center;
+    border-radius: 50%;
+    transition: transform 160ms var(--ease-out);
+  }
+
+  .menu-btn:active {
+    transform: scale(0.94);
+  }
+
+  .menu-btn-bars {
+    position: relative;
+    width: 1.375rem;
+    height: 0.625rem;
+  }
+
+  .menu-btn-bars span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform 250ms var(--ease-out);
+  }
+
+  .menu-btn-bars span:first-child {
+    top: 0;
+  }
+
+  .menu-btn-bars span:last-child {
+    bottom: 0;
+  }
+
+  .menu-btn[aria-expanded='true'] .menu-btn-bars span:first-child {
+    transform: translateY(4px) rotate(45deg);
+  }
+
+  .menu-btn[aria-expanded='true'] .menu-btn-bars span:last-child {
+    transform: translateY(-4px) rotate(-45deg);
+  }
+
+  /* Menú móvil: una persiana que baja; al cerrar se va más rápido de lo que entra */
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: calc(var(--header-h) + 1.5rem) var(--gutter) calc(1.5rem + env(safe-area-inset-bottom));
+    background: var(--ink);
+    color: var(--bone);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    visibility: hidden;
+    clip-path: inset(0 0 100% 0);
+    transition:
+      clip-path 200ms var(--ease-out),
+      visibility 0s linear 200ms;
+  }
+
+  .menu[data-open] {
+    visibility: visible;
+    clip-path: inset(0 0 0 0);
+    transition:
+      clip-path 450ms var(--ease-drawer),
+      visibility 0s;
+  }
+
+  .menu-links a {
+    display: block;
+    padding-block: 0.3rem;
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 12vw, 4rem);
+    line-height: 1.05;
+    text-transform: uppercase;
+    transition: color 150ms ease;
+  }
+
+  .menu-links a:active {
+    color: var(--green);
+  }
+
+  .menu-links li,
+  .menu-foot {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 150ms ease,
+      transform 150ms ease;
+  }
+
+  .menu[data-open] .menu-links li,
+  .menu[data-open] .menu-foot {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 500ms var(--ease-out),
+      transform 500ms var(--ease-out);
+    transition-delay: calc(90ms + var(--i) * 40ms);
+  }
+
+  .menu-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgb(232 232 226 / 0.13);
+  }
+
+  .menu-social {
+    display: flex;
+    gap: 0.25rem;
+    margin-left: -0.75rem;
+  }
+
+  .menu-social a {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .menu-city {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9ca59d;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .nav-list a:hover {
+      color: var(--bone);
+    }
+  }
+
+  @media (max-width: 62rem) {
+    .bar {
+      grid-template-columns: 1fr auto;
+    }
+
+    .nav,
+    .header-cta {
+      display: none;
+    }
+
+    .menu-btn {
+      display: grid;
+    }
+
+    .menu {
+      display: flex;
+    }
+  }
+
+  @media (max-width: 23rem) {
+    .brand-name {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu,
+    .menu[data-open] {
+      clip-path: none;
+      transition:
+        opacity 200ms ease,
+        visibility 0s linear 200ms;
+      opacity: 0;
+    }
+
+    .menu[data-open] {
+      opacity: 1;
+      transition:
+        opacity 200ms ease,
+        visibility 0s;
+    }
+
+    .menu-links li,
+    .menu-foot,
+    .menu[data-open] .menu-links li,
+    .menu[data-open] .menu-foot {
+      transform: none;
+      transition-delay: 0ms;
+    }
+
+    .menu-btn-bars span {
+      transition: none;
+    }
+  }
+</style>

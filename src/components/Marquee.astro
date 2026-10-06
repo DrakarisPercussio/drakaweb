@@ -1,0 +1,91 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Dos grupos idénticos: cuando el primero sale entero, el segundo ocupa su sitio.
+const group = [...t.marquee, ...t.marquee];
+---
+
+<div class="marquee-wrap" aria-hidden="true">
+  <div class="marquee" data-tone="green">
+    <div class="marquee-track">
+      {
+        [0, 1].map(() => (
+          <ul class="marquee-group">
+            {group.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .marquee-wrap {
+    position: relative;
+    z-index: 2;
+    margin-block: -2.25rem;
+    padding-block: 1.25rem;
+    overflow: clip;
+    pointer-events: none;
+  }
+
+  /* Cinta ligeramente torcida, como pegada a mano */
+  .marquee {
+    margin-inline: -1rem;
+    padding-block: clamp(0.6rem, 1.4vw, 0.95rem);
+    transform: rotate(-1.4deg);
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    /* Movimiento constante: lineal */
+    animation: marquee 48s linear infinite;
+  }
+
+  .marquee-group {
+    display: flex;
+    flex: none;
+  }
+
+  .marquee-group li {
+    display: flex;
+    align-items: center;
+    font-family: var(--font-display);
+    font-size: clamp(1.375rem, 2.8vw, 2.25rem);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .marquee-group li::after {
+    content: '';
+    width: 0.4em;
+    height: 0.4em;
+    margin-inline: 0.9em;
+    border-radius: 50%;
+    background: var(--ink);
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+    }
+  }
+</style>

@@ -1,0 +1,34 @@
+---
+// La página es la misma en los tres idiomas; solo cambia `lang`.
+import Layout from '../layouts/Layout.astro';
+import Hero from './Hero.astro';
+import Marquee from './Marquee.astro';
+import About from './About.astro';
+import Sound from './Sound.astro';
+import Events from './Events.astro';
+import Agenda from './Agenda.astro';
+import Join from './Join.astro';
+import Gallery from './Gallery.astro';
+import Shop from './Shop.astro';
+import Booking from './Booking.astro';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<Layout lang={lang}>
+  <Hero lang={lang} />
+  <Marquee lang={lang} />
+  <About lang={lang} />
+  <Sound lang={lang} />
+  <Events lang={lang} />
+  <Agenda lang={lang} />
+  <Join lang={lang} />
+  <Gallery lang={lang} />
+  <Shop lang={lang} />
+  <Booking lang={lang} />
+</Layout>

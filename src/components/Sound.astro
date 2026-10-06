@@ -1,0 +1,114 @@
+---
+import { Image } from 'astro:assets';
+import instruments from '../assets/brand/instruments.webp';
+import { sections } from '../data/site';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="section sound" id={sections.sound} data-tone="bone">
+  <div class="container">
+    <header class="sound-head">
+      <div>
+        <p class="label" data-reveal>{t.sound.label}</p>
+        <h2 class="display section-title" data-reveal style="--i:1">{t.sound.title}</h2>
+      </div>
+      <p class="lead" data-reveal style="--i:2">{t.sound.lead}</p>
+    </header>
+
+    <div class="sound-art" data-reveal>
+      <Image
+        src={instruments}
+        alt={t.sound.alt}
+        widths={[360, 676]}
+        sizes="(min-width: 48rem) 44rem, 92vw"
+        loading="lazy"
+      />
+    </div>
+
+    <ol class="instruments">
+      {
+        t.sound.items.map((item, i) => (
+          <li data-reveal style={`--i:${i % 3}`}>
+            <span class="instrument-n">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="instrument-name display">{item.name}</h3>
+            <p class="instrument-text">{item.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .sound-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr);
+    align-items: end;
+    gap: 1.5rem clamp(2rem, 6vw, 6rem);
+  }
+
+  .sound-art {
+    margin: clamp(2.5rem, 6vw, 5rem) auto;
+    max-width: 44rem;
+  }
+
+  .sound-art img {
+    width: 100%;
+  }
+
+  .instruments {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 clamp(1.5rem, 4vw, 3.5rem);
+  }
+
+  .instruments li {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    align-items: baseline;
+    column-gap: 0.5rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .instrument-n {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .instrument-name {
+    font-size: clamp(1.625rem, 2.6vw, 2.125rem);
+  }
+
+  .instrument-text {
+    grid-column: 2;
+    margin-top: 0.4rem;
+    font-size: 0.9875rem;
+    color: var(--fg-muted);
+  }
+
+  @media (max-width: 62rem) {
+    .sound-head {
+      grid-template-columns: 1fr;
+    }
+
+    .instruments {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 36rem) {
+    .instruments {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

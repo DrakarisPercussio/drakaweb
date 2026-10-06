@@ -1,0 +1,196 @@
+---
+import { Image } from 'astro:assets';
+import ring from '../assets/brand/dragon-ring.webp';
+import Icon from './Icon.astro';
+import LangSwitcher from './LangSwitcher.astro';
+import { sections, site } from '../data/site';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+
+const links = [
+  { id: sections.about, label: t.nav.about },
+  { id: sections.events, label: t.nav.events },
+  { id: sections.agenda, label: t.nav.agenda },
+  { id: sections.gallery, label: t.nav.gallery },
+  { id: sections.shop, label: t.nav.shop },
+  { id: sections.contact, label: t.nav.contact },
+];
+---
+
+<footer class="footer" data-tone="ink">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <Image src={ring} alt="" width={112} height={130} loading="lazy" class="footer-mark" />
+        <p class="footer-tagline">{t.footer.tagline}</p>
+      </div>
+
+      <nav class="footer-col" aria-label={t.footer.sections}>
+        <h2 class="footer-heading">{t.footer.sections}</h2>
+        <ul class="footer-links">
+          {
+            links.map((link) => (
+              <li>
+                <a href={`#${link.id}`}>{link.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="footer-col">
+        <h2 class="footer-heading">{t.footer.social}</h2>
+        <ul class="footer-links">
+          {
+            site.socials.map((social) => (
+              <li>
+                <a
+                  class="footer-social"
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${social.label} (${t.a11y.newTab})`}
+                >
+                  <Icon name={social.id} size={16} />
+                  {social.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2 class="footer-heading">{t.a11y.language}</h2>
+        <LangSwitcher lang={lang} label={t.a11y.language} />
+      </div>
+    </div>
+  </div>
+
+  <p class="footer-wordmark display" aria-hidden="true">Drakaris</p>
+
+  <div class="container footer-bottom">
+    <p>© {year} Drakaris Percussió. {t.footer.rights}</p>
+    <a class="footer-top-link" href="#inici">
+      {t.a11y.backTop}
+      <Icon name="up" size={16} />
+    </a>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-top: clamp(4rem, 8vw, 6rem);
+    overflow: clip;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+    gap: 2.5rem clamp(1.5rem, 4vw, 4rem);
+  }
+
+  .footer-mark {
+    width: 3.5rem;
+    height: auto;
+  }
+
+  .footer-tagline {
+    margin-top: 1.25rem;
+    max-width: 17rem;
+    color: var(--fg-muted);
+  }
+
+  .footer-heading {
+    margin-bottom: 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+
+  .footer-links {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .footer-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding-block: 0.3rem;
+    font-weight: 600;
+    transition: color 150ms ease;
+  }
+
+  /* Nombre gigante de lado a lado, solo en contorno. La caja mide menos que
+     las letras (en Anton las mayúsculas ocupan de 0.05em a 0.92em con
+     interlineado 1), así que quedan cortadas por la línea del pie. */
+  .footer-wordmark {
+    margin-top: clamp(3rem, 7vw, 5rem);
+    height: 0.76em;
+    font-size: 26.6vw;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-align: center;
+    white-space: nowrap;
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(232 232 226 / 0.2);
+    overflow: clip;
+    user-select: none;
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+    padding-block: 1.5rem calc(1.5rem + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--rule);
+    font-size: 0.875rem;
+    color: var(--fg-muted);
+  }
+
+  .footer-top-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 700;
+    color: var(--fg);
+    transition: color 150ms ease;
+  }
+
+  .footer-top-link :global(.icon) {
+    transition: transform 200ms var(--ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .footer-links a:hover,
+    .footer-top-link:hover {
+      color: var(--green);
+    }
+
+    .footer-top-link:hover :global(.icon) {
+      transform: translateY(-3px);
+    }
+  }
+
+  @media (max-width: 62rem) {
+    .footer-top {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

@@ -1,0 +1,128 @@
+---
+import { Image } from 'astro:assets';
+import poster from '../assets/brand/poster.webp';
+import Icon from './Icon.astro';
+import { sections, site } from '../data/site';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="section booking" id={sections.contact} data-tone="green">
+  <div class="container booking-grid">
+    <div class="booking-copy">
+      <p class="label" data-reveal>{t.booking.label}</p>
+      <h2 class="display booking-title" data-reveal style="--i:1">{t.booking.title}</h2>
+      <p class="booking-text" data-reveal style="--i:2">{t.booking.text}</p>
+
+      <div class="booking-actions" data-reveal style="--i:3">
+        <a
+          class="btn btn--ink"
+          href={site.instagram.dm}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${t.booking.primary} (${t.a11y.newTab})`}
+        >
+          <Icon name="instagram" />
+          {t.booking.primary}
+        </a>
+        {
+          site.email && (
+            <a class="btn btn--ghost" href={`mailto:${site.email}`}>
+              <Icon name="mail" />
+              {t.booking.email}
+            </a>
+          )
+        }
+      </div>
+
+      <p class="booking-handle" data-reveal style="--i:4">
+        @{site.instagram.handle} · {site.city}
+      </p>
+    </div>
+
+    <div class="booking-art" data-reveal style="--i:1">
+      <div data-parallax="0.07">
+        <Image
+          src={poster}
+          alt={t.booking.posterAlt}
+          widths={[360, 560, 840, 1120]}
+          sizes="(min-width: 62rem) 26rem, 70vw"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .booking {
+    overflow: clip;
+  }
+
+  .booking-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+    align-items: center;
+    gap: clamp(2.5rem, 6vw, 6rem);
+  }
+
+  .booking-title {
+    margin-top: 1.25rem;
+    font-size: clamp(3rem, 8.4vw, 7.75rem);
+    line-height: 0.92;
+  }
+
+  .booking-text {
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+    max-width: 34rem;
+    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+    font-weight: 500;
+    color: var(--fg-muted);
+  }
+
+  .booking-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .booking-handle {
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--fg-muted);
+  }
+
+  /* El cartel, pegado un poco torcido */
+  .booking-art {
+    width: min(100%, 26rem);
+    justify-self: center;
+    rotate: 4deg;
+  }
+
+  .booking-art img {
+    width: 100%;
+    border-radius: var(--radius);
+    box-shadow:
+      0 1px 2px rgb(12 16 12 / 0.3),
+      0 24px 48px -12px rgb(12 16 12 / 0.45);
+  }
+
+  @media (max-width: 62rem) {
+    .booking-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .booking-art {
+      width: min(20rem, 76%);
+    }
+  }
+</style>

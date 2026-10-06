@@ -8,6 +8,14 @@ export default defineConfig({
   integrations: [react()],
   site: 'https://drakarispercussio.github.io',
   base: process.env.GITHUB_PAGES ? '/drakaweb' : undefined,
+  // Català en la raíz (/), castellano en /es/ e inglés en /en/
+  i18n: {
+    defaultLocale: 'ca',
+    locales: ['ca', 'es', 'en'],
+    routing: {
+      prefixDefaultLocale: false
+    }
+  },
   build: {
     assets: '_astro'
   },

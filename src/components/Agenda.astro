@@ -1,169 +1,199 @@
 ---
-const agendaItems = [
-  {
-    date: "09/07",
-    location: "Centro de Convenciones",
-    time: "19:00",
-    organizer: "Evento Cultural"
-  },
-  {
-    date: "18/07", 
-    location: "Teatro Principal",
-    time: "20:30",
-    organizer: "Compañía de Teatro"
-  },
-  {
-    date: "12/10",
-    location: "Auditorio Municipal",
-    time: "18:00", 
-    organizer: "Ayuntamiento"
-  },
-  {
-    date: "14/07",
-    location: "Plaza Mayor",
-    time: "21:00",
-    organizer: "Festival de Verano"
-  }
-];
+import Icon from './Icon.astro';
+import { agenda, sections, site } from '../data/site';
+import { languages, useTranslations, type Lang } from '../i18n/ui';
 
-import drakarisLogo from '../assets/LOGOS/logoblancinegredrakaris.png';
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const locale = languages[lang].htmlLang;
+
+const format = (date: Date, options: Intl.DateTimeFormatOptions) =>
+  new Intl.DateTimeFormat(locale, { timeZone: 'UTC', ...options }).format(date);
+
+const gigs = [...agenda]
+  .sort((a, b) => a.date.localeCompare(b.date))
+  .map((gig) => {
+    const date = new Date(`${gig.date}T00:00:00Z`);
+    return {
+      ...gig,
+      day: format(date, { day: '2-digit' }),
+      month: format(date, { month: 'short' }).replace('.', ''),
+      year: date.getUTCFullYear(),
+      weekday: format(date, { weekday: 'long' }),
+    };
+  });
 ---
 
-<section class="agenda-section">
-  <h2 class="agenda-title">AGENDA</h2>
-  
-  <div class="carousel-container">
-    <div class="carousel-track" id="carouselTrack">
-      {agendaItems.map((item, index) => (
-        <div class="agenda-card" data-index={index} style={`background-image: url(${drakarisLogo.src})`}>
-          <div class="date">{item.date}</div>
-          <div class="event-details">
-            <div class="location">{item.location}</div>
-            <div class="time">{item.time}</div>
-            <div class="organizer">{item.organizer}</div>
-          </div>
-        </div>
-      ))}
-      {/* Duplicate cards for infinite effect */}
-      {agendaItems.map((item, index) => (
-        <div class="agenda-card" data-index={`duplicate-${index}`} style={`background-image: url(${drakarisLogo.src})`}>
-          <div class="date">{item.date}</div>
-          <div class="event-details">
-            <div class="location">{item.location}</div>
-            <div class="time">{item.time}</div>
-            <div class="organizer">{item.organizer}</div>
-          </div>
-        </div>
-      ))}
+<section class="section agenda" id={sections.agenda} data-tone="ink">
+  <div class="container agenda-grid">
+    <header class="agenda-head">
+      <p class="label" data-reveal>{t.agenda.label}</p>
+      <h2 class="display section-title" data-reveal style="--i:1">{t.agenda.title}</h2>
+      <p class="agenda-follow" data-reveal style="--i:2">
+        <a
+          class="link-arrow"
+          href={site.instagram.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${t.agenda.follow} (${t.a11y.newTab})`}
+        >
+          {t.agenda.follow}
+          <Icon name="external" size={16} />
+        </a>
+      </p>
+    </header>
+
+    <div class="agenda-panel" data-reveal data-agenda>
+      <ol class="gig-list">
+        {
+          gigs.map((gig) => (
+            <li class="gig" data-date={gig.date}>
+              <time class="gig-date" datetime={`${gig.date}T${gig.time}`}>
+                <span class="gig-day display">{gig.day}</span>
+                <span class="gig-month">
+                  {gig.month} {gig.year}
+                </span>
+              </time>
+              <div class="gig-main">
+                <h3 class="gig-title">{gig.title[lang]}</h3>
+                <p class="gig-meta">
+                  <span class="gig-weekday">{gig.weekday}</span> · {gig.place}
+                </p>
+              </div>
+              <span class="gig-time">{gig.time}</span>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="agenda-empty" data-agenda-empty hidden={gigs.length > 0}>{t.agenda.empty}</p>
     </div>
   </div>
 </section>
 
 <style>
-  .agenda-section {
-    background-color: var(--background-color);
-    color: white;
-    padding: clamp(40px, 8vw, 60px) clamp(1rem, 4vw, 2rem);
-    text-align: center;
+  /* Sigue a «Actes» sobre el mismo fondo: sin relleno arriba, pero con aire
+     bajo la cabecera cuando se llega desde el menú */
+  .agenda {
+    padding-top: 0;
+    scroll-margin-top: 3rem;
   }
 
-  .agenda-title {
-    font-size: clamp(2rem, 6vw, 3rem);
-    font-weight: bold;
-    color: var(--title-color);
-    margin-bottom: clamp(30px, 6vw, 50px);
-    letter-spacing: 2px;
+  .agenda-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: start;
+    gap: clamp(2rem, 6vw, 6rem);
   }
 
-  .carousel-container {
-    max-width: 1200px;
-    margin: 0 auto;
+  .agenda-head {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+
+  .agenda-follow {
+    margin-top: 2rem;
+  }
+
+  .agenda-panel {
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--rule);
     overflow: hidden;
-    position: relative;
   }
 
-  .carousel-track {
-    display: flex;
-    transition: transform 0.8s ease-in-out;
-    gap: clamp(10px, 3vw, 20px);
+  .gig {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(1rem, 2.5vw, 2rem);
+    padding: clamp(1.1rem, 2.4vw, 1.6rem) clamp(1.1rem, 2.6vw, 2rem);
+    transition: background-color 150ms ease;
   }
 
-  .agenda-card {
-    flex: 0 0 clamp(220px, 35vw, 280px);
-    background-color: #999;
-    color: #000;
-    padding: clamp(20px, 4vw, 30px) clamp(15px, 3vw, 20px);
-    text-align: center;
-    position: relative;
-    min-height: clamp(250px, 40vw, 300px);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  /* Separador solo entre filas visibles (las fechas pasadas se ocultan) */
+  .gig:not([hidden]) ~ .gig {
+    border-top: 1px solid var(--rule);
   }
 
-  .agenda-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: inherit;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    opacity: 0.2;
-    z-index: 1;
-    margin-bottom: 23px;
+  .gig-date {
+    display: grid;
+    gap: 0.2rem;
   }
 
-  .date {
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: bold;
-    margin-bottom: clamp(15px, 3vw, 20px);
-    position: relative;
-    z-index: 2;
+  .gig-day {
+    font-size: clamp(2.5rem, 4.4vw, 3.5rem);
+    line-height: 0.9;
+    color: var(--green);
+    font-variant-numeric: tabular-nums;
   }
 
-  .event-details {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(4px, 1.5vw, 8px);
-    position: relative;
-    z-index: 2;
-    text-align: center;
+  .gig-month {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--fg-muted);
   }
 
-  .location {
-    font-size: clamp(1rem, 2.5vw, 1.2rem);
-    font-weight: bold;
+  .gig-title {
+    font-size: clamp(1.0625rem, 1.6vw, 1.3125rem);
+    font-weight: 700;
+    line-height: 1.25;
   }
 
-  .time {
-    font-size: clamp(0.9rem, 2.2vw, 1.1rem);
-    color: #444;
+  .gig-meta {
+    margin-top: 0.2rem;
+    font-size: 0.9375rem;
+    color: var(--fg-muted);
   }
 
-  .organizer {
-    font-size: clamp(0.8rem, 2vw, 1rem);
-    color: #666;
-    font-style: italic;
+  .gig-weekday {
+    text-transform: capitalize;
   }
 
-  @media (max-width: 480px) {
-    .agenda-card {
-      flex: 0 0 200px;
-      min-height: 220px;
+  .gig-time {
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    box-shadow: inset 0 0 0 1px var(--rule);
+  }
+
+  .agenda-empty {
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    color: var(--fg-muted);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .gig:hover {
+      background-color: rgb(232 232 226 / 0.035);
     }
-    
-    .carousel-track {
-      gap: 8px;
+  }
+
+  @media (max-width: 62rem) {
+    .agenda-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .agenda-head {
+      position: static;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .gig {
+      grid-template-columns: 5rem minmax(0, 1fr);
+    }
+
+    .gig-time {
+      grid-column: 2;
+      justify-self: start;
     }
   }
 </style>
-
-<script>
-  import { initCarousel } from './utils/carousel.js';
-  
-  document.addEventListener('DOMContentLoaded', initCarousel);
-</script>

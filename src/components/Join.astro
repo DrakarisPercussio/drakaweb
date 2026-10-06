@@ -1,0 +1,90 @@
+---
+import { Image } from 'astro:assets';
+import rakata from '../assets/brand/rakata.webp';
+import Icon from './Icon.astro';
+import { sections, site } from '../data/site';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="section join" id={sections.join} data-tone="bone">
+  <div class="container join-grid">
+    <div class="join-art" data-reveal>
+      <div data-parallax="0.1">
+        <Image
+          src={rakata}
+          alt={t.join.alt}
+          widths={[360, 560, 787]}
+          sizes="(min-width: 62rem) 30rem, 70vw"
+          loading="lazy"
+        />
+      </div>
+    </div>
+
+    <div class="join-copy">
+      <p class="label" data-reveal>{t.join.label}</p>
+      <h2 class="display section-title" data-reveal style="--i:1">{t.join.title}</h2>
+      <p class="lead join-text" data-reveal style="--i:2">{t.join.text}</p>
+      <p class="join-cta" data-reveal style="--i:3">
+        <a
+          class="btn btn--ink"
+          href={site.instagram.dm}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${t.join.cta} (${t.a11y.newTab})`}
+        >
+          <Icon name="instagram" />
+          {t.join.cta}
+        </a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .join {
+    overflow: clip;
+  }
+
+  .join-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: center;
+    gap: clamp(2rem, 7vw, 7rem);
+  }
+
+  /* Ancho explícito: reserva el hueco antes de que cargue la imagen */
+  .join-art {
+    width: min(100%, 30rem);
+    justify-self: center;
+    rotate: -3deg;
+  }
+
+  .join-art img {
+    width: 100%;
+  }
+
+  .join-text {
+    margin-top: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .join-cta {
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 62rem) {
+    .join-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .join-art {
+      width: min(22rem, 78%);
+    }
+  }
+</style>

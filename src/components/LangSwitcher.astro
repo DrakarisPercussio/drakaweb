@@ -1,0 +1,116 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { languages, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  label: string;
+  /** Solo un selector por página puede animarse entre idiomas (el de la cabecera). */
+  animated?: boolean;
+}
+
+const { lang, label, animated = false } = Astro.props;
+const codes = Object.keys(languages) as Lang[];
+const active = codes.indexOf(lang);
+---
+
+<nav class="lang" aria-label={label} data-lang-switch data-animated={animated ? '' : undefined}>
+  <span class="lang-pill" aria-hidden="true" style={`--active:${active}`}></span>
+  <ul class="lang-list">
+    {
+      codes.map((code, index) => (
+        <li>
+          <a
+            href={getRelativeLocaleUrl(code)}
+            hreflang={languages[code].htmlLang}
+            lang={languages[code].htmlLang}
+            aria-current={code === lang ? 'true' : undefined}
+            title={languages[code].name}
+            data-lang-link
+            data-index={index}
+          >
+            <span aria-hidden="true">{languages[code].code}</span>
+            <span class="sr-only">{languages[code].name}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .lang {
+    --seg-w: 2.25rem;
+    --seg-h: 1.875rem;
+    position: relative;
+    display: inline-block;
+    padding: 3px;
+    border-radius: 999px;
+    background: rgb(232 232 226 / 0.06);
+    box-shadow: inset 0 0 0 1px rgb(232 232 226 / 0.13);
+  }
+
+  .lang-list {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, var(--seg-w));
+  }
+
+  .lang a {
+    display: grid;
+    place-items: center;
+    height: var(--seg-h);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #9ca59d;
+    transition: color 150ms ease;
+  }
+
+  .lang a[aria-current] {
+    color: var(--ink);
+  }
+
+  .lang-pill {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: var(--seg-w);
+    height: var(--seg-h);
+    border-radius: 999px;
+    background: var(--green);
+    transform: translateX(calc(var(--active) * 100%));
+    transition: transform 280ms var(--ease-out);
+  }
+
+  /* Capas propias para la transición entre páginas: la píldora se desliza
+     y las siglas funden por encima de ella. */
+  .lang[data-animated] .lang-pill {
+    view-transition-name: lang-pill;
+  }
+
+  .lang[data-animated] .lang-list {
+    view-transition-name: lang-labels;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .lang a:not([aria-current]):hover {
+      color: var(--bone);
+    }
+  }
+
+  /* Dedos: objetivos táctiles más grandes */
+  @media (pointer: coarse) {
+    .lang {
+      --seg-w: 2.5rem;
+      --seg-h: 2.25rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lang-pill {
+      transition: none;
+    }
+  }
+</style>

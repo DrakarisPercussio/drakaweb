@@ -1,0 +1,320 @@
+---
+import { Image } from 'astro:assets';
+import drum from '../assets/brand/drum-claw.webp';
+import Icon from './Icon.astro';
+import { sections } from '../data/site';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// «rakatà» se escribe igual en los tres idiomas y es la palabra que se destaca
+const KEYWORD = 'rakatà';
+const titleLines = t.hero.title.map((line) => {
+  const at = line.indexOf(KEYWORD);
+  return at === -1
+    ? { before: line, keyword: '', after: '' }
+    : { before: line.slice(0, at), keyword: KEYWORD, after: line.slice(at + KEYWORD.length) };
+});
+---
+
+<section class="hero" id="inici" data-tone="ink">
+  <div class="hero-bg" aria-hidden="true"></div>
+
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="label hero-eyebrow" data-intro style="--d:0">{t.hero.eyebrow}</p>
+
+      <h1 class="hero-title display">
+        {
+          titleLines.map((line, i) => (
+            <span class="line">
+              <span class="line-inner" style={`--i:${i}`}>
+                {line.before}
+                {line.keyword && <span class="accent">{line.keyword}</span>}
+                {line.after}
+              </span>{' '}
+            </span>
+          ))
+        }
+      </h1>
+
+      <p class="hero-lead" data-intro style="--d:420">{t.hero.lead}</p>
+
+      <div class="hero-actions" data-intro style="--d:500">
+        <a class="btn btn--primary" href={`#${sections.contact}`}>
+          {t.hero.primary}
+          <Icon name="arrow" />
+        </a>
+        <a class="btn btn--ghost" href={`#${sections.join}`}>{t.hero.secondary}</a>
+      </div>
+    </div>
+
+    <div class="hero-art">
+      <div class="hero-art-inner" data-parallax="0.08">
+        <button class="drum" type="button" data-drum aria-label={t.hero.drum}>
+          <Image
+            src={drum}
+            alt={t.hero.drumAlt}
+            widths={[480, 800, 1200, 1600]}
+            sizes="(min-width: 62rem) 44vw, 92vw"
+            loading="eager"
+            fetchpriority="high"
+            draggable="false"
+          />
+        </button>
+        <p class="drum-hint" aria-hidden="true" data-drum-hint>
+          <span class="drum-hint-dot"></span>
+          {t.hero.drum}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    align-items: center;
+    min-height: 100svh;
+    padding-top: calc(var(--header-h) + clamp(1.5rem, 4vw, 3rem));
+    padding-bottom: clamp(5rem, 10vw, 8rem);
+    overflow: clip;
+  }
+
+  /* Escamas de la lona + resplandor verde detrás del tambor */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(46% 52% at 76% 48%, rgb(34 164 114 / 0.2), transparent 72%),
+      var(--scales);
+    -webkit-mask-image: radial-gradient(110% 85% at 72% 42%, #000 15%, transparent 82%);
+    mask-image: radial-gradient(110% 85% at 72% 42%, #000 15%, transparent 82%);
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    align-items: center;
+    gap: clamp(2rem, 4vw, 4rem);
+  }
+
+  .hero-title {
+    margin-top: 1.5rem;
+    font-size: clamp(4.5rem, 8.6vw, 10rem);
+    line-height: 0.92;
+  }
+
+  /* Cada línea sube desde detrás de su propia máscara */
+  .line {
+    display: block;
+    overflow: clip;
+    padding-top: 0.14em;
+    margin-top: -0.14em;
+  }
+
+  .line-inner {
+    display: block;
+    animation: line-up 1000ms var(--ease-out) both;
+    animation-delay: calc(100ms + var(--i) * 90ms);
+  }
+
+  .accent {
+    color: var(--green);
+  }
+
+  .hero-lead {
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+    max-width: 30rem;
+    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+    color: var(--fg-muted);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  [data-intro] {
+    animation: fade-up 800ms var(--ease-out) both;
+    animation-delay: calc(var(--d) * 1ms);
+  }
+
+  .hero-art {
+    position: relative;
+    animation: art-in 1200ms var(--ease-out) 200ms both;
+  }
+
+  .hero-art-inner {
+    position: relative;
+    will-change: transform;
+  }
+
+  /* El tambor es un botón: se puede tocar */
+  .drum {
+    position: relative;
+    display: block;
+    width: 100%;
+    border-radius: 2rem;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    transition: transform 160ms var(--ease-out);
+  }
+
+  .drum:active {
+    transform: scale(0.97);
+  }
+
+  .drum img {
+    position: relative;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  /* Ondas del golpe: las crea el script en cada toque */
+  .drum :global(.drum-ring) {
+    position: absolute;
+    left: 66%;
+    top: 52%;
+    width: 58%;
+    aspect-ratio: 1;
+    margin: -29% 0 0 -29%;
+    border: 2px solid var(--green);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .drum-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+    margin-left: 46%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    transition: opacity 400ms ease;
+  }
+
+  .drum-hint[data-done] {
+    opacity: 0;
+  }
+
+  .drum-hint-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--green);
+    animation: beat 2400ms var(--ease-out) infinite;
+  }
+
+  @keyframes line-up {
+    from {
+      transform: translateY(112%);
+    }
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  @keyframes art-in {
+    from {
+      opacity: 0;
+      transform: scale(0.94) rotate(-3deg);
+    }
+  }
+
+  /* Dos golpes seguidos y silencio, como un surdo */
+  @keyframes beat {
+    0%,
+    24%,
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgb(34 164 114 / 0);
+    }
+    6% {
+      transform: scale(1.5);
+      box-shadow: 0 0 0 6px rgb(34 164 114 / 0.18);
+    }
+    12% {
+      transform: scale(1);
+    }
+    18% {
+      transform: scale(1.5);
+      box-shadow: 0 0 0 6px rgb(34 164 114 / 0.18);
+    }
+  }
+
+  /* Al cambiar de idioma no se repite la entrada: ya estabas aquí */
+  :global(.is-lang-switch) .line-inner,
+  :global(.is-lang-switch) [data-intro],
+  :global(.is-lang-switch) .hero-art {
+    animation: none;
+  }
+
+  @media (max-width: 62rem) {
+    .hero {
+      align-items: start;
+      padding-bottom: clamp(4rem, 12vw, 6rem);
+    }
+
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    /* Sin mínimo fijo: a 17vw la línea más larga de los tres idiomas
+       («YOU'RE AFTER») cabe entera hasta en pantallas de 320px */
+    .hero-title {
+      font-size: min(17vw, 9rem);
+    }
+
+    .hero-art {
+      width: min(100%, 34rem);
+      justify-self: center;
+    }
+
+    .hero-bg {
+      background:
+        radial-gradient(70% 34% at 60% 78%, rgb(34 164 114 / 0.2), transparent 72%),
+        var(--scales);
+      -webkit-mask-image: radial-gradient(130% 70% at 50% 70%, #000 15%, transparent 85%);
+      mask-image: radial-gradient(130% 70% at 50% 70%, #000 15%, transparent 85%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .line-inner,
+    [data-intro],
+    .hero-art {
+      animation: fade 400ms ease both;
+    }
+
+    .drum-hint-dot {
+      animation: none;
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+      }
+    }
+  }
+</style>

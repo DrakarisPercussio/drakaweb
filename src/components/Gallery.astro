@@ -1,204 +1,170 @@
 ---
-// Different images for each row - using proper Astro image imports
-const topRowImages = [
-  '/src/assets/LOGOS/logoblancinegredrakaris.png',
-  '/src/assets/LOGOS/dks.png', 
-  '/src/assets/gallery/foto-3.jpg',
-  '/src/assets/gallery/foto-4.jpg',
-  '/src/assets/gallery/foto-5.jpg',
-  '/src/assets/gallery/foto-6.jpg'
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import lona from '../assets/brand/lona.jpg';
+import ring from '../assets/brand/dragon-ring.webp';
+import poster from '../assets/brand/poster.webp';
+import dragon10 from '../assets/brand/dragon-10.webp';
+import dksClaw from '../assets/brand/dks-claw.webp';
+import Icon from './Icon.astro';
+import { sections, site } from '../data/site';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+interface Tile {
+  src: ImageMetadata;
+  fit: 'cover' | 'contain';
+  bg?: string;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Cualquier foto que se deje en src/assets/gallery aparece aquí sola,
+// ordenada por nombre de archivo.
+const photoFiles = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/gallery/*.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG,WEBP}',
+  { eager: true },
+);
+const photos: Tile[] = Object.keys(photoFiles)
+  .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+  .map((path) => ({ src: photoFiles[path].default, fit: 'cover' }));
+
+// Mientras no haya fotos, la galería enseña las ilustraciones de la colla.
+const artwork: Tile[] = [
+  { src: lona, fit: 'cover' },
+  { src: ring, fit: 'contain', bg: '#131813' },
+  { src: poster, fit: 'contain', bg: '#0c100c' },
+  { src: dragon10, fit: 'contain', bg: '#6f7578' },
+  { src: dksClaw, fit: 'contain', bg: '#000' },
 ];
 
-const bottomRowImages = [
-  '/src/assets/gallery/foto-7.jpg',
-  '/src/assets/gallery/foto-8.jpg',
-  '/src/assets/gallery/foto-9.jpg', 
-  '/src/assets/gallery/foto-10.jpg',
-  '/src/assets/gallery/foto-11.jpg',
-  '/src/assets/gallery/foto-12.jpg'
-];
+const tiles = photos.length > 0 ? photos : artwork;
 ---
 
-<section class="gallery-section">
-  <!-- Gallery title -->
-  <div class="gallery-header">
-    <h2>GALERÍA</h2>
-  </div>
-  
-  <!-- Photo gallery -->
-  <div class="photo-gallery">
-    <!-- First row - moves left -->
-    <div class="photo-row photo-row-left">
-      <div class="photo-track">
-        {[...topRowImages, ...topRowImages, ...topRowImages].map((image, index) => (
-          <div class="photo-item">
-            <img src={image} alt={`Foto ${index + 1}`} />
-            <div class="photo-placeholder">FOTOS</div>
-          </div>
-        ))}
+<section class="section gallery" id={sections.gallery} data-tone="ink">
+  <div class="container">
+    <header class="gallery-head">
+      <div>
+        <p class="label" data-reveal>{t.gallery.label}</p>
+        <h2 class="display section-title" data-reveal style="--i:1">{t.gallery.title}</h2>
       </div>
-    </div>
-    
-    <!-- Second row - moves right -->
-    <div class="photo-row photo-row-right">
-      <div class="photo-track">
-        {[...bottomRowImages, ...bottomRowImages, ...bottomRowImages].map((image, index) => (
-          <div class="photo-item">
-            <img src={image} alt={`Foto ${index + 1}`} />
-            <div class="photo-placeholder">FOTOS</div>
-          </div>
-        ))}
-      </div>
-    </div>
+      <p data-reveal style="--i:2">
+        <a
+          class="link-arrow"
+          href={site.instagram.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${t.gallery.cta} (${t.a11y.newTab})`}
+        >
+          {t.gallery.cta}
+          <Icon name="external" size={16} />
+        </a>
+      </p>
+    </header>
+
+    <ul class="grid">
+      {
+        tiles.map((tile, i) => (
+          <li class="cell" data-reveal="clip" style={`--i:${i % 3}`}>
+            <div class="tile" style={tile.bg ? `--tile-bg:${tile.bg}` : undefined}>
+              <Image
+                src={tile.src}
+                alt={`${t.gallery.alt} ${i + 1}`}
+                widths={[480, 800, 1200]}
+                sizes="(min-width: 62rem) 46vw, (min-width: 40rem) 50vw, 92vw"
+                loading="lazy"
+                class:list={[tile.fit]}
+              />
+            </div>
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </section>
 
 <style>
-  .gallery-section {
-    position: relative;
-    background-color: var(--white-background);
-    padding: clamp(60px, 10vw, 80px) 0;
-    overflow: hidden;
+  .gallery-head {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 80vh;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.5rem 2rem;
   }
 
-  .gallery-section::before {
-    content: '';
-    position: absolute;
-    top: clamp(-80px, -15vw, -120px);
-    left: 0;
-    width: 100%;
-    height: clamp(80px, 15vw, 120px);
-    background: var(--background-color);
-    transform: skewY(2deg);
-    transform-origin: top left;
-    z-index: 1;
+  /* Rejilla de 12 columnas con un ritmo que se repite cada cinco fotos:
+     una grande y una mediana, luego tres iguales. */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-auto-rows: clamp(13rem, 27vw, 24rem);
+    gap: clamp(0.5rem, 1.2vw, 1rem);
+    margin-top: clamp(2.5rem, 6vw, 4.5rem);
   }
 
-  .gallery-section::after {
-    content: '';
-    position: absolute;
-    bottom: clamp(-80px, -15vw, -120px);
-    left: 0;
-    width: 100%;
-    height: clamp(80px, 15vw, 120px);
-    background: var(--background-color);
-    transform: skewY(-2deg);
-    transform-origin: bottom left;
-    z-index: 1;
+  .cell {
+    grid-column: span 4;
   }
-  
-  .gallery-header {
-    text-align: center;
-    padding: clamp(2rem, 6vw, 4rem) 0 clamp(1rem, 3vw, 2rem) 0;
-    position: relative;
-    z-index: 2;
+
+  .cell:nth-child(5n + 1) {
+    grid-column: span 7;
   }
-  
-  .gallery-header h2 {
-    font-size: clamp(2rem, 5vw, 2.5rem);
-    font-weight: bold;
-    color: var(--title-color);
-    letter-spacing: 2px;
-    margin: 0;
+
+  .cell:nth-child(5n + 2) {
+    grid-column: span 5;
   }
-  
-  .photo-gallery {
-    padding: clamp(1rem, 3vw, 2rem) 0;
-    position: relative;
-    z-index: 2;
-    width: 100%;
-  }
-  
-  .photo-row {
+
+  .tile {
+    height: 100%;
     overflow: hidden;
-    white-space: nowrap;
-    margin-bottom: clamp(1rem, 3vw, 2rem);
+    border-radius: var(--radius);
+    background: var(--tile-bg, var(--ink-2));
   }
-  
-  .photo-track {
-    display: inline-flex;
-    animation-duration: clamp(40s, 60s, 80s);
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    will-change: transform;
-  }
-  
-  .photo-row-left .photo-track {
-    animation-name: scrollLeftSmooth;
-  }
-  
-  .photo-row-right .photo-track {
-    animation-name: scrollRightSmooth;
-  }
-  
-  .photo-item {
-    position: relative;
-    width: clamp(200px, 25vw, 300px);
-    height: clamp(133px, 17vw, 200px);
-    margin-right: clamp(10px, 2.5vw, 20px);
-    flex-shrink: 0;
-    overflow: hidden;
-    background: #a08a8a;
-    border-radius: 8px;
-  }
-  
-  .photo-item img {
+
+  .tile img {
     width: 100%;
     height: 100%;
+    transition: transform 600ms var(--ease-out);
+  }
+
+  .tile .cover {
     object-fit: cover;
-    display: block;
   }
-  
-  .photo-placeholder {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: clamp(1rem, 2.5vw, 1.5rem);
-    font-weight: bold;
-    color: #333;
-    text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
-    pointer-events: none;
+
+  .tile .contain {
+    object-fit: contain;
+    padding: clamp(1rem, 2.5vw, 2rem);
   }
-  
-  @keyframes scrollLeftSmooth {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(calc(-100% / 3));
+
+  @media (hover: hover) and (pointer: fine) {
+    .tile:hover img {
+      transform: scale(1.04);
     }
   }
-  
-  @keyframes scrollRightSmooth {
-    from {
-      transform: translateX(calc(-100% / 3));
+
+  @media (max-width: 40rem) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-rows: clamp(9rem, 44vw, 15rem);
     }
-    to {
-      transform: translateX(0);
+
+    .cell,
+    .cell:nth-child(5n + 2) {
+      grid-column: span 1;
     }
-  }
-  
-  @media (max-width: 768px) {
-    .photo-track {
-      animation-duration: 45s;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .photo-track {
-      animation-duration: 35s;
+
+    .cell:nth-child(5n + 1) {
+      grid-column: span 2;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .photo-track {
-      animation: none;
+    .tile img {
+      transition: none;
     }
   }
 </style>

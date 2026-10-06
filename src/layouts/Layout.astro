@@ -1,33 +1,102 @@
 ---
-import Header from '../pages/Header.astro';
-import Footer from '../pages/Footer.astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import '@fontsource/anton/latin-400.css';
+import '@fontsource-variable/plus-jakarta-sans/wght.css';
+import antonWoff2 from '@fontsource/anton/files/anton-latin-400-normal.woff2?url';
 import '../styles/global.css';
----
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="../src/assets/LOGOS/logoblancinegredrakaris.png" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Drakaris Percussió</title>
-	</head>
-	<body>
-		<div class="layout-wrapper">
-			<Header />
-			<main class="layout-main">
-				<slot />
-			</main>
-			<Footer />
-		</div>
-	</body>
-</html>
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+import { defaultLang, languages, useTranslations, type Lang } from '../i18n/ui';
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const codes = Object.keys(languages) as Lang[];
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const absolute = (path: string) => new URL(path, Astro.site).href;
+const canonical = absolute(getRelativeLocaleUrl(lang));
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'MusicGroup',
+  name: 'Drakaris Percussió',
+  url: absolute(getRelativeLocaleUrl(defaultLang)),
+  logo: absolute(`${base}/icon-512.png`),
+  foundingDate: String(site.founded),
+  foundingLocation: { '@type': 'Place', name: `${site.city}, Barcelona` },
+  genre: 'Percussion',
+  sameAs: [site.instagram.url],
+};
+---
+
+<!doctype html>
+<html lang={languages[lang].htmlLang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0c100c" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{t.meta.title}</title>
+    <meta name="description" content={t.meta.description} />
+    <link rel="canonical" href={canonical} />
+    {codes.map((code) => <link rel="alternate" hreflang={languages[code].htmlLang} href={absolute(getRelativeLocaleUrl(code))} />)}
+    <link rel="alternate" hreflang="x-default" href={absolute(getRelativeLocaleUrl(defaultLang))} />
+
+    <link rel="icon" type="image/png" href={`${base}/favicon.png`} />
+    <link rel="apple-touch-icon" href={`${base}/apple-touch-icon.png`} />
+    <link rel="preload" as="font" type="font/woff2" href={antonWoff2} crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Drakaris" />
+    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={absolute(`${base}/og.jpg`)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={languages[lang].ogLocale} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+    <!-- Antes de pintar: si venimos de cambiar de idioma, no se repiten las animaciones de entrada -->
+    <script is:inline>
+      try {
+        if (sessionStorage.getItem('dk:lang-switch')) document.documentElement.classList.add('is-lang-switch');
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#contingut">{t.a11y.skip}</a>
+    <Header lang={lang} />
+    <main id="contingut">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+
+    <!-- Antes de pintar: recupera el punto de la página en el que estabas al cambiar de idioma -->
+    <script is:inline>
+      (function () {
+        try {
+          var raw = sessionStorage.getItem('dk:lang-switch');
+          if (!raw) return;
+          sessionStorage.removeItem('dk:lang-switch');
+          var memory = JSON.parse(raw);
+          var section = memory.id && document.getElementById(memory.id);
+          if (!section) return;
+          var top = section.getBoundingClientRect().top + window.scrollY + memory.ratio * section.offsetHeight;
+          window.scrollTo({ top: top, behavior: 'instant' });
+        } catch (e) {}
+      })();
+    </script>
+    <script>
+      import '../scripts/site.ts';
+    </script>
+  </body>
+</html>
