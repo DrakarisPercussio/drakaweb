@@ -31,20 +31,20 @@ const t = useTranslations(lang);
               href={site.instagram.dm}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`${t.shop.products[product.id]}, ${product.price}. ${t.shop.order} (${t.a11y.newTab})`}
+              aria-label={`${[t.shop.products[product.id], product.price].filter(Boolean).join(', ')}. ${t.shop.order} (${t.a11y.newTab})`}
             >
               <span class="product-tile" style={`--tile-bg:${product.tile}`}>
                 <Image
                   src={product.image}
                   alt=""
                   widths={[320, 480, 720]}
-                  sizes="(min-width: 62rem) 22vw, 46vw"
+                  sizes="(min-width: 62rem) 30vw, 46vw"
                   loading="lazy"
                 />
               </span>
               <span class="product-info">
                 <span class="product-name">{t.shop.products[product.id]}</span>
-                <span class="product-price">{product.price}</span>
+                {product.price && <span class="product-price">{product.price}</span>}
               </span>
               <span class="product-order">
                 {t.shop.orderShort}
@@ -68,7 +68,7 @@ const t = useTranslations(lang);
 
   .products {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: clamp(1.5rem, 3vw, 2rem) clamp(0.75rem, 1.6vw, 1.25rem);
     margin-top: clamp(2.5rem, 6vw, 4.5rem);
   }
@@ -85,8 +85,8 @@ const t = useTranslations(lang);
   .product-tile {
     display: grid;
     place-items: center;
-    aspect-ratio: 4 / 5;
-    padding: 14%;
+    aspect-ratio: 1;
+    padding: 12%;
     border-radius: var(--radius);
     background: var(--tile-bg);
     overflow: hidden;

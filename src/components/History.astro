@@ -1,0 +1,293 @@
+---
+import { Image } from 'astro:assets';
+import { photo } from '../data/photos';
+import { milestones, sections, site } from '../data/site';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const age = new Date().getFullYear() - site.founded;
+const title = t.history.title.replace('{years}', String(age));
+const firstYear = String(milestones[0].year);
+const digits = Array.from({ length: 10 }, (_, n) => n);
+---
+
+<section class="section history" id={sections.history} data-tone="ink">
+  <div class="container">
+    <header class="history-head">
+      <div>
+        <p class="label" data-reveal>{t.history.label}</p>
+        <h2 class="display section-title" data-reveal style="--i:1">{title}</h2>
+      </div>
+      <p class="lead" data-reveal style="--i:2">{t.history.lead}</p>
+    </header>
+
+    <div class="history-body">
+      <!-- Año gigante que se queda fijo y va rodando, dígito a dígito, según el hito que se lee.
+           Es decorativo: cada hito lleva su propio año escrito. -->
+      <div class="history-year" aria-hidden="true">
+        <div class="odometer display">
+          {
+            firstYear.split('').map((digit, i) => (
+              <span class="odo-col">
+                <span class="odo-strip" data-odo-strip style={`transform:translateY(-${Number(digit) * 10}%);--c:${3 - i}`}>
+                  {digits.map((n) => (
+                    <span>{n}</span>
+                  ))}
+                </span>
+              </span>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="milestones" data-timeline>
+        <div class="rail" aria-hidden="true"><span class="rail-fill" data-rail-fill></span></div>
+        <ol class="milestone-list">
+          {
+            milestones.map((milestone, i) => {
+              const copy = t.history.milestones[i];
+              const image = milestone.photo ? photo(milestone.photo) : undefined;
+              return (
+                <li class="milestone" data-milestone data-year={milestone.year}>
+                  <span class="milestone-dot" aria-hidden="true" />
+                  <div data-reveal>
+                    <p class="milestone-year">{milestone.year}</p>
+                    <h3 class="milestone-title display">{copy.title}</h3>
+                    <p class="milestone-text">{copy.text}</p>
+                    {copy.badges.length > 0 && (
+                      <ul class="badges">
+                        {copy.badges.map((badge) => (
+                          <li>{badge}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                  {image && (
+                    <figure class="milestone-photo" data-reveal="clip">
+                      <div class="milestone-frame">
+                        <Image
+                          src={image}
+                          alt={copy.photoAlt}
+                          width={1200}
+                          widths={[480, 800, 1200]}
+                          sizes="(min-width: 62rem) 40vw, 86vw"
+                          loading="lazy"
+                        />
+                      </div>
+                    </figure>
+                  )}
+                </li>
+              );
+            })
+          }
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .history-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr);
+    align-items: end;
+    gap: 1.5rem clamp(2rem, 6vw, 6rem);
+  }
+
+  .history-body {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    align-items: start;
+    gap: clamp(2rem, 6vw, 6rem);
+    margin-top: clamp(3rem, 7vw, 5.5rem);
+  }
+
+  .history-year {
+    position: sticky;
+    top: calc(var(--header-h) + 16vh);
+  }
+
+  .odometer {
+    display: flex;
+    font-size: clamp(7rem, 17.5vw, 17.5rem);
+    line-height: 1;
+    color: var(--green);
+  }
+
+  /* Cada columna enseña un dígito; la tira con los diez se desplaza por dentro */
+  .odo-col {
+    width: 0.49em;
+    height: 1em;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .odo-strip {
+    display: flex;
+    flex-direction: column;
+    transition: transform 800ms var(--ease-out);
+    /* Las unidades ruedan primero, luego decenas… como un cuentakilómetros */
+    transition-delay: calc(var(--c) * 60ms);
+  }
+
+  .odo-strip span {
+    height: 1em;
+  }
+
+  .milestones {
+    position: relative;
+    padding-left: 2.5rem;
+  }
+
+  .rail {
+    position: absolute;
+    top: 0.4rem;
+    bottom: 0;
+    left: 5px;
+    width: 2px;
+    background: var(--rule);
+  }
+
+  /* La línea se va pintando con el scroll (lo mueve el script) */
+  .rail-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
+  .milestone {
+    position: relative;
+    padding-bottom: clamp(3rem, 7vw, 5.5rem);
+  }
+
+  .milestone:last-child {
+    padding-bottom: 0;
+  }
+
+  .milestone-dot {
+    position: absolute;
+    top: 0.2rem;
+    left: -2.5rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: inset 0 0 0 2px var(--fg-muted);
+    transition:
+      background-color 300ms ease,
+      box-shadow 300ms ease,
+      transform 400ms var(--ease-out);
+  }
+
+  .milestone[data-passed] .milestone-dot {
+    background: var(--accent);
+    box-shadow:
+      inset 0 0 0 2px var(--accent),
+      0 0 0 5px rgb(34 164 114 / 0.2);
+    transform: scale(1.15);
+  }
+
+  .milestone-year {
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .milestone-title {
+    margin-top: 0.5rem;
+    font-size: clamp(1.875rem, 3.4vw, 3rem);
+  }
+
+  .milestone-text {
+    margin-top: 0.75rem;
+    max-width: 33rem;
+    color: var(--fg-muted);
+  }
+
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.1rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .badges li {
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: var(--green);
+    color: var(--ink);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .milestone-photo {
+    margin-top: 1.5rem;
+    max-width: 36rem;
+  }
+
+  .milestone-frame {
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .milestone-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 35%;
+  }
+
+  @media (max-width: 62rem) {
+    .history-head,
+    .history-body {
+      grid-template-columns: 1fr;
+    }
+
+    /* En móvil no hay año fijo: el de cada hito pasa a ser el grande */
+    .history-year {
+      display: none;
+    }
+
+    .milestone-year {
+      font-family: var(--font-display);
+      font-size: clamp(3.25rem, 15vw, 5rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0.01em;
+      color: var(--accent);
+    }
+
+    .milestone-dot {
+      top: 1rem;
+    }
+
+    .milestone-title {
+      margin-top: 0.25rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .odo-strip {
+      transition: none;
+    }
+
+    .milestone-dot {
+      transition: none;
+    }
+  }
+</style>

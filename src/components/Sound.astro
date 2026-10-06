@@ -1,7 +1,8 @@
 ---
 import { Image } from 'astro:assets';
 import instruments from '../assets/brand/instruments.webp';
-import { sections } from '../data/site';
+import Icon from './Icon.astro';
+import { sections, videoCredit, videos } from '../data/site';
 import { useTranslations, type Lang } from '../i18n/ui';
 
 interface Props {
@@ -10,6 +11,20 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+
+// Miniaturas servidas por YouTube, de menos a más peso: el navegador elige
+// la que necesita (37 KB, 88 KB o 255 KB) según el tamaño de la pantalla.
+// En `sizes` se declara a propósito un ancho algo menor que el real para que
+// móviles y pantallas normales se queden con la de 88 KB; la grande solo
+// llega a pantallas de alta densidad en escritorio.
+const thumbnail = (id: string) => ({
+  src: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+  srcset: [
+    `https://i.ytimg.com/vi/${id}/hqdefault.jpg 480w`,
+    `https://i.ytimg.com/vi_webp/${id}/sddefault.webp 640w`,
+    `https://i.ytimg.com/vi_webp/${id}/maxresdefault.webp 1280w`,
+  ].join(', '),
+});
 ---
 
 <section class="section sound" id={sections.sound} data-tone="bone">
@@ -43,6 +58,62 @@ const t = useTranslations(lang);
         ))
       }
     </ol>
+
+    <!-- Después de los instrumentos, cómo suenan todos juntos: dos vídeos del concurso -->
+    <div class="live">
+      <p class="label" data-reveal>{t.sound.live.label}</p>
+      <h3 class="display live-title" data-reveal style="--i:1">{t.sound.live.title}</h3>
+
+      <ul class="videos">
+        {
+          videos.map((video, i) => {
+            const round = t.sound.live.rounds[video.round];
+            const title = `${round} · ${t.sound.live.event} ${video.year}`;
+            const image = thumbnail(video.id);
+            return (
+              <li data-reveal style={`--i:${i}`}>
+                <figure class="video">
+                  <div class="video-frame" data-video-frame>
+                    <a
+                      class="video-link"
+                      href={`https://www.youtube.com/watch?v=${video.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${t.sound.live.play}: ${title}`}
+                      data-video={video.id}
+                      data-title={title}
+                    >
+                      <img
+                        src={image.src}
+                        srcset={image.srcset}
+                        sizes="(min-width: 62rem) 40vw, 50vw"
+                        alt=""
+                        width="1280"
+                        height="720"
+                        loading="lazy"
+                        decoding="async"
+                        referrerpolicy="no-referrer"
+                      />
+                      <span class="video-play" aria-hidden="true">
+                        <Icon name="play" size={26} />
+                      </span>
+                    </a>
+                  </div>
+                  <figcaption>
+                    <span class="video-round">{round}</span>
+                    <span class="video-event">
+                      {t.sound.live.event} · {video.year}
+                    </span>
+                  </figcaption>
+                </figure>
+              </li>
+            );
+          })
+        }
+      </ul>
+
+      <p class="live-credit" data-reveal>{t.sound.live.credit.replace('{author}', videoCredit)}</p>
+    </div>
   </div>
 </section>
 
@@ -96,6 +167,167 @@ const t = useTranslations(lang);
     color: var(--fg-muted);
   }
 
+  /* Los vídeos cierran la sección */
+  .live {
+    margin-top: clamp(2.5rem, 6vw, 4.5rem);
+    padding-top: clamp(2.5rem, 6vw, 4.5rem);
+    border-top: 1px solid var(--rule);
+  }
+
+  .live-title {
+    margin-top: 1rem;
+    font-size: clamp(2rem, 4.4vw, 3.75rem);
+  }
+
+  .videos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.5rem, 2.5vw, 2rem) clamp(0.75rem, 1.6vw, 1.25rem);
+    margin-top: clamp(1.75rem, 4vw, 3rem);
+  }
+
+  .video-frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--ink);
+  }
+
+  .video-link {
+    position: absolute;
+    inset: 0;
+    display: block;
+    transition:
+      opacity 200ms ease,
+      visibility 0s;
+  }
+
+  /* Las miniaturas vienen del canal que grabó el concurso, con sus propios
+     colores. En reposo se muestran en blanco y negro para que convivan con el
+     verde y negro de la web y el botón destaque; el color vuelve al acercarse. */
+  .video-link img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.08) brightness(0.7);
+    transition:
+      transform 600ms var(--ease-out),
+      filter 300ms ease;
+  }
+
+  .video-play {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    place-items: center;
+    width: clamp(3.75rem, 6vw, 4.75rem);
+    aspect-ratio: 1;
+    margin: calc(clamp(3.75rem, 6vw, 4.75rem) / -2) 0 0 calc(clamp(3.75rem, 6vw, 4.75rem) / -2);
+    border-radius: 50%;
+    background: var(--green);
+    color: var(--ink);
+    box-shadow: 0 10px 30px -8px rgb(0 0 0 / 0.6);
+    transition:
+      transform 160ms var(--ease-out),
+      background-color 150ms ease;
+  }
+
+  /* El triángulo pesa más por la izquierda: se corrige a ojo para que se vea centrado */
+  .video-play :global(.icon) {
+    translate: 2px 0;
+    transition: opacity 120ms ease;
+  }
+
+  .video-link:active .video-play {
+    transform: scale(0.94);
+  }
+
+  /* Cargando: el triángulo deja paso a un aro que gira deprisa */
+  .video-play::after {
+    content: '';
+    position: absolute;
+    inset: 30%;
+    border: 3px solid rgb(12 16 12 / 0.25);
+    border-top-color: var(--ink);
+    border-radius: 50%;
+    opacity: 0;
+  }
+
+  .video-frame[data-state='loading'] .video-play :global(.icon) {
+    opacity: 0;
+  }
+
+  .video-frame[data-state='loading'] .video-play::after {
+    opacity: 1;
+    animation: video-spin 600ms linear infinite;
+  }
+
+  /* El reproductor aparece encima de la miniatura cuando ya está listo */
+  .video-frame :global(iframe) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    opacity: 0;
+    transition: opacity 250ms ease;
+  }
+
+  .video-frame[data-state='playing'] :global(iframe) {
+    opacity: 1;
+  }
+
+  .video-frame[data-state='playing'] .video-link {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 200ms ease,
+      visibility 0s linear 200ms;
+  }
+
+  .video figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.15rem 0.75rem;
+    margin-top: 0.9rem;
+  }
+
+  .video-round {
+    font-weight: 700;
+  }
+
+  .video-event {
+    font-size: 0.9375rem;
+    color: var(--fg-muted);
+  }
+
+  .live-credit {
+    margin-top: 1.5rem;
+    font-size: 0.8125rem;
+    color: var(--fg-muted);
+  }
+
+  @keyframes video-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .video-link:hover img {
+      transform: scale(1.03);
+      filter: none;
+    }
+
+    .video-link:hover .video-play {
+      background: var(--green-bright);
+    }
+  }
+
   @media (max-width: 62rem) {
     .sound-head {
       grid-template-columns: 1fr;
@@ -106,9 +338,36 @@ const t = useTranslations(lang);
     }
   }
 
+  @media (max-width: 44rem) {
+    .videos {
+      grid-template-columns: 1fr;
+    }
+  }
+
   @media (max-width: 36rem) {
     .instruments {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .video-link img {
+      transition: filter 300ms ease;
+    }
+
+    .video-link:hover img {
+      transform: none;
+    }
+
+    /* Sin giro: el aro late para seguir indicando que está cargando */
+    .video-frame[data-state='loading'] .video-play::after {
+      animation: video-pulse 900ms ease-in-out infinite alternate;
+    }
+
+    @keyframes video-pulse {
+      from {
+        opacity: 0.35;
+      }
     }
   }
 </style>

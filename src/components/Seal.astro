@@ -1,0 +1,80 @@
+---
+// Sello "DKS · 08980": la garra en el centro y el código postal de Sant
+// Feliu girando alrededor. Es decorativo; el dato ya está escrito en la página.
+import { Image } from 'astro:assets';
+import dksClaw from '../assets/brand/dks-claw.webp';
+import { site } from '../data/site';
+
+interface Props {
+  /** Texto que acompaña al código postal, p. ej. "Denominació d'origen" */
+  label: string;
+}
+
+const { label } = Astro.props;
+const text = `${site.postcode} · ${site.city} · ${label} · `.toLocaleUpperCase('ca');
+---
+
+<div class="seal" aria-hidden="true">
+  <svg class="seal-ring" viewBox="0 0 200 200" data-seal-ring>
+    <defs>
+      <path id="seal-circle" d="M 100,100 m -83,0 a 83,83 0 1,1 166,0 a 83,83 0 1,1 -166,0"></path>
+    </defs>
+    <text>
+      <!-- textLength reparte las letras por toda la circunferencia (2π·83 ≈ 521) -->
+      <textPath href="#seal-circle" textLength="521" lengthAdjust="spacing">{text}</textPath>
+    </text>
+  </svg>
+  <Image src={dksClaw} alt="" width={300} height={290} loading="lazy" class="seal-mark" />
+</div>
+
+<style>
+  .seal {
+    position: relative;
+    width: clamp(7.5rem, 12vw, 10.5rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #000;
+    /* El anillo es un cuadrado que gira: sin recorte, sus esquinas asoman fuera del círculo */
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgb(232 232 226 / 0.22),
+      0 18px 40px -12px rgb(0 0 0 / 0.7);
+  }
+
+  .seal-ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    /* Giro constante: lineal. El script lo acelera un poco al hacer scroll. */
+    animation: seal-spin 26s linear infinite;
+  }
+
+  .seal-ring text {
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    font-weight: 800;
+    fill: var(--bone);
+  }
+
+  .seal-mark {
+    position: absolute;
+    inset: 19%;
+    width: 62%;
+    height: 62%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  @keyframes seal-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .seal-ring {
+      animation: none;
+    }
+  }
+</style>

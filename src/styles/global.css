@@ -103,6 +103,9 @@ a {
 
 button {
   font: inherit;
+  /* Los botones no heredan el espaciado del texto si no se les pide */
+  letter-spacing: inherit;
+  word-spacing: inherit;
   color: inherit;
   background: none;
   border: 0;

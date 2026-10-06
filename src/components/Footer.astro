@@ -16,6 +16,7 @@ const year = new Date().getFullYear();
 
 const links = [
   { id: sections.about, label: t.nav.about },
+  { id: sections.history, label: t.nav.history },
   { id: sections.events, label: t.nav.events },
   { id: sections.agenda, label: t.nav.agenda },
   { id: sections.gallery, label: t.nav.gallery },
@@ -77,7 +78,7 @@ const links = [
   <p class="footer-wordmark display" aria-hidden="true">Drakaris</p>
 
   <div class="container footer-bottom">
-    <p>© {year} Drakaris Percussió. {t.footer.rights}</p>
+    <p>© {year} Drakaris Percussió · {site.short} · {site.postcode}. {t.footer.rights}</p>
     <a class="footer-top-link" href="#inici">
       {t.a11y.backTop}
       <Icon name="up" size={16} />

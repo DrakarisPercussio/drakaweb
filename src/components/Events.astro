@@ -1,5 +1,8 @@
 ---
-import { sections } from '../data/site';
+import { Image } from 'astro:assets';
+import Seal from './Seal.astro';
+import { photo } from '../data/photos';
+import { events, sections, site } from '../data/site';
 import { useTranslations, type Lang } from '../i18n/ui';
 
 interface Props {
@@ -10,23 +13,83 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
 
-<section class="section events" id={sections.events} data-tone="ink">
+<section class="section events" id={sections.events} data-tone="bone">
   <div class="container">
     <p class="label" data-reveal>{t.events.label}</p>
     <h2 class="display section-title" data-reveal style="--i:1">{t.events.title}</h2>
 
     <ol class="event-list">
       {
-        t.events.items.map((event, i) => (
-          <li class="event" data-reveal>
-            <span class="event-n">{String(i + 1).padStart(2, '0')}</span>
-            <h3 class="event-name display">{event.name}</h3>
-            <div class="event-body">
-              <span class="event-tag">{event.tag}</span>
-              <p class="event-text">{event.text}</p>
-            </div>
-          </li>
-        ))
+        events.map((event, i) => {
+          const copy = t.events.items[i];
+          const image = 'photo' in event ? photo(event.photo) : undefined;
+          return (
+            <li class="event" data-flip={i % 2 === 1 ? '' : undefined}>
+              <div class="event-copy">
+                <p class="event-meta" data-reveal>
+                  <span class="event-n">{String(i + 1).padStart(2, '0')}</span>
+                  {copy.tags.map((tag) => (
+                    <span class="event-tag">{tag}</span>
+                  ))}
+                </p>
+                <h3 class="event-name display" data-reveal style="--i:1">
+                  {copy.name}
+                </h3>
+                <p class="event-text" data-reveal style="--i:2">
+                  {copy.text}
+                </p>
+                {copy.note && (
+                  <p class="event-note" data-reveal style="--i:3">
+                    {copy.note}
+                  </p>
+                )}
+              </div>
+
+              <div class="event-media">
+                {image && (
+                  <figure class="event-photo" data-reveal="clip">
+                    <div class="event-frame">
+                      <div data-parallax="0.05">
+                        <Image
+                          src={image}
+                          alt={copy.imageAlt}
+                          width={1200}
+                          widths={[480, 800, 1200]}
+                          sizes="(min-width: 62rem) 42vw, 92vw"
+                          loading="lazy"
+                        />
+                      </div>
+                    </div>
+                  </figure>
+                )}
+                {'poster' in event && (
+                  <figure class="event-poster" data-reveal style="--i:1">
+                    <div data-parallax="0.04">
+                      <Image
+                        src={event.poster}
+                        alt={copy.imageAlt}
+                        widths={[360, 560, 908]}
+                        sizes="(min-width: 62rem) 22rem, 70vw"
+                        loading="lazy"
+                      />
+                    </div>
+                  </figure>
+                )}
+                {'stamp' in event && (
+                  <p class="stamp" aria-hidden="true" data-reveal style="--i:4">
+                    <span class="stamp-label">{t.events.stampLabel}</span>
+                    <span class="stamp-code display">{site.postcode}</span>
+                  </p>
+                )}
+                {'seal' in event && (
+                  <div class="event-seal" data-reveal style="--i:4">
+                    <Seal label={t.events.stampLabel} />
+                  </div>
+                )}
+              </div>
+            </li>
+          );
+        })
       }
     </ol>
   </div>
@@ -35,35 +98,39 @@ const t = useTranslations(lang);
 <style>
   .event-list {
     margin-top: clamp(2.5rem, 6vw, 4.5rem);
-    border-bottom: 1px solid var(--rule);
   }
 
   .event {
     display: grid;
-    grid-template-columns: 3.5rem minmax(0, 1.15fr) minmax(0, 0.85fr);
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
     align-items: center;
-    gap: 1rem clamp(1.5rem, 4vw, 4rem);
-    padding-block: clamp(1.75rem, 3.6vw, 2.75rem);
+    gap: clamp(2.5rem, 7vw, 7rem);
+    padding-block: clamp(3rem, 7vw, 6rem);
     border-top: 1px solid var(--rule);
   }
 
+  .event:last-child {
+    padding-bottom: 0;
+  }
+
+  /* Los actos alternan: imagen a la derecha, a la izquierda, a la derecha */
+  .event[data-flip] .event-media {
+    order: -1;
+  }
+
+  .event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
   .event-n {
-    align-self: start;
-    padding-top: 0.6rem;
+    margin-right: 0.5rem;
     font-size: 0.8125rem;
     font-weight: 700;
-    color: var(--green);
+    color: var(--accent);
     font-variant-numeric: tabular-nums;
-  }
-
-  .event-name {
-    font-size: clamp(2.5rem, 6.2vw, 5.25rem);
-  }
-
-  .event-body {
-    display: grid;
-    justify-items: start;
-    gap: 0.75rem;
   }
 
   .event-tag {
@@ -73,22 +140,124 @@ const t = useTranslations(lang);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--green);
-    box-shadow: inset 0 0 0 1px rgb(34 164 114 / 0.5);
+    color: var(--accent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+
+  .event-name {
+    margin-top: 1.1rem;
+    font-size: clamp(2.75rem, 6vw, 5.25rem);
   }
 
   .event-text {
-    max-width: 28rem;
+    margin-top: clamp(1rem, 2vw, 1.5rem);
+    max-width: 33rem;
+    font-size: clamp(1rem, 1.3vw, 1.125rem);
     color: var(--fg-muted);
+  }
+
+  .event-note {
+    margin-top: 1.25rem;
+    max-width: 30rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--accent);
+    font-weight: 600;
+  }
+
+  .event-media {
+    position: relative;
+  }
+
+  /* Foto: más alta que el marco para que el paralaje tenga recorrido */
+  .event-frame {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .event-frame > div {
+    height: 100%;
+  }
+
+  .event-frame img {
+    width: 100%;
+    height: 124%;
+    margin-top: -9%;
+    object-fit: cover;
+  }
+
+  /* Cartel: se enseña entero, como pegado en la pared */
+  .event-poster {
+    width: min(100%, 22rem);
+    margin-inline: auto;
+    rotate: -3deg;
+  }
+
+  .event-poster img {
+    width: 100%;
+    border-radius: 0.75rem;
+    box-shadow:
+      0 0 0 1px rgb(12 16 12 / 0.08),
+      0 24px 48px -16px rgb(12 16 12 / 0.45);
+  }
+
+  /* El código postal de Sant Feliu, estampado sobre la foto de las fiestas */
+  .stamp {
+    position: absolute;
+    left: clamp(-1.5rem, -2vw, -0.75rem);
+    bottom: clamp(-1.75rem, -2vw, -1rem);
+    padding: 0.7rem 1.1rem 0.55rem;
+    border-radius: 0.875rem;
+    background: var(--green);
+    color: var(--ink);
+    rotate: -6deg;
+    box-shadow: 0 14px 30px -10px rgb(12 16 12 / 0.5);
+  }
+
+  /* El sello DKS, pegado sobre la esquina de la foto de la Drakafesta */
+  .event-seal {
+    position: absolute;
+    top: clamp(-2.75rem, -3vw, -1.5rem);
+    right: clamp(-2.5rem, -3vw, -1rem);
+    rotate: 8deg;
+  }
+
+  .stamp-label {
+    display: block;
+    font-size: 0.625rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .stamp-code {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: clamp(2.5rem, 4.6vw, 3.75rem);
+    line-height: 0.95;
   }
 
   @media (max-width: 62rem) {
     .event {
-      grid-template-columns: 2.25rem minmax(0, 1fr);
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
     }
 
-    .event-body {
-      grid-column: 2;
+    .event[data-flip] .event-media {
+      order: 0;
+    }
+
+    .stamp {
+      left: -0.5rem;
+    }
+
+    .event-seal {
+      right: -0.5rem;
+    }
+
+    .event-poster {
+      width: min(78%, 20rem);
     }
   }
 </style>

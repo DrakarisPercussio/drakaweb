@@ -52,7 +52,7 @@ const gigs = [...agenda]
         {
           gigs.map((gig) => (
             <li class="gig" data-date={gig.date}>
-              <time class="gig-date" datetime={`${gig.date}T${gig.time}`}>
+              <time class="gig-date" datetime={gig.time ? `${gig.date}T${gig.time}` : gig.date}>
                 <span class="gig-day display">{gig.day}</span>
                 <span class="gig-month">
                   {gig.month} {gig.year}
@@ -61,10 +61,11 @@ const gigs = [...agenda]
               <div class="gig-main">
                 <h3 class="gig-title">{gig.title[lang]}</h3>
                 <p class="gig-meta">
-                  <span class="gig-weekday">{gig.weekday}</span> · {gig.place}
+                  <span class="gig-weekday">{gig.weekday}</span>
+                  {gig.place && ` · ${gig.place}`}
                 </p>
               </div>
-              <span class="gig-time">{gig.time}</span>
+              {gig.time && <span class="gig-time">{gig.time}</span>}
             </li>
           ))
         }
@@ -75,13 +76,6 @@ const gigs = [...agenda]
 </section>
 
 <style>
-  /* Sigue a «Actes» sobre el mismo fondo: sin relleno arriba, pero con aire
-     bajo la cabecera cuando se llega desde el menú */
-  .agenda {
-    padding-top: 0;
-    scroll-margin-top: 3rem;
-  }
-
   .agenda-grid {
     display: grid;
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
@@ -110,7 +104,7 @@ const gigs = [...agenda]
     grid-template-columns: 5.5rem minmax(0, 1fr) auto;
     align-items: center;
     gap: clamp(1rem, 2.5vw, 2rem);
-    padding: clamp(1.1rem, 2.4vw, 1.6rem) clamp(1.1rem, 2.6vw, 2rem);
+    padding: clamp(0.9rem, 1.8vw, 1.25rem) clamp(1.1rem, 2.6vw, 2rem);
     transition: background-color 150ms ease;
   }
 

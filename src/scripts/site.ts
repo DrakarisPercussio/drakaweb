@@ -1,6 +1,11 @@
 // Interacciones de la web. Todo es mejora progresiva: sin este script la
 // página se lee y se navega igual.
 
+import './drum';
+import './timeline';
+import './reel';
+import './video';
+
 const root = document.documentElement;
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -67,7 +72,7 @@ if (menu && menuButton) {
   });
 
   // Si la ventana crece hasta la vista de escritorio, el menú no debe quedarse abierto
-  window.matchMedia('(min-width: 62.0625rem)').addEventListener('change', (event) => {
+  window.matchMedia('(min-width: 70.0625rem)').addEventListener('change', (event) => {
     if (event.matches) setMenu(false);
   });
 }
@@ -118,7 +123,9 @@ function renderParallax() {
     const anchor = element.parentElement;
     if (!anchor) continue;
     const rect = anchor.getBoundingClientRect();
-    const distance = rect.top + rect.height / 2 - viewportCenter;
+    // Fuera de pantalla no sigue desplazándose: el recorrido tiene tope
+    const reach = viewportCenter + rect.height / 2;
+    const distance = Math.max(-reach, Math.min(reach, rect.top + rect.height / 2 - viewportCenter));
     const speed = Number(element.dataset.parallax) || 0.1;
     element.style.transform = `translate3d(0, ${(-distance * speed).toFixed(1)}px, 0)`;
   }
@@ -155,89 +162,38 @@ if (parallaxTargets.length > 0 && 'IntersectionObserver' in window && !reducedMo
 }
 
 /* -------------------------------------------------------------------------
-   El tambor del hero suena al tocarlo
+   El sello DKS gira solo; al hacer scroll gira más deprisa y luego se calma
    ------------------------------------------------------------------------- */
 
-const drum = document.querySelector<HTMLButtonElement>('[data-drum]');
-const drumHint = document.querySelector<HTMLElement>('[data-drum-hint]');
-let audio: AudioContext | undefined;
+const sealRings = [...document.querySelectorAll<SVGElement>('[data-seal-ring]')];
 
-// Un surdo sintetizado: un tono grave que cae de afinación + el chasquido de la maza
-function playDrum() {
-  const AudioCtor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-  if (!AudioCtor) return;
-  audio ??= new AudioCtor();
-  if (audio.state === 'suspended') void audio.resume();
+if (sealRings.length > 0 && !reducedMotion.matches) {
+  let lastY = window.scrollY;
+  let lastTime = performance.now();
+  let rate = 1;
+  let sealFrame = 0;
 
-  const now = audio.currentTime;
-  const master = audio.createGain();
-  master.gain.value = 0.7;
-  master.connect(audio.destination);
+  const settle = () => {
+    rate += (1 - rate) * 0.05;
+    const done = rate - 1 < 0.02;
+    if (done) rate = 1;
+    // Se ajusta la velocidad de la animación CSS en marcha, sin reiniciarla
+    for (const ring of sealRings) for (const spin of ring.getAnimations()) spin.playbackRate = rate;
+    sealFrame = done ? 0 : requestAnimationFrame(settle);
+  };
 
-  const body = audio.createOscillator();
-  const bodyGain = audio.createGain();
-  body.type = 'sine';
-  body.frequency.setValueAtTime(155, now);
-  body.frequency.exponentialRampToValueAtTime(52, now + 0.22);
-  bodyGain.gain.setValueAtTime(0.0001, now);
-  bodyGain.gain.exponentialRampToValueAtTime(1, now + 0.006);
-  bodyGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.75);
-  body.connect(bodyGain).connect(master);
-  body.start(now);
-  body.stop(now + 0.8);
-
-  const length = Math.floor(audio.sampleRate * 0.05);
-  const buffer = audio.createBuffer(1, length, audio.sampleRate);
-  const samples = buffer.getChannelData(0);
-  for (let i = 0; i < length; i++) samples[i] = (Math.random() * 2 - 1) * (1 - i / length);
-  const attack = audio.createBufferSource();
-  const attackFilter = audio.createBiquadFilter();
-  const attackGain = audio.createGain();
-  attack.buffer = buffer;
-  attackFilter.type = 'bandpass';
-  attackFilter.frequency.value = 1400;
-  attackGain.gain.value = 0.35;
-  attack.connect(attackFilter).connect(attackGain).connect(master);
-  attack.start(now);
-}
-
-function rippleDrum() {
-  if (!drum) return;
-  // Cada golpe crea su propia onda: los golpes rápidos se solapan en vez de reiniciarse
-  const ring = document.createElement('span');
-  ring.className = 'drum-ring';
-  drum.prepend(ring);
-  const frames = reducedMotion.matches
-    ? [{ opacity: 0.5 }, { opacity: 0 }]
-    : [
-        { opacity: 0.6, transform: 'scale(0.9)' },
-        { opacity: 0, transform: 'scale(1.5)' },
-      ];
-  ring.animate(frames, { duration: 700, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' }).finished.then(
-    () => ring.remove(),
-    () => ring.remove(),
+  window.addEventListener(
+    'scroll',
+    () => {
+      const now = performance.now();
+      const speed = Math.abs(window.scrollY - lastY) / Math.max(now - lastTime, 1); // px por ms
+      lastY = window.scrollY;
+      lastTime = now;
+      rate = Math.min(10, Math.max(rate, 1 + speed * 4));
+      if (sealFrame === 0) sealFrame = requestAnimationFrame(settle);
+    },
+    { passive: true },
   );
-}
-
-function hitDrum() {
-  playDrum();
-  rippleDrum();
-  drumHint?.setAttribute('data-done', '');
-}
-
-if (drum) {
-  // Con ratón suena al bajar el botón, no al soltarlo. Con el dedo se espera al
-  // toque completo para que no suene al arrastrar para hacer scroll.
-  let handled = false;
-  drum.addEventListener('pointerdown', (event) => {
-    if (event.pointerType !== 'mouse' || event.button !== 0) return;
-    handled = true;
-    hitDrum();
-  });
-  drum.addEventListener('click', () => {
-    if (!handled) hitDrum();
-    handled = false;
-  });
 }
 
 /* -------------------------------------------------------------------------

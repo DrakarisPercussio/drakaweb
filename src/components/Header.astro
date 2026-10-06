@@ -15,6 +15,7 @@ const t = useTranslations(lang);
 
 const links = [
   { id: sections.about, label: t.nav.about },
+  { id: sections.history, label: t.nav.history },
   { id: sections.events, label: t.nav.events },
   { id: sections.agenda, label: t.nav.agenda },
   { id: sections.gallery, label: t.nav.gallery },
@@ -347,7 +348,8 @@ const menuLinks = [...links, { id: sections.contact, label: t.nav.contact }];
     }
   }
 
-  @media (max-width: 62rem) {
+  /* Con seis enlaces el menú completo necesita 70rem; por debajo, hamburguesa */
+  @media (max-width: 70rem) {
     .bar {
       grid-template-columns: 1fr auto;
     }
