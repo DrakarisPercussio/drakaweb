@@ -449,3 +449,14 @@ p {
     animation: none !important;
   }
 }
+
+/* Al imprimir (o guardar como PDF) se enseña todo, aunque no se haya llegado
+   con el scroll a las secciones que aparecen al entrar en pantalla. */
+@media print {
+  [data-reveal-state='pending'],
+  [data-reveal='clip'][data-reveal-state='pending'] > * {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+  }
+}

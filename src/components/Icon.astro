@@ -1,6 +1,6 @@
 ---
 interface Props {
-  name: 'arrow' | 'external' | 'up' | 'mail' | 'play' | 'instagram' | 'youtube' | 'tiktok';
+  name: 'arrow' | 'external' | 'up' | 'mail' | 'pin' | 'play' | 'instagram' | 'youtube' | 'tiktok';
   size?: number;
 }
 
@@ -24,6 +24,14 @@ const brand = ['instagram', 'youtube', 'tiktok', 'play'].includes(name);
   {name === 'arrow' && <path d="M5 12h14M13 6l6 6-6 6" />}
   {name === 'external' && <path d="M7 17 17 7M8 7h9v9" />}
   {name === 'up' && <path d="M12 19V5M6 11l6-6 6 6" />}
+  {
+    name === 'pin' && (
+      <Fragment>
+        <path d="M12 21s-7-6.3-7-11.5a7 7 0 0 1 14 0C19 14.7 12 21 12 21z" />
+        <circle cx="12" cy="9.5" r="2.5" />
+      </Fragment>
+    )
+  }
   {name === 'play' && <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z" />}
   {
     name === 'mail' && (

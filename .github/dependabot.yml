@@ -1,0 +1,19 @@
+# Una vez al mes, GitHub propone (en una sola pull request por tipo) las
+# actualizaciones de las dependencias y de las acciones del flujo de publicación.
+# Así los parches de seguridad no dependen de acordarse de mirarlo.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      dependencias:
+        patterns: ['*']
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      acciones:
+        patterns: ['*']

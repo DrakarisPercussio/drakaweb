@@ -5,6 +5,8 @@ import type { Lang } from '../i18n/ui';
 import rakata from '../assets/brand/rakata.webp';
 import poster from '../assets/brand/poster.webp';
 import drumClaw from '../assets/brand/drum-claw.webp';
+import dragonRing from '../assets/brand/dragon-ring.webp';
+import dksClaw from '../assets/brand/dks-claw.webp';
 import korrebarsPoster from '../assets/LOGOS/Korrebars2026.png';
 
 const instagramHandle = 'drakaris_percussio';
@@ -24,10 +26,11 @@ export const site = {
   },
   // Correo de contacto. Mientras esté vacío, el botón de correo no se muestra.
   email: '',
+  // Redes de la colla. Para añadir otra (p. ej. YouTube): una línea más con
+  // su `id` (instagram, tiktok o youtube), nombre y dirección.
   socials: [
     { id: 'instagram', label: 'Instagram', url: `https://instagram.com/${instagramHandle}` },
-    { id: 'youtube', label: 'YouTube', url: 'https://youtube.com/@drakaris' },
-    { id: 'tiktok', label: 'TikTok', url: 'https://tiktok.com/@drakaris' },
+    { id: 'tiktok', label: 'TikTok', url: 'https://www.tiktok.com/@drakaris_percussio' },
   ],
 } as const;
 
@@ -48,9 +51,11 @@ export const sections = {
 // HISTÒRIA — un hito por año. El título y el texto de cada uno están en
 // `history.milestones` de src/i18n/ui.ts, en este mismo orden.
 // `photo` es "año/archivo" dentro de src/assets/Fotos (opcional).
-export const milestones: { year: number; photo?: string }[] = [
+// `rebrand` enseña, en lugar de una foto, los dos logos del cambio de imagen.
+export const milestones: { year: number; photo?: string; rebrand?: boolean }[] = [
   { year: 2013 },
   { year: 2019, photo: '2019/Cruyff.jpg' },
+  { year: 2020, rebrand: true },
   { year: 2022, photo: '2022/mallorca.jpg' },
   { year: 2023, photo: '2023/Concurs2.jpg' },
   { year: 2024, photo: '2024/Perculliga.jpg' },
@@ -82,50 +87,63 @@ export interface Gig {
   date: string;
   /** Hora en formato HH:MM (opcional: sin hora, no se muestra) */
   time?: string;
-  /** Lugar (opcional) */
+  /** Lugar tal como se lee en la web (opcional) */
   place?: string;
+  /** Qué buscar en el mapa al pulsar. Si no se pone, se busca `place`. */
+  map?: string;
   title: Record<Lang, string>;
 }
 
 // AGENDA — próximas actuaciones. Las fechas pasadas se ocultan solas.
-// Para añadir una: copiar un bloque y cambiar fecha y título; `time` y `place` son opcionales.
+// Para añadir una: copiar un bloque y cambiar fecha, título y lugar.
+// Cada fila enlaza al mapa: con `map` se puede afinar el punto exacto
+// (una calle, una plaza…); sin él, se abre el lugar que diga `place`.
 export const agenda: Gig[] = [
   {
     date: '2026-10-09',
-    place: 'Carrer Joan Maragall',
+    place: 'Carrer Joan Maragall, Sant Feliu de Llobregat',
     title: { ca: 'Vermut de colles', es: 'Vermut de colles', en: "Crews' vermouth" },
   },
   {
     date: '2026-10-09',
+    place: 'Sant Feliu de Llobregat',
     title: { ca: 'Tabalada nocturna', es: 'Tabalada nocturna', en: 'Night tabalada (drum parade)' },
   },
   {
     date: '2026-10-10',
+    place: 'Sant Feliu de Llobregat',
     title: { ca: 'Tabalada i correfoc', es: 'Tabalada y correfoc', en: 'Tabalada and fire run' },
   },
   {
     date: '2026-10-12',
+    place: 'Sant Feliu de Llobregat',
     title: { ca: 'Cercavila de colles', es: 'Pasacalles de colles', en: "Crews' street parade" },
   },
   {
     date: '2026-11-29',
+    place: 'Espinelves',
     title: { ca: 'Espinelves', es: 'Espinelves', en: 'Espinelves' },
   },
   {
     date: '2026-12-19',
+    place: 'Sant Feliu de Llobregat',
     title: { ca: 'Mercat de Nadal', es: 'Mercado de Navidad', en: 'Christmas market' },
   },
   {
     date: '2027-01-05',
+    place: 'Sant Feliu de Llobregat',
     title: { ca: 'Cavalcada de Reis', es: 'Cabalgata de Reyes', en: 'Three Kings parade' },
   },
 ];
 
 // BOTIGA — `id` enlaza con el nombre en `shop.products` de ui.ts.
-// `tile` es el color de fondo sobre el que se muestra el diseño.
-// `price` está vacío hasta saber los precios reales: sin precio, no se muestra.
+// `price` va en euros (1.5 = 1,50 €); `tile` es el color de fondo sobre el
+// que se muestra el diseño. Las imágenes son ilustraciones de la colla a
+// falta de fotos de cada producto.
 export const products = [
-  { id: 'adult', price: '', image: rakata, tile: '#c9cbc4' },
-  { id: 'kids', price: '', image: poster, tile: '#0c100c' },
-  { id: 'cup', price: '', image: drumClaw, tile: '#141a15' },
+  { id: 'adult', price: 12, image: rakata, tile: '#c9cbc4' },
+  { id: 'kids', price: 10, image: poster, tile: '#0c100c' },
+  { id: 'cup', price: 1.5, image: drumClaw, tile: '#141a15' },
+  { id: 'tote', price: 8, image: dragonRing, tile: '#141a15' },
+  { id: 'bag', price: 8, image: dksClaw, tile: '#000000' },
 ] as const;

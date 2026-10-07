@@ -12,11 +12,28 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
-// Dos cintas de fotos pequeñas que se deslizan en sentidos opuestos.
-// Las fotos se reparten alternándolas entre las dos. No llevan pie visible:
-// el texto de cada una queda como descripción para lectores de pantalla.
-const tiles = mixedPhotos.map((item) => ({ ...item, caption: captionFor(item, lang) }));
-const rows = [tiles.filter((_, i) => i % 2 === 0), tiles.filter((_, i) => i % 2 === 1)];
+// Cintas de fotos pequeñas que se deslizan en sentidos alternos. No llevan pie
+// visible: el texto de cada una queda como descripción para lectores de pantalla.
+//
+// Las fotos se reparten en tres tandas. En móvil cada tanda es una cinta (tres
+// filas, porque caben menos fotos a lo ancho). En pantallas anchas solo hay dos
+// cintas, y la tercera tanda se intercala entre las otras dos: esas fotos están
+// dos veces en la página, pero cada pantalla solo enseña (y solo descarga) una.
+//
+// (En `sizes`, el ancho de móvil se declara algo menor que el real a propósito:
+// así los teléfonos de pantalla muy densa bajan la versión de 480 px en vez de
+// la de 640, que en una miniatura no se distingue y son muchas fotos.)
+const tiles = mixedPhotos.map((item) => ({ ...item, caption: captionFor(item, lang), wideOnly: false }));
+const [first, second, third] = [0, 1, 2].map((n) => tiles.filter((_, i) => i % 3 === n));
+
+const withExtras = (own: typeof tiles, extras: typeof tiles) =>
+  own.flatMap((tile, i) => (extras[i] ? [tile, { ...extras[i], wideOnly: true }] : [tile]));
+
+const rows = [
+  { items: withExtras(first, third.filter((_, i) => i % 2 === 0)), narrow: first.length, narrowOnly: false },
+  { items: withExtras(second, third.filter((_, i) => i % 2 === 1)), narrow: second.length, narrowOnly: false },
+  { items: third, narrow: third.length, narrowOnly: true },
+];
 ---
 
 <section class="section gallery" id={sections.gallery} data-tone="ink">
@@ -44,19 +61,23 @@ const rows = [tiles.filter((_, i) => i % 2 === 0), tiles.filter((_, i) => i % 2 
   <div class="reel" data-reveal>
     {
       rows.map((row, r) => (
-        <div class="reel-row" data-reel style={`--count:${row.length}`}>
+        <div
+          class:list={['reel-row', { 'narrow-only': row.narrowOnly }]}
+          data-reel
+          style={`--count:${row.items.length};--count-narrow:${row.narrow}`}
+        >
           <div class:list={['reel-track', { reverse: r % 2 === 1 }]}>
             {/* Cada cinta lleva sus fotos dos veces: al acabar la primera tanda, la segunda ya ocupa su sitio */}
             {[0, 1].map((copy) => (
               <ul class="reel-group" aria-hidden={copy === 1 ? 'true' : undefined}>
-                {row.map((tile) => (
-                  <li class="reel-item">
+                {row.items.map((tile) => (
+                  <li class:list={['reel-item', { 'wide-only': tile.wideOnly }]}>
                     <Image
                       src={tile.image}
                       alt={copy === 0 ? tile.caption : ''}
                       width={640}
                       widths={[320, 480, 640]}
-                      sizes="(min-width: 62rem) 20rem, 14rem"
+                      sizes="(min-width: 62rem) 19rem, (min-width: 40rem) 13rem, 9rem"
                       loading="lazy"
                     />
                   </li>
@@ -141,6 +162,29 @@ const rows = [tiles.filter((_, i) => i % 2 === 0), tiles.filter((_, i) => i % 2 
   @keyframes reel {
     to {
       transform: translateX(-50%);
+    }
+  }
+
+  /* La tercera cinta solo existe en móvil */
+  .reel-row.narrow-only {
+    display: none;
+  }
+
+  @media (max-width: 40rem) {
+    .reel {
+      --tile: 10.5rem;
+    }
+
+    .reel-row.narrow-only {
+      display: block;
+    }
+
+    .reel-item.wide-only {
+      display: none;
+    }
+
+    .reel-track {
+      animation-duration: calc(var(--count-narrow) * 8s);
     }
   }
 

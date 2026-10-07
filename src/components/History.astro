@@ -1,5 +1,7 @@
 ---
 import { Image } from 'astro:assets';
+import dragonRing from '../assets/brand/dragon-ring.webp';
+import dksClaw from '../assets/brand/dks-claw.webp';
 import { photo } from '../data/photos';
 import { milestones, sections, site } from '../data/site';
 import { useTranslations, type Lang } from '../i18n/ui';
@@ -11,8 +13,16 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
+// Años de la colla. Aquí se calculan al publicar la web; después, el script
+// de la página los pone al día cada año sin tener que volver a publicarla.
 const age = new Date().getFullYear() - site.founded;
-const title = t.history.title.replace('{years}', String(age));
+const [titleStart, titleEnd] = t.history.title.split('{years}');
+
+// Los dos logos del cambio de imagen de 2020
+const rebrand = [
+  { image: dragonRing, alt: t.history.rebrand.logoAlt, label: t.history.rebrand.logo },
+  { image: dksClaw, alt: t.history.rebrand.chestAlt, label: t.history.rebrand.chest },
+];
 const firstYear = String(milestones[0].year);
 const digits = Array.from({ length: 10 }, (_, n) => n);
 ---
@@ -22,7 +32,9 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
     <header class="history-head">
       <div>
         <p class="label" data-reveal>{t.history.label}</p>
-        <h2 class="display section-title" data-reveal style="--i:1">{title}</h2>
+        <h2 class="display section-title" data-reveal style="--i:1">
+          {titleStart}<span data-years-since={site.founded}>{age}</span>{titleEnd}
+        </h2>
       </div>
       <p class="lead" data-reveal style="--i:2">{t.history.lead}</p>
     </header>
@@ -68,6 +80,18 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
                       </ul>
                     )}
                   </div>
+                  {milestone.rebrand && (
+                    <div class="rebrand" data-reveal style="--i:1">
+                      {rebrand.map((logo) => (
+                        <figure class="rebrand-item">
+                          <div class="rebrand-tile">
+                            <Image src={logo.image} alt={logo.alt} width={480} widths={[240, 480]} sizes="14rem" loading="lazy" />
+                          </div>
+                          <figcaption>{logo.label}</figcaption>
+                        </figure>
+                      ))}
+                    </div>
+                  )}
                   {image && (
                     <figure class="milestone-photo" data-reveal="clip">
                       <div class="milestone-frame">
@@ -76,7 +100,7 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
                           alt={copy.photoAlt}
                           width={1200}
                           widths={[480, 800, 1200]}
-                          sizes="(min-width: 62rem) 40vw, 86vw"
+                          sizes="(min-width: 62rem) 40vw, 62vw"
                           loading="lazy"
                         />
                       </div>
@@ -236,6 +260,38 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
   .milestone-photo {
     margin-top: 1.5rem;
     max-width: 36rem;
+  }
+
+  /* Hito del cambio de imagen: los dos logos nuevos, lado a lado */
+  .rebrand {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.5rem, 1.2vw, 1rem);
+    margin-top: 1.5rem;
+    max-width: 30rem;
+  }
+
+  .rebrand-tile {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: var(--radius);
+    background: #000;
+    box-shadow: inset 0 0 0 1px var(--rule);
+  }
+
+  /* Cada logo cabe entero en su cuadro, con el mismo margen */
+  .rebrand-tile img {
+    position: absolute;
+    inset: 13%;
+    width: 74%;
+    height: 74%;
+    object-fit: contain;
+  }
+
+  .rebrand-item figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.875rem;
+    font-weight: 700;
   }
 
   .milestone-frame {

@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# originales de las fotos reducidas con "npm run photos" (no se suben)
+.originals/

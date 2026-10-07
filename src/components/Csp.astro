@@ -1,0 +1,44 @@
+---
+// Política de seguridad de contenido (CSP): la lista de lo único que el
+// navegador puede cargar o ejecutar en la web. Si algún día se colara código
+// ajeno (una dependencia comprometida, una extensión…), no podría llamar a
+// servidores que no estén aquí.
+//
+// ⚠ Si se añade algo de otro dominio —un mapa incrustado, un vídeo de otra
+// plataforma, una fuente o un script externo—, hay que darlo de alta aquí o el
+// navegador lo bloqueará sin avisar (el aviso sale en la consola).
+//
+// Solo se aplica en la web publicada: en `npm run dev` las herramientas de
+// desarrollo necesitan más permisos.
+import { createHash } from 'node:crypto';
+
+interface Props {
+  /** Código de los <script> escritos dentro de la propia página (los que no son un archivo) */
+  inlineScripts?: string[];
+}
+
+const { inlineScripts = [] } = Astro.props;
+
+// Cada script escrito en la página se autoriza por su huella: si alguien lo
+// cambiara, dejaría de coincidir y no se ejecutaría.
+const fingerprint = (code: string) => `'sha256-${createHash('sha256').update(code).digest('base64')}'`;
+
+const policy = [
+  // Por defecto, solo archivos de la propia web
+  "default-src 'self'",
+  ["script-src 'self'", ...inlineScripts.map(fingerprint)].join(' '),
+  // 'unsafe-inline' permite los atributos style="…" que usan las animaciones
+  "style-src 'self' 'unsafe-inline'",
+  // Imágenes propias, las dibujadas en el CSS (data:) y las miniaturas de YouTube
+  "img-src 'self' data: https://i.ytimg.com",
+  "font-src 'self'",
+  // Lo único que se puede incrustar: el reproductor de YouTube sin cookies
+  'frame-src https://www.youtube-nocookie.com',
+  "connect-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join('; ');
+---
+
+{import.meta.env.PROD && <meta http-equiv="Content-Security-Policy" content={policy} />}

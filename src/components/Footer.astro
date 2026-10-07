@@ -12,6 +12,7 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+// Año en que se publica la web; el script de la página lo pone al día cada 1 de enero
 const year = new Date().getFullYear();
 
 const links = [
@@ -78,7 +79,9 @@ const links = [
   <p class="footer-wordmark display" aria-hidden="true">Drakaris</p>
 
   <div class="container footer-bottom">
-    <p>© {year} Drakaris Percussió · {site.short} · {site.postcode}. {t.footer.rights}</p>
+    <p>
+      © <span data-current-year>{year}</span> Drakaris Percussió · {site.short} · {site.postcode}. {t.footer.rights}
+    </p>
     <a class="footer-top-link" href="#inici">
       {t.a11y.backTop}
       <Icon name="up" size={16} />

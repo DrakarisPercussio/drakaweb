@@ -230,6 +230,23 @@ for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-lang-link
 }
 
 /* -------------------------------------------------------------------------
+   Años que se ponen al día solos: el del copyright y los que lleva la colla
+   («13 anys fent tremolar els carrers» pasa a 14 en 2027). El HTML lleva los
+   del día en que se publicó; aquí solo se corrigen hacia delante.
+   ------------------------------------------------------------------------- */
+
+const thisYear = new Date().getFullYear();
+
+for (const element of document.querySelectorAll<HTMLElement>('[data-current-year]')) {
+  if (thisYear > Number(element.textContent)) element.textContent = String(thisYear);
+}
+
+for (const element of document.querySelectorAll<HTMLElement>('[data-years-since]')) {
+  const years = thisYear - Number(element.dataset.yearsSince);
+  if (years > Number(element.textContent)) element.textContent = String(years);
+}
+
+/* -------------------------------------------------------------------------
    Agenda: las fechas pasadas desaparecen aunque no se haya vuelto a publicar
    ------------------------------------------------------------------------- */
 

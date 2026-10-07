@@ -5,10 +5,10 @@
     "**/*"
   ],
   "exclude": [
-    "dist"
+    "dist",
+    ".originals"
   ],
   "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "react"
+    "moduleDetection": "force"
   }
 }

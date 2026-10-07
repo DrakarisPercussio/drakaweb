@@ -18,12 +18,16 @@ const gigs = [...agenda]
   .sort((a, b) => a.date.localeCompare(b.date))
   .map((gig) => {
     const date = new Date(`${gig.date}T00:00:00Z`);
+    // Enlace universal de Google Maps: en el móvil abre la app de mapas
+    const mapQuery = gig.map ?? gig.place;
     return {
       ...gig,
+      mapUrl: mapQuery && `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`,
       day: format(date, { day: '2-digit' }),
       month: format(date, { month: 'short' }).replace('.', ''),
       year: date.getUTCFullYear(),
       weekday: format(date, { weekday: 'long' }),
+      weekdayShort: format(date, { weekday: 'short' }),
     };
   });
 ---
@@ -61,11 +65,32 @@ const gigs = [...agenda]
               <div class="gig-main">
                 <h3 class="gig-title">{gig.title[lang]}</h3>
                 <p class="gig-meta">
-                  <span class="gig-weekday">{gig.weekday}</span>
+                  <span class="gig-weekday">
+                    <span class="gig-weekday-long">{gig.weekday}</span>
+                    <span class="gig-weekday-short">{gig.weekdayShort}</span>
+                  </span>
                   {gig.place && ` · ${gig.place}`}
                 </p>
               </div>
-              {gig.time && <span class="gig-time">{gig.time}</span>}
+              {(gig.time || gig.mapUrl) && (
+                <div class="gig-side">
+                  {gig.time && <span class="gig-time">{gig.time}</span>}
+                  {gig.mapUrl && (
+                    <a
+                      class="gig-map"
+                      href={gig.mapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${t.agenda.mapLabel}: ${gig.title[lang]}, ${gig.place} (${t.a11y.newTab})`}
+                    >
+                      <span class="gig-map-chip">
+                        <Icon name="pin" size={15} />
+                        <span class="gig-map-text">{t.agenda.map}</span>
+                      </span>
+                    </a>
+                  )}
+                </div>
+              )}
             </li>
           ))
         }
@@ -105,6 +130,7 @@ const gigs = [...agenda]
     align-items: center;
     gap: clamp(1rem, 2.5vw, 2rem);
     padding: clamp(0.9rem, 1.8vw, 1.25rem) clamp(1.1rem, 2.6vw, 2rem);
+    position: relative;
     transition: background-color 150ms ease;
   }
 
@@ -138,6 +164,8 @@ const gigs = [...agenda]
     font-size: clamp(1.0625rem, 1.6vw, 1.3125rem);
     font-weight: 700;
     line-height: 1.25;
+    /* Una palabra muy larga se parte antes que salirse de su columna */
+    overflow-wrap: anywhere;
   }
 
   .gig-meta {
@@ -150,6 +178,16 @@ const gigs = [...agenda]
     text-transform: capitalize;
   }
 
+  .gig-weekday-short {
+    display: none;
+  }
+
+  .gig-side {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
   .gig-time {
     padding: 0.3rem 0.75rem;
     border-radius: 999px;
@@ -157,6 +195,36 @@ const gigs = [...agenda]
     font-weight: 700;
     font-variant-numeric: tabular-nums;
     box-shadow: inset 0 0 0 1px var(--rule);
+  }
+
+  /* El enlace al mapa ocupa toda la fila: se puede pulsar en cualquier punto.
+     (La pulsación se anima en el chip de dentro y no en el enlace: un transform
+     en el enlace encogería su zona pulsable justo mientras se hace clic.) */
+  .gig-map::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .gig-map-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.8rem 0.4rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--fg-muted);
+    box-shadow: inset 0 0 0 1px var(--rule);
+    transition:
+      transform 160ms var(--ease-out),
+      background-color 150ms ease,
+      color 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  .gig-map:active .gig-map-chip {
+    transform: scale(0.96);
   }
 
   .agenda-empty {
@@ -167,6 +235,13 @@ const gigs = [...agenda]
   @media (hover: hover) and (pointer: fine) {
     .gig:hover {
       background-color: rgb(232 232 226 / 0.035);
+    }
+
+    /* Al pasar por la fila, el chip del mapa se enciende */
+    .gig:hover .gig-map-chip {
+      background-color: var(--green);
+      color: var(--ink);
+      box-shadow: inset 0 0 0 1px var(--green);
     }
   }
 
@@ -180,14 +255,56 @@ const gigs = [...agenda]
     }
   }
 
+  /* En móvil la fila se reordena para no crecer: título y mapa arriba, y el
+     día y el lugar debajo, a todo el ancho. (`display: contents` deja que el
+     título y el lugar se coloquen por separado en la rejilla de la fila.) */
   @media (max-width: 30rem) {
     .gig {
-      grid-template-columns: 5rem minmax(0, 1fr);
+      grid-template-columns: 4.25rem minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 0.2rem 0.75rem;
     }
 
-    .gig-time {
-      grid-column: 2;
-      justify-self: start;
+    .gig-date {
+      grid-row: span 2;
+    }
+
+    .gig-main {
+      display: contents;
+    }
+
+    .gig-title {
+      align-self: center;
+    }
+
+    .gig-meta {
+      grid-column: 2 / -1;
+      margin-top: 0;
+    }
+
+    /* El día de la semana, abreviado: así día y lugar caben en una línea */
+    .gig-weekday-long {
+      display: none;
+    }
+
+    .gig-weekday-short {
+      display: inline;
+    }
+
+    .gig-side {
+      grid-column: 3;
+      grid-row: 1;
+    }
+  }
+
+  /* En los móviles más estrechos el chip del mapa se queda solo con el icono */
+  @media (max-width: 22rem) {
+    .gig-map-text {
+      display: none;
+    }
+
+    .gig-map-chip {
+      padding: 0.5rem;
     }
   }
 </style>

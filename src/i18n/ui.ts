@@ -64,9 +64,16 @@ const ca = {
   },
   history: {
     label: 'Història',
-    // {years} se sustituye por los años que lleva la colla
-    title: '{years} anys fent soroll.',
+    // {years} se sustituye por los años que lleva la colla (se actualiza solo cada año)
+    title: '{years} anys fent tremolar els carrers.',
     lead: 'De seguir el Drac de Sant Feliu pels carrers a pujar al podi.',
+    // Los dos logos que se enseñan en el hito del cambio de imagen
+    rebrand: {
+      logo: 'El logo nou',
+      chest: 'Al pit, DKS',
+      logoAlt: 'Logo de Drakaris: un drac blanc i verd en cercle',
+      chestAlt: 'Logo DKS: una urpa verda amb les lletres DKS',
+    },
     // Un texto por hito, en el mismo orden que `milestones` en src/data/site.ts
     milestones: [
       {
@@ -80,6 +87,12 @@ const ca = {
         text: "Toquem a la inauguració de l'Estadi Johan Cruyff del FC Barcelona i quedem tercers a la Kabronada: el primer títol de Drakaris.",
         badges: ['3r · Kabronada'],
         photoAlt: "Drakaris tocant sota una pluja de confeti a la inauguració de l'Estadi Johan Cruyff",
+      },
+      {
+        title: 'Drakaris muda de pell',
+        text: "Canviem d'imatge: estrenem vestuari i logo nou. Al pit de la samarreta, l'urpa amb les lletres DKS.",
+        badges: [],
+        photoAlt: '',
       },
       {
         title: 'Rumb a Mallorca',
@@ -109,7 +122,7 @@ const ca = {
   },
   sound: {
     label: 'El so',
-    title: 'Així sona el drac.',
+    title: 'Així sona el nostre esperit.',
     lead: 'Cada instrument hi diu la seva. Junts fem el rakatà.',
     alt: 'Il·lustració dels instruments de la colla',
     // Los dos vídeos del concurso, bajo la lista de instrumentos
@@ -165,6 +178,8 @@ const ca = {
     label: 'Agenda',
     title: 'Pròximes actuacions.',
     follow: 'Totes les novetats, a Instagram',
+    map: 'Mapa',
+    mapLabel: 'Com arribar-hi',
     empty:
       "Ara mateix no tenim cap data anunciada. Segueix-nos a Instagram i te n'assabentaràs abans que ningú.",
   },
@@ -183,14 +198,16 @@ const ca = {
   },
   shop: {
     label: 'Botiga',
-    title: 'Vesteix el drac.',
-    text: 'Samarretes i gots de la colla. Les comandes es fan per missatge directe a Instagram.',
+    title: 'Vesteix de Drakaris.',
+    text: 'Samarretes, gots i bosses de la colla. Les comandes es fan per missatge directe a Instagram.',
     order: 'Fes la comanda per Instagram',
     orderShort: 'Fes la comanda',
     products: {
       adult: "Samarreta d'adult",
       kids: 'Samarreta infantil',
       cup: 'Got de Drakaris',
+      tote: 'Tote bag de Drakaris',
+      bag: 'Bossa de Drakaris',
     },
   },
   booking: {
@@ -206,6 +223,12 @@ const ca = {
     sections: 'Seccions',
     social: 'Xarxes',
     rights: 'Tots els drets reservats.',
+  },
+  // Página de error (dirección que no existe)
+  notFound: {
+    title: 'Aquí no hi sona res.',
+    text: 'Aquesta pàgina no existeix o ha canviat de lloc.',
+    cta: "Torna a l'inici",
   },
 };
 
@@ -258,8 +281,14 @@ const es: Dictionary = {
   },
   history: {
     label: 'Historia',
-    title: '{years} años haciendo ruido.',
+    title: '{years} años haciendo temblar las calles.',
     lead: 'De seguir al Drac de Sant Feliu por las calles a subirnos al podio.',
+    rebrand: {
+      logo: 'El logo nuevo',
+      chest: 'En el pecho, DKS',
+      logoAlt: 'Logo de Drakaris: un dragón blanco y verde en círculo',
+      chestAlt: 'Logo DKS: una garra verde con las letras DKS',
+    },
     milestones: [
       {
         title: 'Nace la colla',
@@ -272,6 +301,12 @@ const es: Dictionary = {
         text: 'Tocamos en la inauguración del Estadi Johan Cruyff del FC Barcelona y quedamos terceros en la Kabronada: el primer título de Drakaris.',
         badges: ['3.º · Kabronada'],
         photoAlt: 'Drakaris tocando bajo una lluvia de confeti en la inauguración del Estadi Johan Cruyff',
+      },
+      {
+        title: 'Drakaris muda de piel',
+        text: 'Cambiamos de imagen: estrenamos vestuario y logo nuevo. En el pecho de la camiseta, la garra con las letras DKS.',
+        badges: [],
+        photoAlt: '',
       },
       {
         title: 'Rumbo a Mallorca',
@@ -301,7 +336,7 @@ const es: Dictionary = {
   },
   sound: {
     label: 'El sonido',
-    title: 'Así suena el dragón.',
+    title: 'Así suena nuestro espíritu.',
     lead: 'Cada instrumento dice la suya. Juntos hacemos el rakatà.',
     alt: 'Ilustración de los instrumentos de la colla',
     live: {
@@ -353,6 +388,8 @@ const es: Dictionary = {
     label: 'Agenda',
     title: 'Próximas actuaciones.',
     follow: 'Todas las novedades, en Instagram',
+    map: 'Mapa',
+    mapLabel: 'Cómo llegar',
     empty: 'Ahora mismo no tenemos ninguna fecha anunciada. Síguenos en Instagram y te enterarás antes que nadie.',
   },
   join: {
@@ -370,14 +407,16 @@ const es: Dictionary = {
   },
   shop: {
     label: 'Tienda',
-    title: 'Viste al dragón.',
-    text: 'Camisetas y vasos de la colla. Los pedidos se hacen por mensaje directo en Instagram.',
+    title: 'Viste de Drakaris.',
+    text: 'Camisetas, vasos y bolsas de la colla. Los pedidos se hacen por mensaje directo en Instagram.',
     order: 'Haz tu pedido por Instagram',
     orderShort: 'Haz tu pedido',
     products: {
       adult: 'Camiseta de adulto',
       kids: 'Camiseta infantil',
       cup: 'Vaso de Drakaris',
+      tote: 'Tote bag de Drakaris',
+      bag: 'Bolsa de cuerdas de Drakaris',
     },
   },
   booking: {
@@ -393,6 +432,11 @@ const es: Dictionary = {
     sections: 'Secciones',
     social: 'Redes',
     rights: 'Todos los derechos reservados.',
+  },
+  notFound: {
+    title: 'Aquí no suena nada.',
+    text: 'Esta página no existe o ha cambiado de sitio.',
+    cta: 'Volver al inicio',
   },
 };
 
@@ -443,8 +487,14 @@ const en: Dictionary = {
   },
   history: {
     label: 'History',
-    title: '{years} years of making noise.',
+    title: '{years} years of shaking the streets.',
     lead: "From following Sant Feliu's dragon through the streets to climbing onto the podium.",
+    rebrand: {
+      logo: 'The new logo',
+      chest: 'On the chest, DKS',
+      logoAlt: 'Drakaris logo: a white and green dragon in a circle',
+      chestAlt: 'DKS logo: a green claw with the letters DKS',
+    },
     milestones: [
       {
         title: 'The crew is born',
@@ -457,6 +507,12 @@ const en: Dictionary = {
         text: "We play at the opening of FC Barcelona's Estadi Johan Cruyff and finish third at the Kabronada: the first title for Drakaris.",
         badges: ['3rd · Kabronada'],
         photoAlt: 'Drakaris playing under a shower of confetti at the opening of the Estadi Johan Cruyff',
+      },
+      {
+        title: 'Drakaris sheds its skin',
+        text: 'A new look: new outfits and a new logo. On the chest of the T-shirt, the claw with the letters DKS.',
+        badges: [],
+        photoAlt: '',
       },
       {
         title: 'Off to Mallorca',
@@ -486,7 +542,7 @@ const en: Dictionary = {
   },
   sound: {
     label: 'The sound',
-    title: 'This is how the dragon sounds.',
+    title: 'This is how our spirit sounds.',
     lead: 'Every instrument has its say. Together they make the rakatà.',
     alt: "Illustration of the crew's instruments",
     live: {
@@ -538,6 +594,8 @@ const en: Dictionary = {
     label: 'Dates',
     title: 'Upcoming gigs.',
     follow: 'All the news, on Instagram',
+    map: 'Map',
+    mapLabel: 'Directions',
     empty: "No dates announced right now. Follow us on Instagram and you'll be the first to know.",
   },
   join: {
@@ -555,14 +613,16 @@ const en: Dictionary = {
   },
   shop: {
     label: 'Shop',
-    title: 'Wear the dragon.',
-    text: 'Crew T-shirts and cups. Orders are placed by direct message on Instagram.',
+    title: 'Wear Drakaris.',
+    text: 'Crew T-shirts, cups and bags. Orders are placed by direct message on Instagram.',
     order: 'Order on Instagram',
     orderShort: 'Order',
     products: {
       adult: 'Adult T-shirt',
       kids: 'Kids T-shirt',
       cup: 'Drakaris cup',
+      tote: 'Drakaris tote bag',
+      bag: 'Drakaris drawstring bag',
     },
   },
   booking: {
@@ -578,6 +638,11 @@ const en: Dictionary = {
     sections: 'Sections',
     social: 'Social',
     rights: 'All rights reserved.',
+  },
+  notFound: {
+    title: 'Nothing playing here.',
+    text: "This page doesn't exist or has moved.",
+    cta: 'Back to the home page',
   },
 };
 

@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
 import { products, sections, site } from '../data/site';
-import { useTranslations, type Lang } from '../i18n/ui';
+import { languages, useTranslations, type Lang } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -10,6 +10,14 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+
+// «12 €», «1,50 €»… con el formato de cada idioma
+const price = (euros: number) =>
+  new Intl.NumberFormat(languages[lang].htmlLang, {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: Number.isInteger(euros) ? 0 : 2,
+  }).format(euros);
 ---
 
 <section class="section shop" id={sections.shop} data-tone="bone">
@@ -31,20 +39,20 @@ const t = useTranslations(lang);
               href={site.instagram.dm}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`${[t.shop.products[product.id], product.price].filter(Boolean).join(', ')}. ${t.shop.order} (${t.a11y.newTab})`}
+              aria-label={`${t.shop.products[product.id]}, ${price(product.price)}. ${t.shop.order} (${t.a11y.newTab})`}
             >
               <span class="product-tile" style={`--tile-bg:${product.tile}`}>
                 <Image
                   src={product.image}
                   alt=""
                   widths={[320, 480, 720]}
-                  sizes="(min-width: 62rem) 30vw, 46vw"
+                  sizes="(min-width: 62rem) 14vw, (min-width: 40rem) 24vw, 36vw"
                   loading="lazy"
                 />
               </span>
               <span class="product-info">
                 <span class="product-name">{t.shop.products[product.id]}</span>
-                {product.price && <span class="product-price">{product.price}</span>}
+                <span class="product-price">{price(product.price)}</span>
               </span>
               <span class="product-order">
                 {t.shop.orderShort}
@@ -68,7 +76,7 @@ const t = useTranslations(lang);
 
   .products {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: clamp(1.5rem, 3vw, 2rem) clamp(0.75rem, 1.6vw, 1.25rem);
     margin-top: clamp(2.5rem, 6vw, 4.5rem);
   }
@@ -83,18 +91,20 @@ const t = useTranslations(lang);
   }
 
   .product-tile {
-    display: grid;
-    place-items: center;
+    position: relative;
+    display: block;
     aspect-ratio: 1;
-    padding: 12%;
     border-radius: var(--radius);
     background: var(--tile-bg);
     overflow: hidden;
   }
 
+  /* La ilustración cabe entera dentro del cuadro, con margen, sea vertical u horizontal */
   .product-tile img {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    inset: 11%;
+    width: 78%;
+    height: 78%;
     object-fit: contain;
     transition: transform 500ms var(--ease-out);
   }
@@ -144,6 +154,12 @@ const t = useTranslations(lang);
       grid-template-columns: 1fr;
     }
 
+    .products {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 40rem) {
     .products {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
