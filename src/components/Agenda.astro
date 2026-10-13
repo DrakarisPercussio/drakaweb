@@ -44,6 +44,8 @@ const gigs = [...agenda]
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${t.agenda.follow} (${t.a11y.newTab})`}
+          data-track="instagram_click"
+          data-track-place="agenda"
         >
           {t.agenda.follow}
           <Icon name="external" size={16} />
@@ -82,6 +84,8 @@ const gigs = [...agenda]
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`${t.agenda.mapLabel}: ${gig.title[lang]}, ${gig.place} (${t.a11y.newTab})`}
+                      data-track="map_click"
+                      data-track-detail={`${gig.date} ${gig.title.ca}`}
                     >
                       <span class="gig-map-chip">
                         <Icon name="pin" size={15} />

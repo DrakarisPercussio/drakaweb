@@ -4,35 +4,94 @@ import '@fontsource/anton/latin-400.css';
 import '@fontsource-variable/plus-jakarta-sans/wght.css';
 import antonWoff2 from '@fontsource/anton/files/anton-latin-400-normal.woff2?url';
 import '../styles/global.css';
+import ConsentBanner from '../components/ConsentBanner.astro';
 import Csp from '../components/Csp.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { site } from '../data/site';
+import { agenda, analyticsEnabled, site } from '../data/site';
 import { defaultLang, languages, useTranslations, type Lang } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
+  /** Ruta de la página dentro de su idioma: '' para la portada, 'legal/' para la página legal */
+  path?: string;
+  /** Título y descripción propios (si no, los de la portada) */
+  title?: string;
+  description?: string;
 }
 
-const { lang } = Astro.props;
+const { lang, path = '' } = Astro.props;
 const t = useTranslations(lang);
+const { title = t.meta.title, description = t.meta.description } = Astro.props;
 const codes = Object.keys(languages) as Lang[];
+const isHome = path === '';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const absolute = (path: string) => new URL(path, Astro.site).href;
-const canonical = absolute(getRelativeLocaleUrl(lang));
+const absolute = (url: string) => new URL(url, Astro.site).href;
+const canonical = absolute(getRelativeLocaleUrl(lang, path));
 
-const structuredData = {
-  '@context': 'https://schema.org',
+// Datos estructurados: lo que Google lee para saber quién es Drakaris (nombre,
+// otros nombres por los que se la busca, dónde está, redes) y qué actuaciones
+// tiene por delante. Solo van en la portada.
+const homeUrl = absolute(getRelativeLocaleUrl(defaultLang));
+const today = new Date().toISOString().slice(0, 10);
+
+const group = {
   '@type': 'MusicGroup',
+  '@id': `${homeUrl}#drakaris`,
   name: 'Drakaris Percussió',
-  url: absolute(getRelativeLocaleUrl(defaultLang)),
+  legalName: site.legal.name,
+  // Incluye la grafía con la que mucha gente lo escribe al buscar
+  alternateName: ['Drakaris', site.short, 'Dracarys Percussió'],
+  description: t.meta.description,
+  url: homeUrl,
   logo: absolute(`${base}/icon-512.png`),
+  image: absolute(`${base}/og.jpg`),
   foundingDate: String(site.founded),
   foundingLocation: { '@type': 'Place', name: `${site.city}, Barcelona` },
-  genre: 'Percussion',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: "Carrer de l'Ateneu, 23-25",
+    postalCode: site.postcode,
+    addressLocality: site.city,
+    addressRegion: 'Barcelona',
+    addressCountry: 'ES',
+  },
+  ...(site.email && { email: site.email }),
+  areaServed: 'Catalunya',
+  genre: ['Batucada', 'Percussió', 'Samba'],
   sameAs: site.socials.map((social) => social.url),
 };
+
+const upcoming = agenda
+  .filter((gig) => gig.date >= today && gig.place)
+  .map((gig) => {
+    // «Carrer Joan Maragall, Sant Feliu de Llobregat» → calle y población
+    const parts = gig.place!.split(',').map((part) => part.trim());
+    const locality = parts.at(-1);
+    return {
+      '@type': 'Event',
+      name: `${gig.title[lang]} · Drakaris Percussió`,
+      startDate: gig.time ? `${gig.date}T${gig.time}` : gig.date,
+      eventStatus: 'https://schema.org/EventScheduled',
+      eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+      location: {
+        '@type': 'Place',
+        name: gig.place,
+        address: {
+          '@type': 'PostalAddress',
+          ...(parts.length > 1 && { streetAddress: parts.slice(0, -1).join(', ') }),
+          addressLocality: locality,
+          addressRegion: 'Catalunya',
+          addressCountry: 'ES',
+        },
+      },
+      performer: { '@id': group['@id'] },
+      organizer: { '@id': group['@id'] },
+    };
+  });
+
+const structuredData = { '@context': 'https://schema.org', '@graph': [group, ...upcoming] };
 
 // Dos scripts mínimos que tienen que ejecutarse antes de pintar la página, y por
 // eso van escritos dentro de ella. Se definen aquí para poder autorizarlos por
@@ -49,16 +108,23 @@ const restoreScrollScript = `(function(){try{var raw=sessionStorage.getItem('dk:
 <html lang={languages[lang].htmlLang}>
   <head>
     <meta charset="UTF-8" />
-    <Csp inlineScripts={[skipIntroScript, restoreScrollScript]} />
+    <Csp inlineScripts={[skipIntroScript, restoreScrollScript]} analytics={analyticsEnabled} />
+    <!-- Activa la transición entre páginas. Va aquí y no en el CSS: ver la nota en global.css -->
+    <style is:inline>
+      @view-transition {
+        navigation: auto;
+      }
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0c100c" />
     <meta name="generator" content={Astro.generator} />
+    {site.searchConsoleVerification && <meta name="google-site-verification" content={site.searchConsoleVerification} />}
 
-    <title>{t.meta.title}</title>
-    <meta name="description" content={t.meta.description} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {codes.map((code) => <link rel="alternate" hreflang={languages[code].htmlLang} href={absolute(getRelativeLocaleUrl(code))} />)}
-    <link rel="alternate" hreflang="x-default" href={absolute(getRelativeLocaleUrl(defaultLang))} />
+    {codes.map((code) => <link rel="alternate" hreflang={languages[code].htmlLang} href={absolute(getRelativeLocaleUrl(code, path))} />)}
+    <link rel="alternate" hreflang="x-default" href={absolute(getRelativeLocaleUrl(defaultLang, path))} />
     <link rel="sitemap" href={`${base}/sitemap.xml`} />
 
     <link rel="icon" type="image/png" href={`${base}/favicon.png`} />
@@ -66,9 +132,9 @@ const restoreScrollScript = `(function(){try{var raw=sessionStorage.getItem('dk:
     <link rel="preload" as="font" type="font/woff2" href={antonWoff2} crossorigin />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Drakaris" />
-    <meta property="og:title" content={t.meta.title} />
-    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:site_name" content="Drakaris Percussió" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={absolute(`${base}/og.jpg`)} />
     <meta property="og:image:width" content="1200" />
@@ -76,17 +142,18 @@ const restoreScrollScript = `(function(){try{var raw=sessionStorage.getItem('dk:
     <meta property="og:locale" content={languages[lang].ogLocale} />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    {isHome && <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />}
 
     <script is:inline set:html={skipIntroScript} />
   </head>
   <body>
     <a class="skip-link" href="#contingut">{t.a11y.skip}</a>
-    <Header lang={lang} />
+    <ConsentBanner lang={lang} />
+    <Header lang={lang} path={path} />
     <main id="contingut">
       <slot />
     </main>
-    <Footer lang={lang} />
+    <Footer lang={lang} path={path} />
 
     <script is:inline set:html={restoreScrollScript} />
     <script>

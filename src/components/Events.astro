@@ -1,7 +1,8 @@
 ---
 import { Image } from 'astro:assets';
 import Seal from './Seal.astro';
-import { photo } from '../data/photos';
+import PhotoCredit from './PhotoCredit.astro';
+import { creditsFor, photo } from '../data/photos';
 import { events, sections, site } from '../data/site';
 import { useTranslations, type Lang } from '../i18n/ui';
 
@@ -59,6 +60,12 @@ const t = useTranslations(lang);
                           loading="lazy"
                         />
                       </div>
+                      {/* En la foto con el sello del código postal (abajo), el crédito va arriba */}
+                      <PhotoCredit
+                        credits={'photo' in event ? creditsFor(event.photo) : []}
+                        label={t.gallery.credit}
+                        top={'stamp' in event}
+                      />
                     </div>
                   </figure>
                 )}
@@ -170,6 +177,7 @@ const t = useTranslations(lang);
 
   /* Foto: más alta que el marco para que el paralaje tenga recorrido */
   .event-frame {
+    position: relative;
     aspect-ratio: 4 / 3;
     overflow: hidden;
     border-radius: var(--radius);

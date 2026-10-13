@@ -1,17 +1,30 @@
 ---
 import { Image } from 'astro:assets';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import ring from '../assets/brand/dragon-ring.webp';
 import Icon from './Icon.astro';
 import LangSwitcher from './LangSwitcher.astro';
-import { sections, site } from '../data/site';
+import { analyticsEnabled, sections, site } from '../data/site';
 import { useTranslations, type Lang } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
+  /** Ruta de la página dentro de su idioma ('' = portada) */
+  path?: string;
 }
 
-const { lang } = Astro.props;
+const { lang, path = '' } = Astro.props;
 const t = useTranslations(lang);
+
+// Desde la página legal, los enlaces a secciones llevan a la portada
+const to = (id: string) => (path === '' ? `#${id}` : `${getRelativeLocaleUrl(lang)}#${id}`);
+
+const legalUrl = getRelativeLocaleUrl(lang, 'legal/');
+const legalLinks = [
+  { id: 'avis-legal', label: t.legal.notice },
+  { id: 'privacitat', label: t.legal.privacy },
+  { id: 'galetes', label: t.legal.cookies },
+];
 // Año en que se publica la web; el script de la página lo pone al día cada 1 de enero
 const year = new Date().getFullYear();
 
@@ -40,7 +53,7 @@ const links = [
           {
             links.map((link) => (
               <li>
-                <a href={`#${link.id}`}>{link.label}</a>
+                <a href={to(link.id)}>{link.label}</a>
               </li>
             ))
           }
@@ -59,6 +72,9 @@ const links = [
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`${social.label} (${t.a11y.newTab})`}
+                  data-track="social_click"
+                  data-track-detail={social.id}
+                  data-track-place="footer"
                 >
                   <Icon name={social.id} size={16} />
                   {social.label}
@@ -71,7 +87,7 @@ const links = [
 
       <div class="footer-col">
         <h2 class="footer-heading">{t.a11y.language}</h2>
-        <LangSwitcher lang={lang} label={t.a11y.language} />
+        <LangSwitcher lang={lang} label={t.a11y.language} path={path} />
       </div>
     </div>
   </div>
@@ -82,6 +98,25 @@ const links = [
     <p>
       © <span data-current-year>{year}</span> Drakaris Percussió · {site.short} · {site.postcode}. {t.footer.rights}
     </p>
+    <ul class="footer-legal">
+      {
+        legalLinks.map((link) => (
+          <li>
+            <a href={`${legalUrl}#${link.id}`}>{link.label}</a>
+          </li>
+        ))
+      }
+      {/* Solo aparece si hay analítica: lo muestra el script que gestiona el aviso de cookies */}
+      {
+        analyticsEnabled && (
+          <li>
+            <button type="button" data-consent-open hidden>
+              {t.legal.cookieSettings}
+            </button>
+          </li>
+        )
+      }
+    </ul>
     <a class="footer-top-link" href="#inici">
       {t.a11y.backTop}
       <Icon name="up" size={16} />
@@ -164,6 +199,21 @@ const links = [
     color: var(--fg-muted);
   }
 
+  .footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    margin-right: auto;
+  }
+
+  .footer-legal a,
+  .footer-legal button {
+    display: inline-block;
+    padding-block: 0.3rem;
+    color: inherit;
+    transition: color 150ms ease;
+  }
+
   .footer-top-link {
     display: inline-flex;
     align-items: center;
@@ -179,6 +229,8 @@ const links = [
 
   @media (hover: hover) and (pointer: fine) {
     .footer-links a:hover,
+    .footer-legal a:hover,
+    .footer-legal button:hover,
     .footer-top-link:hover {
       color: var(--green);
     }

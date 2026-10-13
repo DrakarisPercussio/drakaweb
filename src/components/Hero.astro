@@ -46,11 +46,13 @@ const titleLines = t.hero.title.map((line) => {
       <p class="hero-lead" data-intro style="--d:420">{t.hero.lead}</p>
 
       <div class="hero-actions" data-intro style="--d:500">
-        <a class="btn btn--primary" href={`#${sections.contact}`}>
+        <a class="btn btn--primary" href={`#${sections.contact}`} data-track="nav_cta" data-track-detail="booking" data-track-place="hero">
           {t.hero.primary}
           <Icon name="arrow" />
         </a>
-        <a class="btn btn--ghost" href={`#${sections.join}`}>{t.hero.secondary}</a>
+        <a class="btn btn--ghost" href={`#${sections.join}`} data-track="nav_cta" data-track-detail="join" data-track-place="hero">
+          {t.hero.secondary}
+        </a>
       </div>
     </div>
 

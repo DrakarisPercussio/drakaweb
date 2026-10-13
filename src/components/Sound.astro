@@ -82,6 +82,8 @@ const thumbnail = (id: string) => ({
                       aria-label={`${t.sound.live.play}: ${title}`}
                       data-video={video.id}
                       data-title={title}
+                      data-track="video_play"
+                      data-track-detail={video.round}
                     >
                       <img
                         src={image.src}

@@ -418,13 +418,14 @@ p {
 }
 
 /* --------------------------------------------------------------------------
-   Cambio de idioma: la página nueva funde con la anterior y la píldora del
-   selector se desliza hasta el idioma elegido.
-   -------------------------------------------------------------------------- */
+   Cambio de página (idioma, página legal): la nueva funde con la anterior y la
+   píldora del selector se desliza hasta el idioma elegido.
 
-@view-transition {
-  navigation: auto;
-}
+   La regla que lo activa (`@view-transition { navigation: auto }`) no está
+   aquí sino escrita en el <head> de Layout.astro: el navegador decide si hay
+   transición al empezar a leer la página, y si en ese momento esta hoja de
+   estilos aún se está descargando, la da por desactivada.
+   -------------------------------------------------------------------------- */
 
 ::view-transition-old(root),
 ::view-transition-new(root) {

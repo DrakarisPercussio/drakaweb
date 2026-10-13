@@ -7,9 +7,11 @@ interface Props {
   label: string;
   /** Solo un selector por página puede animarse entre idiomas (el de la cabecera). */
   animated?: boolean;
+  /** Ruta de la página actual dentro de su idioma ('' = portada), para no salir de ella al cambiar */
+  path?: string;
 }
 
-const { lang, label, animated = false } = Astro.props;
+const { lang, label, animated = false, path = '' } = Astro.props;
 const codes = Object.keys(languages) as Lang[];
 const active = codes.indexOf(lang);
 ---
@@ -21,13 +23,15 @@ const active = codes.indexOf(lang);
       codes.map((code, index) => (
         <li>
           <a
-            href={getRelativeLocaleUrl(code)}
+            href={getRelativeLocaleUrl(code, path)}
             hreflang={languages[code].htmlLang}
             lang={languages[code].htmlLang}
             aria-current={code === lang ? 'true' : undefined}
             title={languages[code].name}
             data-lang-link
             data-index={index}
+            data-track={code === lang ? undefined : 'language_change'}
+            data-track-detail={code}
           >
             <span aria-hidden="true">{languages[code].code}</span>
             <span class="sr-only">{languages[code].name}</span>

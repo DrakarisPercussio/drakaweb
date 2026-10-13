@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import ring from '../assets/brand/dragon-ring.webp';
 import Icon from './Icon.astro';
 import LangSwitcher from './LangSwitcher.astro';
@@ -8,10 +9,17 @@ import { useTranslations, type Lang } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
+  /** Ruta de la página dentro de su idioma ('' = portada) */
+  path?: string;
 }
 
-const { lang } = Astro.props;
+const { lang, path = '' } = Astro.props;
 const t = useTranslations(lang);
+
+// En la portada los enlaces saltan a su sección; desde otra página (la legal)
+// llevan a la portada, a esa misma sección.
+const home = getRelativeLocaleUrl(lang);
+const to = (id: string) => (path === '' ? `#${id}` : `${home}#${id}`);
 
 const links = [
   { id: sections.about, label: t.nav.about },
@@ -26,7 +34,7 @@ const menuLinks = [...links, { id: sections.contact, label: t.nav.contact }];
 
 <header class="site-header" data-header>
   <div class="bar container">
-    <a class="brand" href="#inici" aria-label={t.a11y.home}>
+    <a class="brand" href={path === '' ? '#inici' : home} aria-label={t.a11y.home}>
       <Image src={ring} alt="" width={72} height={84} loading="eager" class="brand-mark" />
       <span class="brand-name">Drakaris</span>
     </a>
@@ -36,7 +44,7 @@ const menuLinks = [...links, { id: sections.contact, label: t.nav.contact }];
         {
           links.map((link) => (
             <li>
-              <a href={`#${link.id}`} data-nav-link>
+              <a href={to(link.id)} data-nav-link>
                 {link.label}
               </a>
             </li>
@@ -46,8 +54,16 @@ const menuLinks = [...links, { id: sections.contact, label: t.nav.contact }];
     </nav>
 
     <div class="actions">
-      <LangSwitcher lang={lang} label={t.a11y.language} animated />
-      <a class="btn btn--primary btn--sm header-cta" href={`#${sections.contact}`}>{t.nav.cta}</a>
+      <LangSwitcher lang={lang} label={t.a11y.language} path={path} animated />
+      <a
+        class="btn btn--primary btn--sm header-cta"
+        href={to(sections.contact)}
+        data-track="nav_cta"
+        data-track-detail="booking"
+        data-track-place="header"
+      >
+        {t.nav.cta}
+      </a>
       <button
         class="menu-btn"
         type="button"
@@ -70,7 +86,7 @@ const menuLinks = [...links, { id: sections.contact, label: t.nav.contact }];
       {
         menuLinks.map((link, i) => (
           <li style={`--i:${i}`}>
-            <a href={`#${link.id}`} data-menu-link>
+            <a href={to(link.id)} data-menu-link>
               {link.label}
             </a>
           </li>
@@ -83,7 +99,15 @@ const menuLinks = [...links, { id: sections.contact, label: t.nav.contact }];
       {
         site.socials.map((social) => (
           <li>
-            <a href={social.url} target="_blank" rel="noopener noreferrer" aria-label={`${social.label} (${t.a11y.newTab})`}>
+            <a
+              href={social.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${social.label} (${t.a11y.newTab})`}
+              data-track="social_click"
+              data-track-detail={social.id}
+              data-track-place="menu"
+            >
               <Icon name={social.id} size={22} />
             </a>
           </li>

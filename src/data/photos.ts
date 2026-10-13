@@ -9,6 +9,75 @@ const files = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true },
 );
 
+/* ==========================================================================
+   CRÉDITOS — quién hizo cada foto
+   ==========================================================================
+   Solo hay que escribir el nombre entre las comillas de la foto:
+
+       '2023/Concurs1.jpg': 'Nom Cognom',
+
+   · Sin nombre ('') no sale nada.
+   · Si una foto es de varias personas, separadas por comas: 'Nom A, Nom B'.
+   · El mismo nombre, escrito igual, en varias fotos cuenta como una sola
+     persona en la lista de la galería.
+   · Una foto nueva que no esté en la lista no lleva crédito; para dárselo se
+     añade una línea con su "año/archivo".
+
+   Dónde se ve:
+   · Sobre las fotos grandes (historia y actos), en una esquina: «Foto: Nom».
+   · En la galería, al pasar el ratón por cada foto.
+   · Bajo la galería, en una línea con todos: «Fotografies: Nom A, Nom B».
+   ========================================================================== */
+const credits: Record<string, string> = {
+  '2019/Cruyff.jpg': 'Leo Messi',
+  '2019/llavatraka.jpg': '',
+  '2021/IMG-20211122-WA0025.jpg': '',
+  '2021/PrimeraDrakacasa.jpg': '',
+  '2022/Amb el Drac.jpg': '',
+  '2022/Cercavila.jpg': '',
+  '2022/IMG-20220327-WA0073.jpg': '',
+  '2022/IMG-20220701-WA0104.jpg': '',
+  '2022/Tardor.jpg': '',
+  '2022/TardorAnalogica.jpg': '',
+  '2022/mallorca.jpg': '',
+  '2023/230916_Drakafesta_323.JPG': '',
+  '2023/230916_Drakafesta_341.JPG': '',
+  '2023/230916_Drakafesta_380.JPG': '',
+  '2023/231012_Tabalada_107.JPG': '',
+  '2023/231012_Tabalada_471.JPG': '',
+  '2023/231015_Cercavila_83.JPG': '',
+  '2023/Concurs1.jpg': '',
+  '2023/Concurs2.jpg': '',
+  '2024/BeDisco.jpg': '',
+  '2024/ConcursRojos.jpg': '',
+  '2024/IMG-20240104-WA0028.jpg': '',
+  '2024/IMG-20240311-WA0007.jpg': '',
+  '2024/IMG-20240317-WA0029.jpg': '',
+  '2024/IMG-20241009-WA0043.jpg': '',
+  '2024/Perculliga.jpg': '',
+  '2025/Calçotada.jpg': '',
+  '2025/Correfoc.jpg': '',
+  '2025/IMG-20250719-WA0000.jpg': '',
+  '2025/IMG-20251221-WA0070.jpg': '',
+  '2026/Concurs.jpg': '',
+  '2026/FestaTardor.jpg': '',
+  '2026/FestesPrimavera.jpg': 'Shakira',
+  '2026/IMG-20260725-WA0104.jpg': '',
+  '2026/IMG-20261009-WA0140.jpg': '',
+  '2026/IMG-20261009-WA0354.jpg': '',
+  '2026/SantJordi.jpg': '',
+};
+
+// (Opcional) El Instagram o la web de cada fotógrafo: con esto su nombre pasa
+// a ser un enlace. El nombre tiene que estar escrito igual que arriba.
+const photographerLinks: Record<string, string> = {
+  // 'Nom Cognom': 'https://www.instagram.com/usuari/',
+};
+
+/* ==========================================================================
+   Descripciones y galería
+   ========================================================================== */
+
 type Caption = string | Record<Lang, string>;
 
 // Imágenes de la carpeta de fotos que no son para la galería (los logos de 2020).
@@ -19,11 +88,6 @@ const notInGallery = new Set(['2020/logo1.jpg', '2020/logo2.jpg']);
 const captions: Record<string, Caption> = {
   '2019/Cruyff.jpg': 'Estadi Johan Cruyff',
   '2019/llavatraka.jpg': 'Llavatraka',
-  '2020/CovidVideollamada.jpg': {
-    ca: 'Videotrucada durant el confinament',
-    es: 'Videollamada durante el confinamiento',
-    en: 'Video call during lockdown',
-  },
   '2021/PrimeraDrakacasa.jpg': { ca: 'Primera Drakacasa', es: 'Primera Drakacasa', en: 'First Drakacasa' },
   '2022/Amb el Drac.jpg': { ca: 'Amb el Drac de Sant Feliu', es: 'Con el Drac de Sant Feliu', en: 'With the Drac de Sant Feliu' },
   '2022/Cercavila.jpg': 'Cercavila',
@@ -47,9 +111,27 @@ const captions: Record<string, Caption> = {
   '2025/IMG-20250719-WA0000.jpg': { ca: "Sopar d'estiu", es: 'Cena de verano', en: 'Summer dinner' },
   '2025/IMG-20251221-WA0070.jpg': { ca: 'Sopar de Nadal', es: 'Cena de Navidad', en: 'Christmas dinner' },
   '2026/Concurs.jpg': 'Concurs de Percussió de Barcelona',
+  '2026/FestaTardor.jpg': 'Festa de Tardor',
   '2026/FestesPrimavera.jpg': 'Festes de Primavera',
+  '2026/IMG-20261009-WA0140.jpg': 'Festa de Tardor',
+  '2026/IMG-20261009-WA0354.jpg': 'Festa de Tardor',
   '2026/SantJordi.jpg': 'Sant Jordi',
 };
+
+export interface Credit {
+  name: string;
+  /** Instagram o web del fotógrafo, si se ha indicado */
+  url?: string;
+}
+
+/** Los fotógrafos de una foto ("año/archivo"). Lista vacía si no tiene crédito. */
+export function creditsFor(key: string): Credit[] {
+  return (credits[key] ?? '')
+    .split(',')
+    .map((name) => name.trim())
+    .filter(Boolean)
+    .map((name) => ({ name, url: photographerLinks[name] }));
+}
 
 export interface Photo {
   /** "año/archivo", p. ej. "2024/Perculliga.jpg" */
@@ -57,15 +139,24 @@ export interface Photo {
   /** Nombre de la carpeta: el año */
   year: string;
   image: ImageMetadata;
+  credits: Credit[];
 }
 
 // Lo más reciente primero; dentro de cada año, por nombre de archivo.
 export const photos: Photo[] = Object.entries(files)
   .map(([path, file]) => {
     const [year, name] = path.split('/').slice(-2);
-    return { key: `${year}/${name}`, year, image: file.default };
+    const key = `${year}/${name}`;
+    return { key, year, image: file.default, credits: creditsFor(key) };
   })
   .sort((a, b) => b.year.localeCompare(a.year) || a.key.localeCompare(b.key, undefined, { numeric: true }));
+
+// Aviso al publicar: un crédito o una descripción cuya foto ya no existe (se ha
+// borrado o cambiado de nombre) no hace daño, pero conviene quitar la línea.
+const existing = new Set(photos.map((item) => item.key));
+for (const key of new Set([...Object.keys(credits), ...Object.keys(captions)])) {
+  if (!existing.has(key)) console.warn(`[fotos] «${key}» está en src/data/photos.ts pero no en src/assets/Fotos`);
+}
 
 // La galería no va por fechas: las fotos se mezclan. El orden sale del nombre
 // de cada archivo, así que es siempre el mismo hasta que se añadan fotos nuevas.
@@ -78,6 +169,11 @@ function mixKey(key: string): number {
 export const mixedPhotos: Photo[] = photos
   .filter((item) => !notInGallery.has(item.key))
   .sort((a, b) => mixKey(a.key) - mixKey(b.key));
+
+/** Todos los fotógrafos de la galería, sin repetir y por orden alfabético */
+export const galleryCredits: Credit[] = [
+  ...new Map(mixedPhotos.flatMap((item) => item.credits).map((credit) => [credit.name, credit])).values(),
+].sort((a, b) => a.name.localeCompare(b.name, 'ca'));
 
 /** Una foto concreta por su clave, o `undefined` si se ha borrado o renombrado. */
 export function photo(key: string): ImageMetadata | undefined {

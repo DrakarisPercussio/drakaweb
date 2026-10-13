@@ -2,7 +2,8 @@
 import { Image } from 'astro:assets';
 import dragonRing from '../assets/brand/dragon-ring.webp';
 import dksClaw from '../assets/brand/dks-claw.webp';
-import { photo } from '../data/photos';
+import PhotoCredit from './PhotoCredit.astro';
+import { creditsFor, photo } from '../data/photos';
 import { milestones, sections, site } from '../data/site';
 import { useTranslations, type Lang } from '../i18n/ui';
 
@@ -103,6 +104,7 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
                           sizes="(min-width: 62rem) 40vw, 62vw"
                           loading="lazy"
                         />
+                        <PhotoCredit credits={creditsFor(milestone.photo ?? '')} label={t.gallery.credit} />
                       </div>
                     </figure>
                   )}
@@ -295,6 +297,7 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
   }
 
   .milestone-frame {
+    position: relative;
     aspect-ratio: 3 / 2;
     overflow: hidden;
     border-radius: var(--radius);

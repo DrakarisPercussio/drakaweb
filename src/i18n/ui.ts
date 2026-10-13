@@ -18,8 +18,10 @@ export const defaultLang: Lang = 'ca';
 const ca = {
   meta: {
     title: 'Drakaris Percussió',
+    // Lo que enseña Google bajo el título. Lleva las palabras por las que se
+    // busca una colla así: percussió, batucada, tambors, el nombre del pueblo.
     description:
-      "Drakaris (DKS) és la colla de percussió de Sant Feliu de Llobregat. Des del 2013 portem el rakatà a cercaviles, correfocs, festes majors i actes propis. Contracta'ns o vine a tocar.",
+      "Drakaris (DKS): colla de percussió i batucada de Sant Feliu de Llobregat. Des del 2013 portem tambors i rakatà a cercaviles, correfocs i festes majors. Contracta'ns o vine a tocar.",
   },
   a11y: {
     skip: 'Salta al contingut',
@@ -194,12 +196,15 @@ const ca = {
     label: 'Galeria',
     title: 'El rakatà, en imatges.',
     cta: "Veure'n més a Instagram",
+    // Crédito de fotógrafo: sobre una foto («Foto: Nom») y bajo la galería («Fotografies: …»)
+    credit: 'Foto',
+    credits: 'Fotografies',
     alt: 'Drakaris',
   },
   shop: {
     label: 'Botiga',
     title: 'Vesteix de Drakaris.',
-    text: 'Samarretes, gots i bosses de la colla. Les comandes es fan per missatge directe a Instagram.',
+    text: 'Samarretes, mocadors, gots i bosses de la colla. Les comandes es fan per missatge directe a Instagram.',
     order: 'Fes la comanda per Instagram',
     orderShort: 'Fes la comanda',
     products: {
@@ -208,21 +213,44 @@ const ca = {
       cup: 'Got de Drakaris',
       tote: 'Tote bag de Drakaris',
       bag: 'Bossa de Drakaris',
+      scarf: 'Mocador de Drakaris',
     },
   },
   booking: {
     label: 'Contractació',
     title: 'Posa ritme a la teva festa.',
-    text: "Festes majors, cercaviles, inauguracions, casaments… Explica'ns què tens al cap i et direm com ho fem sonar.",
+    text: "Batucada per a festes majors, cercaviles, inauguracions, casaments… Explica'ns què tens al cap i et direm com ho fem sonar.",
     primary: 'Escriu-nos per Instagram',
     email: "Envia'ns un correu",
+    // Asunto con el que se abre el correo: ayuda a distinguir las contrataciones
+    emailSubject: 'Contractació de Drakaris',
     posterAlt: 'Cartell de Drakaris: un drac enroscat entre tambors, «Since 2013, Sant Feliu de Llobregat»',
   },
   footer: {
-    tagline: 'Colla de percussió de Sant Feliu de Llobregat. Des del 2013.',
+    tagline: 'Colla de percussió i batucada de Sant Feliu de Llobregat. Des del 2013.',
     sections: 'Seccions',
     social: 'Xarxes',
     rights: 'Tots els drets reservats.',
+  },
+  // Página «Informació legal» (los textos largos están en src/i18n/legal.ts)
+  legal: {
+    title: 'Informació legal',
+    lead: "Qui hi ha darrere d'aquest web, què fem amb les dades i quines galetes fem servir.",
+    updated: 'Darrera actualització',
+    back: "Torna a l'inici",
+    // Enlaces del pie de página
+    notice: 'Avís legal',
+    privacy: 'Privacitat',
+    cookies: 'Galetes',
+    cookieSettings: 'Configuració de galetes',
+  },
+  // Aviso de cookies: solo sale si hay Google Analytics configurado
+  consent: {
+    label: 'Galetes',
+    text: "Fem servir galetes d'analítica (Google Analytics) per saber com es fa servir el web i millorar-lo. Només s'activen si les acceptes.",
+    more: 'Més informació',
+    accept: 'Accepta',
+    reject: 'Rebutja',
   },
   // Página de error (dirección que no existe)
   notFound: {
@@ -238,7 +266,7 @@ const es: Dictionary = {
   meta: {
     title: 'Drakaris Percussió',
     description:
-      'Drakaris (DKS) es la colla de percusión de Sant Feliu de Llobregat. Desde 2013 llevamos el rakatà a pasacalles, correfocs, fiestas mayores y actos propios. Contrátanos o ven a tocar.',
+      'Drakaris (DKS): colla de percusión y batucada de Sant Feliu de Llobregat (Barcelona). Desde 2013 llevamos tambores y rakatà a pasacalles, correfocs y fiestas mayores. Contrátanos o ven a tocar.',
   },
   a11y: {
     skip: 'Saltar al contenido',
@@ -403,12 +431,14 @@ const es: Dictionary = {
     label: 'Galería',
     title: 'El rakatà, en imágenes.',
     cta: 'Ver más en Instagram',
+    credit: 'Foto',
+    credits: 'Fotografías',
     alt: 'Drakaris',
   },
   shop: {
     label: 'Tienda',
     title: 'Viste de Drakaris.',
-    text: 'Camisetas, vasos y bolsas de la colla. Los pedidos se hacen por mensaje directo en Instagram.',
+    text: 'Camisetas, pañuelos, vasos y bolsas de la colla. Los pedidos se hacen por mensaje directo en Instagram.',
     order: 'Haz tu pedido por Instagram',
     orderShort: 'Haz tu pedido',
     products: {
@@ -417,21 +447,40 @@ const es: Dictionary = {
       cup: 'Vaso de Drakaris',
       tote: 'Tote bag de Drakaris',
       bag: 'Bolsa de cuerdas de Drakaris',
+      scarf: 'Pañuelo de Drakaris',
     },
   },
   booking: {
     label: 'Contratación',
     title: 'Pon ritmo a tu fiesta.',
-    text: 'Fiestas mayores, pasacalles, inauguraciones, bodas… Cuéntanos qué tienes en mente y te diremos cómo lo hacemos sonar.',
+    text: 'Batucada para fiestas mayores, pasacalles, inauguraciones, bodas… Cuéntanos qué tienes en mente y te diremos cómo lo hacemos sonar.',
     primary: 'Escríbenos por Instagram',
     email: 'Envíanos un correo',
+    emailSubject: 'Contratación de Drakaris',
     posterAlt: 'Cartel de Drakaris: un dragón enroscado entre tambores, «Since 2013, Sant Feliu de Llobregat»',
   },
   footer: {
-    tagline: 'Colla de percusión de Sant Feliu de Llobregat. Desde 2013.',
+    tagline: 'Colla de percusión y batucada de Sant Feliu de Llobregat. Desde 2013.',
     sections: 'Secciones',
     social: 'Redes',
     rights: 'Todos los derechos reservados.',
+  },
+  legal: {
+    title: 'Información legal',
+    lead: 'Quién hay detrás de esta web, qué hacemos con los datos y qué cookies usamos.',
+    updated: 'Última actualización',
+    back: 'Volver al inicio',
+    notice: 'Aviso legal',
+    privacy: 'Privacidad',
+    cookies: 'Cookies',
+    cookieSettings: 'Configuración de cookies',
+  },
+  consent: {
+    label: 'Cookies',
+    text: 'Usamos cookies de analítica (Google Analytics) para saber cómo se usa la web y mejorarla. Solo se activan si las aceptas.',
+    more: 'Más información',
+    accept: 'Aceptar',
+    reject: 'Rechazar',
   },
   notFound: {
     title: 'Aquí no suena nada.',
@@ -444,7 +493,7 @@ const en: Dictionary = {
   meta: {
     title: 'Drakaris Percussió',
     description:
-      'Drakaris (DKS) is the percussion crew from Sant Feliu de Llobregat, Barcelona. Since 2013 we have brought the rakatà to street parades, fire runs, town festivals and our own events. Book us or come and play.',
+      'Drakaris (DKS): percussion and batucada drum group from Sant Feliu de Llobregat, Barcelona. Since 2013 we bring drums and rakatà to street parades, fire runs and festivals. Book us or come and play.',
   },
   a11y: {
     skip: 'Skip to content',
@@ -609,12 +658,14 @@ const en: Dictionary = {
     label: 'Gallery',
     title: 'The rakatà, in pictures.',
     cta: 'See more on Instagram',
+    credit: 'Photo',
+    credits: 'Photography',
     alt: 'Drakaris',
   },
   shop: {
     label: 'Shop',
     title: 'Wear Drakaris.',
-    text: 'Crew T-shirts, cups and bags. Orders are placed by direct message on Instagram.',
+    text: 'Crew T-shirts, neckerchiefs, cups and bags. Orders are placed by direct message on Instagram.',
     order: 'Order on Instagram',
     orderShort: 'Order',
     products: {
@@ -623,21 +674,40 @@ const en: Dictionary = {
       cup: 'Drakaris cup',
       tote: 'Drakaris tote bag',
       bag: 'Drakaris drawstring bag',
+      scarf: 'Drakaris neckerchief',
     },
   },
   booking: {
     label: 'Bookings',
     title: 'Bring the rhythm to your party.',
-    text: "Town festivals, parades, openings, weddings… Tell us what you have in mind and we'll tell you how we make it sound.",
+    text: "Batucada for town festivals, parades, openings, weddings… Tell us what you have in mind and we'll tell you how we make it sound.",
     primary: 'Message us on Instagram',
     email: 'Send us an email',
+    emailSubject: 'Booking Drakaris',
     posterAlt: 'Drakaris poster: a dragon coiled around drums, "Since 2013, Sant Feliu de Llobregat"',
   },
   footer: {
-    tagline: 'Percussion crew from Sant Feliu de Llobregat. Since 2013.',
+    tagline: 'Percussion and batucada crew from Sant Feliu de Llobregat. Since 2013.',
     sections: 'Sections',
     social: 'Social',
     rights: 'All rights reserved.',
+  },
+  legal: {
+    title: 'Legal information',
+    lead: 'Who is behind this website, what we do with data and which cookies we use.',
+    updated: 'Last updated',
+    back: 'Back to the home page',
+    notice: 'Legal notice',
+    privacy: 'Privacy',
+    cookies: 'Cookies',
+    cookieSettings: 'Cookie settings',
+  },
+  consent: {
+    label: 'Cookies',
+    text: 'We use analytics cookies (Google Analytics) to learn how the site is used and improve it. They are only activated if you accept.',
+    more: 'More information',
+    accept: 'Accept',
+    reject: 'Reject',
   },
   notFound: {
     title: 'Nothing playing here.',

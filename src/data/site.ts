@@ -7,6 +7,7 @@ import poster from '../assets/brand/poster.webp';
 import drumClaw from '../assets/brand/drum-claw.webp';
 import dragonRing from '../assets/brand/dragon-ring.webp';
 import dksClaw from '../assets/brand/dks-claw.webp';
+import dragonRingMono from '../assets/brand/dragon-ring-mono.webp';
 import korrebarsPoster from '../assets/LOGOS/Korrebars2026.png';
 
 const instagramHandle = 'drakaris_percussio';
@@ -25,14 +26,41 @@ export const site = {
     dm: `https://ig.me/m/${instagramHandle}`,
   },
   // Correo de contacto. Mientras esté vacío, el botón de correo no se muestra.
-  email: '',
+  email: 'drakaris46@gmail.com',
   // Redes de la colla. Para añadir otra (p. ej. YouTube): una línea más con
   // su `id` (instagram, tiktok o youtube), nombre y dirección.
   socials: [
     { id: 'instagram', label: 'Instagram', url: `https://instagram.com/${instagramHandle}` },
     { id: 'tiktok', label: 'TikTok', url: 'https://www.tiktok.com/@drakaris_percussio' },
   ],
+
+  // DATOS LEGALES de la entidad: salen en la página «Informació legal»
+  // (aviso legal, privacidad y cookies). Lo que esté vacío no se muestra.
+  legal: {
+    name: 'Associació Drakaris Percussió',
+    nif: 'G13654637',
+    registry: "Registre d'Associacions de la Generalitat de Catalunya",
+    registryNumber: '72801',
+    /** Fecha de inscripción, AAAA-MM-DD */
+    registered: '2023-03-22',
+    address: "Carrer de l'Ateneu, 23-25, 08980 Sant Feliu de Llobregat (Barcelona)",
+    /** Fecha de la última revisión de los textos legales, AAAA-MM-DD */
+    updated: '2026-10-13',
+  },
+
+  // GOOGLE ANALYTICS: el identificador de la propiedad, entero («G-» seguido
+  // de unas diez letras y números, p. ej. G-AB12CD34EF). Mientras esté vacío o
+  // a medias no hay analítica ni aviso de cookies. Al ponerlo, la web pide
+  // permiso al visitante y solo mide si lo acepta.
+  analyticsId: 'G-',
+
+  // GOOGLE SEARCH CONSOLE: el código de la etiqueta de verificación (lo que va
+  // dentro de content="…" en la etiqueta <meta name="google-site-verification">).
+  searchConsoleVerification: '',
 } as const;
+
+/** ¿Hay un identificador de Analytics completo? (un «G-» a medias no cuenta) */
+export const analyticsEnabled = /^G-[A-Z0-9]{6,}$/.test(site.analyticsId);
 
 // Ids de sección: son los mismos en los tres idiomas para que los enlaces
 // y la posición de scroll se conserven al cambiar de idioma.
@@ -77,7 +105,7 @@ export const videoCredit = 'BATUCHARLY';
 // `photo` es una foto de src/assets/Fotos; `poster` es un cartel que se enseña entero.
 // `stamp` pega el código postal sobre la foto y `seal`, el sello DKS.
 export const events = [
-  { id: 'tardor', photo: '2025/Correfoc.jpg', stamp: true },
+  { id: 'tardor', photo: '2026/FestaTardor.jpg', stamp: true },
   { id: 'korrebars', poster: korrebarsPoster },
   { id: 'drakafesta', photo: '2023/230916_Drakafesta_380.JPG', seal: true },
 ] as const;
@@ -137,13 +165,15 @@ export const agenda: Gig[] = [
 ];
 
 // BOTIGA — `id` enlaza con el nombre en `shop.products` de ui.ts.
-// `price` va en euros (1.5 = 1,50 €); `tile` es el color de fondo sobre el
-// que se muestra el diseño. Las imágenes son ilustraciones de la colla a
-// falta de fotos de cada producto.
+// `price` va en euros (1.5 = 1,50 €); `tile` es el fondo sobre el que se
+// muestra el diseño (un color, o un degradado como el del mocador: negro con
+// la esquina roja de su reverso). Las imágenes son ilustraciones de la colla
+// a falta de fotos de cada producto.
 export const products = [
   { id: 'adult', price: 12, image: rakata, tile: '#c9cbc4' },
   { id: 'kids', price: 10, image: poster, tile: '#0c100c' },
   { id: 'cup', price: 1.5, image: drumClaw, tile: '#141a15' },
   { id: 'tote', price: 8, image: dragonRing, tile: '#141a15' },
   { id: 'bag', price: 8, image: dksClaw, tile: '#000000' },
+  { id: 'scarf', price: 6, image: dragonRingMono, tile: 'linear-gradient(135deg, #0c100c 70%, #c2182b 70%)' },
 ] as const;

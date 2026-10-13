@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
-import { captionFor, mixedPhotos } from '../data/photos';
+import { captionFor, galleryCredits, mixedPhotos } from '../data/photos';
 import { sections, site } from '../data/site';
 import { useTranslations, type Lang } from '../i18n/ui';
 
@@ -23,7 +23,14 @@ const t = useTranslations(lang);
 // (En `sizes`, el ancho de móvil se declara algo menor que el real a propósito:
 // así los teléfonos de pantalla muy densa bajan la versión de 480 px en vez de
 // la de 640, que en una miniatura no se distingue y son muchas fotos.)
-const tiles = mixedPhotos.map((item) => ({ ...item, caption: captionFor(item, lang), wideOnly: false }));
+//
+// Créditos: el nombre del fotógrafo sale al pasar el ratón por su foto y, para
+// que se vea también en el móvil, en una línea bajo las cintas con todos ellos.
+const tiles = mixedPhotos.map((item) => {
+  const by = item.credits.map((credit) => credit.name).join(', ');
+  const caption = captionFor(item, lang);
+  return { ...item, by, caption: by ? `${caption}. ${t.gallery.credit}: ${by}` : caption, wideOnly: false };
+});
 const [first, second, third] = [0, 1, 2].map((n) => tiles.filter((_, i) => i % 3 === n));
 
 const withExtras = (own: typeof tiles, extras: typeof tiles) =>
@@ -50,6 +57,8 @@ const rows = [
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${t.gallery.cta} (${t.a11y.newTab})`}
+          data-track="instagram_click"
+          data-track-place="gallery"
         >
           {t.gallery.cta}
           <Icon name="external" size={16} />
@@ -80,6 +89,11 @@ const rows = [
                       sizes="(min-width: 62rem) 19rem, (min-width: 40rem) 13rem, 9rem"
                       loading="lazy"
                     />
+                    {tile.by && (
+                      <span class="reel-credit" aria-hidden="true">
+                        {t.gallery.credit}: {tile.by}
+                      </span>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -89,6 +103,26 @@ const rows = [
       ))
     }
   </div>
+
+  {
+    galleryCredits.length > 0 && (
+      <p class="container gallery-credits" data-reveal>
+        {t.gallery.credits}:{' '}
+        {galleryCredits.map((credit, i) => (
+          <Fragment>
+            {i > 0 && ', '}
+            {credit.url ? (
+              <a href={credit.url} target="_blank" rel="noopener noreferrer">
+                {credit.name}
+              </a>
+            ) : (
+              credit.name
+            )}
+          </Fragment>
+        ))}
+      </p>
+    )
+  }
 </section>
 
 <style>
@@ -157,6 +191,43 @@ const rows = [
     object-fit: cover;
     /* Casi todo son fotos de grupo: se prioriza la franja de las caras */
     object-position: 50% 35%;
+  }
+
+  /* Crédito de cada foto: aparece al pasar el ratón (la cinta frena) */
+  .reel-credit {
+    position: absolute;
+    left: 0.5rem;
+    bottom: 0.5rem;
+    max-width: calc(100% - 1rem);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: rgb(12 16 12 / 0.72);
+    color: var(--bone);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.4;
+    opacity: 0;
+    transition: opacity 150ms ease;
+    pointer-events: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .reel-item:hover .reel-credit {
+      opacity: 1;
+    }
+  }
+
+  /* Todos los fotógrafos, bajo las cintas */
+  .gallery-credits {
+    margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-size: 0.875rem;
+    color: var(--fg-muted);
+  }
+
+  .gallery-credits a {
+    color: var(--fg);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   @keyframes reel {

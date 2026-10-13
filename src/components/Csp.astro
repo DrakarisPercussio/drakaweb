@@ -15,9 +15,21 @@ import { createHash } from 'node:crypto';
 interface Props {
   /** Código de los <script> escritos dentro de la propia página (los que no son un archivo) */
   inlineScripts?: string[];
+  /** ¿La página puede cargar Google Analytics? (solo si hay identificador configurado) */
+  analytics?: boolean;
 }
 
-const { inlineScripts = [] } = Astro.props;
+const { inlineScripts = [], analytics = false } = Astro.props;
+
+// Lo que necesita Google Analytics 4, según su guía para CSP. Solo se abre
+// si la web tiene analítica; y aun así no se usa hasta que el visitante acepta.
+const ga = analytics
+  ? {
+      script: ' https://*.googletagmanager.com',
+      img: ' https://*.google-analytics.com https://*.googletagmanager.com',
+      connect: ' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com',
+    }
+  : { script: '', img: '', connect: '' };
 
 // Cada script escrito en la página se autoriza por su huella: si alguien lo
 // cambiara, dejaría de coincidir y no se ejecutaría.
@@ -26,15 +38,15 @@ const fingerprint = (code: string) => `'sha256-${createHash('sha256').update(cod
 const policy = [
   // Por defecto, solo archivos de la propia web
   "default-src 'self'",
-  ["script-src 'self'", ...inlineScripts.map(fingerprint)].join(' '),
+  ["script-src 'self'", ...inlineScripts.map(fingerprint)].join(' ') + ga.script,
   // 'unsafe-inline' permite los atributos style="…" que usan las animaciones
   "style-src 'self' 'unsafe-inline'",
   // Imágenes propias, las dibujadas en el CSS (data:) y las miniaturas de YouTube
-  "img-src 'self' data: https://i.ytimg.com",
+  `img-src 'self' data: https://i.ytimg.com${ga.img}`,
   "font-src 'self'",
   // Lo único que se puede incrustar: el reproductor de YouTube sin cookies
   'frame-src https://www.youtube-nocookie.com',
-  "connect-src 'self'",
+  `connect-src 'self'${ga.connect}`,
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

@@ -27,13 +27,20 @@ const t = useTranslations(lang);
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${t.booking.primary} (${t.a11y.newTab})`}
+          data-track="contact_booking"
+          data-track-place="instagram"
         >
           <Icon name="instagram" />
           {t.booking.primary}
         </a>
         {
           site.email && (
-            <a class="btn btn--ghost" href={`mailto:${site.email}`}>
+            <a
+              class="btn btn--ink"
+              href={`mailto:${site.email}?subject=${encodeURIComponent(t.booking.emailSubject)}`}
+              data-track="contact_booking"
+              data-track-place="email"
+            >
               <Icon name="mail" />
               {t.booking.email}
             </a>
@@ -46,14 +53,35 @@ const t = useTranslations(lang);
           {
             site.socials.map((social) => (
               <li>
-                <a href={social.url} target="_blank" rel="noopener noreferrer" aria-label={`${social.label} (${t.a11y.newTab})`}>
+                <a
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${social.label} (${t.a11y.newTab})`}
+                  data-track="social_click"
+                  data-track-detail={social.id}
+                  data-track-place="booking"
+                >
                   <Icon name={social.id} size={20} />
                 </a>
               </li>
             ))
           }
         </ul>
-        <p class="booking-handle">@{site.instagram.handle} · {site.city}</p>
+        {/* La dirección también va escrita: quien no tenga programa de correo puede copiarla */}
+        <p class="booking-handle">
+          {
+            site.email && (
+              <Fragment>
+                <a href={`mailto:${site.email}`} data-track="contact_booking" data-track-place="email-text">
+                  {site.email}
+                </a>
+                {' · '}
+              </Fragment>
+            )
+          }
+          @{site.instagram.handle}
+        </p>
       </div>
     </div>
 
@@ -139,6 +167,11 @@ const t = useTranslations(lang);
       background-color: var(--ink);
       color: var(--bone);
     }
+  }
+
+  .booking-handle a {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   .booking-handle {

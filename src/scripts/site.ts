@@ -5,6 +5,7 @@ import './drum';
 import './timeline';
 import './reel';
 import './video';
+import './analytics';
 
 const root = document.documentElement;
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
