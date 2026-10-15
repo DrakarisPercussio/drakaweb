@@ -3,8 +3,9 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://drakarispercussio.github.io',
-  base: process.env.GITHUB_PAGES ? '/drakaweb' : undefined,
+  // Dominio propio: la web vive en la raíz (antes, en drakarispercussio.github.io/drakaweb/).
+  // De aquí salen las direcciones completas: canónicas, idiomas, sitemap e imagen para redes.
+  site: 'https://drakarispercussio.com',
   // Català en la raíz (/), castellano en /es/ e inglés en /en/
   i18n: {
     defaultLocale: 'ca',

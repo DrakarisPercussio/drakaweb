@@ -1,7 +1,5 @@
 // Indicaciones para buscadores: pueden leerlo todo, y aquí está el mapa del sitio.
-// Nota: los buscadores solo leen robots.txt en la raíz del dominio. Mientras la
-// web viva en una subcarpeta (github.io/drakaweb) no tiene efecto; lo tendrá el
-// día que se publique en un dominio propio.
+// (Los buscadores solo lo leen en la raíz del dominio: drakarispercussio.com/robots.txt.)
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = ({ site }) => {
