@@ -5,6 +5,7 @@ import './drum';
 import './timeline';
 import './reel';
 import './video';
+import './consent';
 import './analytics';
 
 const root = document.documentElement;

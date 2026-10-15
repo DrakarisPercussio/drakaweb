@@ -1,7 +1,6 @@
 ---
 import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
-import { getRelativeLocaleUrl } from 'astro:i18n';
 import instruments from '../assets/brand/instruments.webp';
 import Icon from './Icon.astro';
 import { sections, videoCredit, videos } from '../data/site';
@@ -14,6 +13,8 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
+// Los vídeos se reproducen aquí mismo al pulsar play (src/scripts/video.ts).
+//
 // Las miniaturas se sirven desde la propia web (src/assets/videos/<id>.jpg) y
 // no desde YouTube: así, al abrir la página, Google no recibe la IP de nadie.
 // Para un vídeo nuevo, guardar en esa carpeta, con su id como nombre, la imagen
@@ -114,10 +115,7 @@ const thumbnail = (id: string) => {
         }
       </ul>
 
-      <p class="live-credit" data-reveal>
-        {`${t.sound.live.credit.replace('{author}', videoCredit)}. ${t.sound.live.privacy} `}
-        <a href={`${getRelativeLocaleUrl(lang, 'legal/')}#galetes`}>{t.consent.more}</a>
-      </p>
+      <p class="live-credit" data-reveal>{t.sound.live.credit.replace('{author}', videoCredit)}</p>
     </div>
   </div>
 </section>
@@ -311,17 +309,9 @@ const thumbnail = (id: string) => {
   }
 
   .live-credit {
-    max-width: 44rem;
     margin-top: 1.5rem;
     font-size: 0.8125rem;
     color: var(--fg-muted);
-  }
-
-  .live-credit a {
-    font-weight: 700;
-    white-space: nowrap;
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
   }
 
   @keyframes video-spin {

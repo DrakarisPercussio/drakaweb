@@ -45,7 +45,7 @@ const policy = [
   // vídeos también son propias: así YouTube no sabe nada hasta que se pulsa play.
   `img-src 'self' data:${ga.img}`,
   "font-src 'self'",
-  // Lo único que se puede incrustar: el reproductor de YouTube sin cookies
+  // Lo único que se puede incrustar: el reproductor de YouTube, al pulsar play
   'frame-src https://www.youtube-nocookie.com',
   `connect-src 'self'${ga.connect}`,
   "object-src 'none'",

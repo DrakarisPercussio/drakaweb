@@ -1,13 +1,16 @@
-// Analítica con permiso. Tres cosas:
+// Google Analytics, con permiso. Dos cosas:
 //
-//  1. El aviso de cookies: pregunta una vez y recuerda la respuesta 12 meses.
-//  2. Google Analytics: solo se descarga si la respuesta es «sí». Antes de eso
-//     no sale ni una petición hacia Google ni se guarda ninguna cookie.
-//  3. Los clics que interesa contar: cualquier elemento con `data-track` envía
+//  1. Analytics solo se descarga si el visitante acepta la analítica en el
+//     aviso de cookies (src/scripts/consent.ts). Antes de eso no sale ni una
+//     petición hacia Google ni se guarda ninguna cookie; si después la
+//     rechaza, se apaga y se borran sus cookies.
+//  2. Los clics que interesa contar: cualquier elemento con `data-track` envía
 //     un evento con ese nombre (para ver cuáles hay, buscar `data-track` en src/).
 //
-// Si la web no tiene identificador de Analytics (`site.analyticsId` vacío), el
-// aviso no existe en la página y este archivo no hace nada.
+// Si la web no tiene identificador de Analytics (`site.analyticsId` vacío o a
+// medias), este archivo no hace nada.
+
+import { getConsent, onConsent } from './consent';
 
 declare global {
   interface Window {
@@ -17,40 +20,9 @@ declare global {
   }
 }
 
-const banner = document.querySelector<HTMLElement>('[data-consent]');
-const gaId = banner?.dataset.gaId;
+const gaId = document.querySelector<HTMLElement>('[data-ga-id]')?.dataset.gaId;
 
-if (banner && gaId) {
-  const STORAGE_KEY = 'dk:consent';
-  const VALID_FOR = 365 * 24 * 60 * 60 * 1000; // la respuesta se vuelve a pedir al cabo de un año
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-  /* ---------------------------------------------------------------------
-     La respuesta guardada
-     --------------------------------------------------------------------- */
-
-  const readChoice = (): boolean | undefined => {
-    try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null') as { analytics?: unknown; at?: unknown } | null;
-      if (!saved || typeof saved.analytics !== 'boolean' || typeof saved.at !== 'number') return undefined;
-      return Date.now() - saved.at < VALID_FOR ? saved.analytics : undefined;
-    } catch {
-      return undefined;
-    }
-  };
-
-  const saveChoice = (analytics: boolean) => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ analytics, at: Date.now() }));
-    } catch {
-      // Sin almacenamiento (modo privado estricto): la respuesta vale para esta visita
-    }
-  };
-
-  /* ---------------------------------------------------------------------
-     Google Analytics
-     --------------------------------------------------------------------- */
-
+if (gaId) {
   let loaded = false;
   let enabled = false;
 
@@ -96,68 +68,15 @@ if (banner && gaId) {
     }
   }
 
+  if (getConsent()?.analytics) enableAnalytics();
+  onConsent((consent) => (consent.analytics ? enableAnalytics() : disableAnalytics()));
+
   /** Envía un evento, si hay permiso. Sin permiso no hace nada (ni lo guarda para luego). */
   function track(name: string, detail: Record<string, string | undefined>) {
     if (!enabled) return;
     const params = Object.fromEntries(Object.entries(detail).filter(([, value]) => value));
     window.gtag?.('event', name, params);
   }
-
-  /* ---------------------------------------------------------------------
-     El aviso
-     --------------------------------------------------------------------- */
-
-  let opener: HTMLElement | null = null;
-
-  function openBanner(from: HTMLElement | null = null) {
-    opener = from;
-    banner!.hidden = false;
-    // Un fotograma de margen para que la transición arranque desde el estado oculto
-    requestAnimationFrame(() => requestAnimationFrame(() => banner!.setAttribute('data-open', '')));
-    // Abierto a mano desde el pie: el foco va al aviso. En la primera visita no se roba el foco.
-    if (from) banner!.querySelector<HTMLElement>('button')?.focus({ preventScroll: true });
-  }
-
-  function closeBanner() {
-    banner!.removeAttribute('data-open');
-    const hide = () => {
-      if (!banner!.hasAttribute('data-open')) banner!.hidden = true;
-    };
-    if (reducedMotion.matches) hide();
-    else window.setTimeout(hide, 220);
-    opener?.focus({ preventScroll: true });
-    opener = null;
-  }
-
-  function decide(analytics: boolean) {
-    saveChoice(analytics);
-    if (analytics) enableAnalytics();
-    else disableAnalytics();
-    closeBanner();
-  }
-
-  banner.querySelector('[data-consent-accept]')?.addEventListener('click', () => decide(true));
-  banner.querySelector('[data-consent-reject]')?.addEventListener('click', () => decide(false));
-
-  // «Configuració de galetes», en el pie: vuelve a abrir el aviso para cambiar de opinión
-  for (const button of document.querySelectorAll<HTMLElement>('[data-consent-open]')) {
-    button.hidden = false;
-    button.addEventListener('click', () => openBanner(button));
-  }
-
-  // Si se abrió a mano, Escape lo cierra sin cambiar nada
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && opener && banner.hasAttribute('data-open')) closeBanner();
-  });
-
-  const choice = readChoice();
-  if (choice === true) enableAnalytics();
-  // Primera visita: el aviso entra cuando ya ha terminado la animación de portada
-  else if (choice === undefined) window.setTimeout(() => openBanner(), 1200);
-
-  /* ---------------------------------------------------------------------
-     Clics que se cuentan
-     --------------------------------------------------------------------- */
 
   document.addEventListener(
     'click',
@@ -169,5 +88,3 @@ if (banner && gaId) {
     { capture: true },
   );
 }
-
-export {};

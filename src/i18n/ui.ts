@@ -156,8 +156,6 @@ const ca = {
       rounds: { final: 'Final', semifinal: 'Semifinal' },
       play: 'Reprodueix el vídeo',
       credit: 'Vídeos de {author} a YouTube',
-      // Aviso junto a los vídeos: al pulsar play, YouTube puede guardar cookies
-      privacy: 'En prémer play, el vídeo es carrega des de YouTube, que pot desar galetes al teu navegador.',
     },
     // Los seis instrumentos que toca la colla
     items: [
@@ -230,9 +228,6 @@ const ca = {
     text: 'Samarretes, mocadors, gots i bosses de la colla. Les comandes es fan per missatge directe a Instagram.',
     order: 'Fes la comanda per Instagram',
     orderShort: 'Fes la comanda',
-    // Bajo los productos: la ley pide decir si el precio lleva impuestos y envío
-    note: "Preus finals, amb impostos inclosos. Si cal enviament, te'n direm el cost abans de confirmar la comanda.",
-    terms: 'Condicions de compra',
     products: {
       adult: "Samarreta d'adult",
       kids: 'Samarreta infantil',
@@ -261,7 +256,7 @@ const ca = {
   // Página «Informació legal» (los textos largos están en src/i18n/legal.ts)
   legal: {
     title: 'Informació legal',
-    lead: "Qui hi ha darrere d'aquest web, com funcionen les comandes, què fem amb les dades i quines galetes fem servir.",
+    lead: "Qui hi ha darrere d'aquest web, com funcionen les comandes, què fem amb les dades i les galetes.",
     updated: 'Darrera actualització',
     back: "Torna a l'inici",
     // Enlaces del pie de página
@@ -274,10 +269,17 @@ const ca = {
   // Aviso de cookies: solo sale si hay Google Analytics configurado
   consent: {
     label: 'Galetes',
-    text: "Fem servir galetes d'analítica (Google Analytics) per saber com es fa servir el web i millorar-lo. Només s'activen si les acceptes.",
+    text: "Fem servir galetes d'analítica (Google Analytics) per saber com es fa servir el web. Només s'activen si les acceptes.",
     more: 'Més informació',
     accept: 'Accepta',
     reject: 'Rebutja',
+    customize: 'Configura',
+    save: 'Desa',
+    // Las opciones que se ven al pulsar «Configura»
+    categories: {
+      necessary: { title: 'Necessàries', text: 'Recorden la teva elecció. Sempre actives.' },
+      analytics: { title: 'Analítiques', text: "Google Analytics: quantes visites rep el web i d'on arriben." },
+    },
   },
   // Página de error (dirección que no existe)
   notFound: {
@@ -421,7 +423,6 @@ const es: Dictionary = {
       rounds: { final: 'Final', semifinal: 'Semifinal' },
       play: 'Reproducir el vídeo',
       credit: 'Vídeos de {author} en YouTube',
-      privacy: 'Al pulsar play, el vídeo se carga desde YouTube, que puede guardar cookies en tu navegador.',
     },
     items: [
       { name: 'Surdo', text: 'El latido de la colla, en tres medidas: 18, 20 y 22 pulgadas.' },
@@ -489,8 +490,6 @@ const es: Dictionary = {
     text: 'Camisetas, pañuelos, vasos y bolsas de la colla. Los pedidos se hacen por mensaje directo en Instagram.',
     order: 'Haz tu pedido por Instagram',
     orderShort: 'Haz tu pedido',
-    note: 'Precios finales, con impuestos incluidos. Si hace falta envío, te diremos su coste antes de confirmar el pedido.',
-    terms: 'Condiciones de compra',
     products: {
       adult: 'Camiseta de adulto',
       kids: 'Camiseta infantil',
@@ -517,7 +516,7 @@ const es: Dictionary = {
   },
   legal: {
     title: 'Información legal',
-    lead: 'Quién hay detrás de esta web, cómo funcionan los pedidos, qué hacemos con los datos y qué cookies usamos.',
+    lead: 'Quién hay detrás de esta web, cómo funcionan los pedidos, qué hacemos con los datos y las cookies.',
     updated: 'Última actualización',
     back: 'Volver al inicio',
     notice: 'Aviso legal',
@@ -528,10 +527,16 @@ const es: Dictionary = {
   },
   consent: {
     label: 'Cookies',
-    text: 'Usamos cookies de analítica (Google Analytics) para saber cómo se usa la web y mejorarla. Solo se activan si las aceptas.',
+    text: 'Usamos cookies de analítica (Google Analytics) para saber cómo se usa la web. Solo se activan si las aceptas.',
     more: 'Más información',
     accept: 'Aceptar',
     reject: 'Rechazar',
+    customize: 'Configurar',
+    save: 'Guardar',
+    categories: {
+      necessary: { title: 'Necesarias', text: 'Recuerdan tu elección. Siempre activas.' },
+      analytics: { title: 'Analíticas', text: 'Google Analytics: cuántas visitas recibe la web y de dónde llegan.' },
+    },
   },
   notFound: {
     title: 'Aquí no suena nada.',
@@ -672,7 +677,6 @@ const en: Dictionary = {
       rounds: { final: 'Final', semifinal: 'Semi-final' },
       play: 'Play video',
       credit: 'Videos by {author} on YouTube',
-      privacy: 'When you press play, the video loads from YouTube, which may store cookies in your browser.',
     },
     items: [
       { name: 'Surdo', text: "The crew's heartbeat, in three sizes: 18, 20 and 22 inches." },
@@ -740,8 +744,6 @@ const en: Dictionary = {
     text: 'Crew T-shirts, neckerchiefs, cups and bags. Orders are placed by direct message on Instagram.',
     order: 'Order on Instagram',
     orderShort: 'Order',
-    note: "Final prices, taxes included. If your order needs shipping, we'll tell you the cost before confirming it.",
-    terms: 'Purchase terms',
     products: {
       adult: 'Adult T-shirt',
       kids: 'Kids T-shirt',
@@ -768,7 +770,7 @@ const en: Dictionary = {
   },
   legal: {
     title: 'Legal information',
-    lead: 'Who is behind this website, how orders work, what we do with data and which cookies we use.',
+    lead: 'Who is behind this website, how orders work, what we do with data, and cookies.',
     updated: 'Last updated',
     back: 'Back to the home page',
     notice: 'Legal notice',
@@ -779,10 +781,16 @@ const en: Dictionary = {
   },
   consent: {
     label: 'Cookies',
-    text: 'We use analytics cookies (Google Analytics) to learn how the site is used and improve it. They are only activated if you accept.',
+    text: 'We use analytics cookies (Google Analytics) to learn how the site is used. They are only activated if you accept.',
     more: 'More information',
     accept: 'Accept',
     reject: 'Reject',
+    customize: 'Settings',
+    save: 'Save',
+    categories: {
+      necessary: { title: 'Necessary', text: 'Remember your choice. Always on.' },
+      analytics: { title: 'Analytics', text: 'Google Analytics: how many visits the site gets and where they come from.' },
+    },
   },
   notFound: {
     title: 'Nothing playing here.',

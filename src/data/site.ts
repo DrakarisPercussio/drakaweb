@@ -44,13 +44,13 @@ export const site = {
     registered: '2023-03-22',
     address: "Carrer de l'Ateneu, 23-25, 08980 Sant Feliu de Llobregat (Barcelona)",
     /** Fecha de la última revisión de los textos legales, AAAA-MM-DD */
-    updated: '2026-10-15',
+    updated: '2026-10-16',
   },
 
   // GOOGLE ANALYTICS: el identificador de la propiedad, entero («G-» seguido
   // de unas diez letras y números, p. ej. G-AB12CD34EF). Mientras esté vacío o
-  // a medias no hay analítica ni aviso de cookies. Al ponerlo, la web pide
-  // permiso al visitante y solo mide si lo acepta.
+  // a medias no hay analítica ni aviso de cookies. Al ponerlo, aparecen el
+  // aviso y la configuración de cookies, y solo se mide si se acepta.
   analyticsId: 'G-',
 
   // AGENDA: el enlace de la hoja de Google con las próximas actuaciones.

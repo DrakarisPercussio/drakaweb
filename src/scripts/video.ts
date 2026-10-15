@@ -3,8 +3,9 @@
 // que alguien pulsa play. Sin este script, el botón es un enlace normal al vídeo.
 //
 // Privacidad: hasta que se pulsa play, el navegador no se conecta con YouTube
-// ni con Google (ni siquiera para adelantar la conexión al pasar el ratón), así
-// que no reciben la IP de nadie que no haya querido ver el vídeo.
+// ni con Google, así que no reciben la IP de nadie que no haya querido ver el
+// vídeo. Al reproducirlo, YouTube guarda sus propias cookies (lo explica la
+// política de cookies de la página legal).
 
 const frames = [...document.querySelectorAll<HTMLElement>('[data-video-frame]')];
 

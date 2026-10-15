@@ -114,7 +114,7 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
                           alt={copy.photoAlt}
                           width={1200}
                           widths={[480, 800, 1200]}
-                          sizes="(min-width: 62rem) 40vw, 62vw"
+                          sizes="(min-width: 62rem) 30rem, 90vw"
                           loading="lazy"
                         />
                         <PhotoCredit credits={creditsFor(milestone.photo ?? '')} label={t.gallery.credit} />
@@ -204,7 +204,7 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
 
   .milestone {
     position: relative;
-    padding-bottom: clamp(3rem, 7vw, 5.5rem);
+    padding-bottom: clamp(2.5rem, 5vw, 4rem);
   }
 
   .milestone:last-child {
@@ -272,9 +272,11 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
     letter-spacing: 0.02em;
   }
 
+  /* Fotos y logos comparten ancho máximo y se quedan en un tamaño de apoyo:
+     la sección se lee como una línea de tiempo, no como una galería */
   .milestone-photo {
     margin-top: 1.5rem;
-    max-width: 36rem;
+    max-width: 30rem;
   }
 
   /* Hito del cambio de imagen: los dos logos nuevos, lado a lado */
@@ -323,7 +325,7 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
 
   .milestone-frame {
     position: relative;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 16 / 10;
     overflow: hidden;
     border-radius: var(--radius);
     background: var(--surface);
