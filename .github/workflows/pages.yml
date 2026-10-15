@@ -3,6 +3,10 @@ name: Deploy Astro to GitHub Pages
 on:
   push:
     branches: [ master ]
+  # Cada mañana se vuelve a publicar para leer la agenda de Google Sheets (y ocultar
+  # las fechas pasadas). Para que salga al momento: pestaña Actions → «Run workflow».
+  schedule:
+    - cron: '0 5 * * *'
   workflow_dispatch:
 
 permissions:

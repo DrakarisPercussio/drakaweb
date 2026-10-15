@@ -11,6 +11,17 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+
+// El botón de correo abre un mensaje nuevo en Gmail, en otra pestaña, con la
+// dirección y el asunto ya puestos (un enlace mailto: depende de que el
+// ordenador tenga un programa de correo configurado, y a menudo no lo tiene).
+// En el móvil se cambia a mailto: (ver src/scripts/site.ts): allí siempre hay una
+// app de correo —Gmail en Android— y la versión web de Gmail no deja redactar.
+const subject = t.booking.emailSubject;
+const gmail = site.email
+  ? `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(site.email)}&su=${encodeURIComponent(subject)}`
+  : '';
+const mailto = site.email ? `mailto:${site.email}?subject=${encodeURIComponent(subject)}` : '';
 ---
 
 <section class="section booking" id={sections.contact} data-tone="green">
@@ -37,7 +48,11 @@ const t = useTranslations(lang);
           site.email && (
             <a
               class="btn btn--ink"
-              href={`mailto:${site.email}?subject=${encodeURIComponent(t.booking.emailSubject)}`}
+              href={gmail}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${t.booking.email} (${t.a11y.newTab})`}
+              data-mail={mailto}
               data-track="contact_booking"
               data-track-place="email"
             >
@@ -73,7 +88,7 @@ const t = useTranslations(lang);
           {
             site.email && (
               <Fragment>
-                <a href={`mailto:${site.email}`} data-track="contact_booking" data-track-place="email-text">
+                <a href={gmail} target="_blank" rel="noopener noreferrer" data-mail={mailto} data-track="contact_booking" data-track-place="email-text">
                   {site.email}
                 </a>
                 {' · '}

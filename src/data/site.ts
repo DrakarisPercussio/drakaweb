@@ -1,13 +1,12 @@
 // Datos de la colla que no dependen del idioma (enlaces, fechas, productos).
 // Los textos traducibles viven en src/i18n/ui.ts.
 
-import type { Lang } from '../i18n/ui';
-import rakata from '../assets/brand/rakata.webp';
-import poster from '../assets/brand/poster.webp';
 import drumClaw from '../assets/brand/drum-claw.webp';
 import dragonRing from '../assets/brand/dragon-ring.webp';
 import dksClaw from '../assets/brand/dks-claw.webp';
 import dragonRingMono from '../assets/brand/dragon-ring-mono.webp';
+import adultTee from '../assets/shop/CamisetaAdultoArticulo.jpeg';
+import kidsTee from '../assets/shop/infantil.jpeg';
 import korrebarsPoster from '../assets/LOGOS/Korrebars2026.png';
 
 const instagramHandle = 'drakaris_percussio';
@@ -45,7 +44,7 @@ export const site = {
     registered: '2023-03-22',
     address: "Carrer de l'Ateneu, 23-25, 08980 Sant Feliu de Llobregat (Barcelona)",
     /** Fecha de la última revisión de los textos legales, AAAA-MM-DD */
-    updated: '2026-10-13',
+    updated: '2026-10-15',
   },
 
   // GOOGLE ANALYTICS: el identificador de la propiedad, entero («G-» seguido
@@ -53,6 +52,10 @@ export const site = {
   // a medias no hay analítica ni aviso de cookies. Al ponerlo, la web pide
   // permiso al visitante y solo mide si lo acepta.
   analyticsId: 'G-',
+
+  // AGENDA: el enlace de la hoja de Google con las próximas actuaciones.
+  // Vacío = se lee el Excel del proyecto, src/data/agenda.xlsx. Ver src/data/agenda.ts.
+  agendaSheet: 'https://docs.google.com/spreadsheets/d/1o3i4ad1CFv52tGno1WkOnNo5zYVzZoNN/edit?usp=sharing&ouid=113089197995921671197&rtpof=true&sd=true',
 
   // GOOGLE SEARCH CONSOLE: el código de la etiqueta de verificación (lo que va
   // dentro de content="…" en la etiqueta <meta name="google-site-verification">).
@@ -79,14 +82,19 @@ export const sections = {
 // HISTÒRIA — un hito por año. El título y el texto de cada uno están en
 // `history.milestones` de src/i18n/ui.ts, en este mismo orden.
 // `photo` es "año/archivo" dentro de src/assets/Fotos (opcional).
-// `rebrand` enseña, en lugar de una foto, los dos logos del cambio de imagen.
-export const milestones: { year: number; photo?: string; rebrand?: boolean }[] = [
-  { year: 2013 },
+// `label` sustituye al año cuando el hito abarca varios (p. ej. «2013–2017");
+// el año gigante que rueda en pantalla usa `year`.
+// `firstLogo` enseña el logo de los inicios y `rebrand`, los dos logos de 2020.
+export const milestones: { year: number; label?: string; photo?: string; firstLogo?: boolean; rebrand?: boolean }[] = [
+  { year: 2013, firstLogo: true },
+  { year: 2017, label: '2013–2017', photo: '2013/2013a2017.jpg' },
+  { year: 2018, photo: '2018/PrimeraDrakafesta.jpg' },
   { year: 2019, photo: '2019/Cruyff.jpg' },
   { year: 2020, rebrand: true },
   { year: 2022, photo: '2022/mallorca.jpg' },
   { year: 2023, photo: '2023/Concurs2.jpg' },
   { year: 2024, photo: '2024/Perculliga.jpg' },
+  { year: 2025, photo: '2025/cabalgata.JPG' },
   { year: 2026, photo: '2026/Concurs.jpg' },
 ];
 
@@ -110,70 +118,17 @@ export const events = [
   { id: 'drakafesta', photo: '2023/230916_Drakafesta_380.JPG', seal: true },
 ] as const;
 
-export interface Gig {
-  /** Fecha en formato AAAA-MM-DD */
-  date: string;
-  /** Hora en formato HH:MM (opcional: sin hora, no se muestra) */
-  time?: string;
-  /** Lugar tal como se lee en la web (opcional) */
-  place?: string;
-  /** Qué buscar en el mapa al pulsar. Si no se pone, se busca `place`. */
-  map?: string;
-  title: Record<Lang, string>;
-}
-
-// AGENDA — próximas actuaciones. Las fechas pasadas se ocultan solas.
-// Para añadir una: copiar un bloque y cambiar fecha, título y lugar.
-// Cada fila enlaza al mapa: con `map` se puede afinar el punto exacto
-// (una calle, una plaza…); sin él, se abre el lugar que diga `place`.
-export const agenda: Gig[] = [
-  {
-    date: '2026-10-09',
-    place: 'Carrer Joan Maragall, Sant Feliu de Llobregat',
-    title: { ca: 'Vermut de colles', es: 'Vermut de colles', en: "Crews' vermouth" },
-  },
-  {
-    date: '2026-10-09',
-    place: 'Sant Feliu de Llobregat',
-    title: { ca: 'Tabalada nocturna', es: 'Tabalada nocturna', en: 'Night tabalada (drum parade)' },
-  },
-  {
-    date: '2026-10-10',
-    place: 'Sant Feliu de Llobregat',
-    title: { ca: 'Tabalada i correfoc', es: 'Tabalada y correfoc', en: 'Tabalada and fire run' },
-  },
-  {
-    date: '2026-10-12',
-    place: 'Sant Feliu de Llobregat',
-    title: { ca: 'Cercavila de colles', es: 'Pasacalles de colles', en: "Crews' street parade" },
-  },
-  {
-    date: '2026-11-29',
-    place: 'Espinelves',
-    title: { ca: 'Espinelves', es: 'Espinelves', en: 'Espinelves' },
-  },
-  {
-    date: '2026-12-19',
-    place: 'Sant Feliu de Llobregat',
-    title: { ca: 'Mercat de Nadal', es: 'Mercado de Navidad', en: 'Christmas market' },
-  },
-  {
-    date: '2027-01-05',
-    place: 'Sant Feliu de Llobregat',
-    title: { ca: 'Cavalcada de Reis', es: 'Cabalgata de Reyes', en: 'Three Kings parade' },
-  },
-];
-
 // BOTIGA — `id` enlaza con el nombre en `shop.products` de ui.ts.
-// `price` va en euros (1.5 = 1,50 €); `tile` es el fondo sobre el que se
-// muestra el diseño (un color, o un degradado como el del mocador: negro con
-// la esquina roja de su reverso). Las imágenes son ilustraciones de la colla
-// a falta de fotos de cada producto.
+// `price` va en euros (1.5 = 1,50 €); `tile` es el color de fondo del cuadro.
+// `photo: true` = la imagen es una foto del producto y llena todo el cuadro;
+// sin él, es una ilustración que se enseña entera, con margen.
+// Las fotos de producto están en src/assets/shop (allí hay también una de la
+// samarreta d'adult amb models, CamisetaAdultoModelos.jpeg, por si se prefiere).
 export const products = [
-  { id: 'adult', price: 12, image: rakata, tile: '#c9cbc4' },
-  { id: 'kids', price: 10, image: poster, tile: '#0c100c' },
+  { id: 'adult', price: 12, image: adultTee, tile: '#c9cbc4', photo: true },
+  { id: 'kids', price: 10, image: kidsTee, tile: '#000000' },
   { id: 'cup', price: 1.5, image: drumClaw, tile: '#141a15' },
-  { id: 'tote', price: 8, image: dragonRing, tile: '#141a15' },
-  { id: 'bag', price: 8, image: dksClaw, tile: '#000000' },
-  { id: 'scarf', price: 6, image: dragonRingMono, tile: 'linear-gradient(135deg, #0c100c 70%, #c2182b 70%)' },
+  { id: 'tote', price: 7, image: dragonRing, tile: '#141a15' },
+  { id: 'bag', price: 10, image: dksClaw, tile: '#000000' },
+  { id: 'scarf', price: 6, image: dragonRingMono, tile: '#0c100c' },
 ] as const;

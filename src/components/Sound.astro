@@ -1,5 +1,7 @@
 ---
+import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import instruments from '../assets/brand/instruments.webp';
 import Icon from './Icon.astro';
 import { sections, videoCredit, videos } from '../data/site';
@@ -12,19 +14,22 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
-// Miniaturas servidas por YouTube, de menos a más peso: el navegador elige
-// la que necesita (37 KB, 88 KB o 255 KB) según el tamaño de la pantalla.
-// En `sizes` se declara a propósito un ancho algo menor que el real para que
-// móviles y pantallas normales se queden con la de 88 KB; la grande solo
-// llega a pantallas de alta densidad en escritorio.
-const thumbnail = (id: string) => ({
-  src: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
-  srcset: [
-    `https://i.ytimg.com/vi/${id}/hqdefault.jpg 480w`,
-    `https://i.ytimg.com/vi_webp/${id}/sddefault.webp 640w`,
-    `https://i.ytimg.com/vi_webp/${id}/maxresdefault.webp 1280w`,
-  ].join(', '),
+// Las miniaturas se sirven desde la propia web (src/assets/videos/<id>.jpg) y
+// no desde YouTube: así, al abrir la página, Google no recibe la IP de nadie.
+// Para un vídeo nuevo, guardar en esa carpeta, con su id como nombre, la imagen
+// https://i.ytimg.com/vi/<id>/maxresdefault.jpg
+const thumbnails = import.meta.glob<{ default: ImageMetadata }>('../assets/videos/*.{jpg,jpeg,png,webp}', {
+  eager: true,
 });
+const thumbnail = (id: string) => {
+  const found = Object.entries(thumbnails).find(([file]) => file.split('/').pop()?.replace(/\.\w+$/, '') === id);
+  if (!found) {
+    throw new Error(
+      `[vídeos] Falta la miniatura del vídeo ${id}: guarda https://i.ytimg.com/vi/${id}/maxresdefault.jpg como src/assets/videos/${id}.jpg`,
+    );
+  }
+  return found[1].default;
+};
 ---
 
 <section class="section sound" id={sections.sound} data-tone="bone">
@@ -69,7 +74,6 @@ const thumbnail = (id: string) => ({
           videos.map((video, i) => {
             const round = t.sound.live.rounds[video.round];
             const title = `${round} · ${t.sound.live.event} ${video.year}`;
-            const image = thumbnail(video.id);
             return (
               <li data-reveal style={`--i:${i}`}>
                 <figure class="video">
@@ -85,16 +89,12 @@ const thumbnail = (id: string) => ({
                       data-track="video_play"
                       data-track-detail={video.round}
                     >
-                      <img
-                        src={image.src}
-                        srcset={image.srcset}
-                        sizes="(min-width: 62rem) 40vw, 50vw"
+                      <Image
+                        src={thumbnail(video.id)}
                         alt=""
-                        width="1280"
-                        height="720"
+                        widths={[480, 720, 960, 1280]}
+                        sizes="(min-width: 44rem) 45vw, 92vw"
                         loading="lazy"
-                        decoding="async"
-                        referrerpolicy="no-referrer"
                       />
                       <span class="video-play" aria-hidden="true">
                         <Icon name="play" size={26} />
@@ -114,7 +114,10 @@ const thumbnail = (id: string) => ({
         }
       </ul>
 
-      <p class="live-credit" data-reveal>{t.sound.live.credit.replace('{author}', videoCredit)}</p>
+      <p class="live-credit" data-reveal>
+        {`${t.sound.live.credit.replace('{author}', videoCredit)}. ${t.sound.live.privacy} `}
+        <a href={`${getRelativeLocaleUrl(lang, 'legal/')}#galetes`}>{t.consent.more}</a>
+      </p>
     </div>
   </div>
 </section>
@@ -308,9 +311,17 @@ const thumbnail = (id: string) => ({
   }
 
   .live-credit {
+    max-width: 44rem;
     margin-top: 1.5rem;
     font-size: 0.8125rem;
     color: var(--fg-muted);
+  }
+
+  .live-credit a {
+    font-weight: 700;
+    white-space: nowrap;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   @keyframes video-spin {

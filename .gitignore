@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # originales de las fotos reducidas con "npm run photos" (no se suben)
 .originals/
+
+# archivos temporales de Excel mientras está abierto
+~$*

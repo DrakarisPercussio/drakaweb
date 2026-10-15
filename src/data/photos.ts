@@ -29,10 +29,14 @@ const files = import.meta.glob<{ default: ImageMetadata }>(
    · Bajo la galería, en una línea con todos: «Fotografies: Nom A, Nom B».
    ========================================================================== */
 const credits: Record<string, string> = {
+  '2013/2013a2017.jpg': '',
+  '2018/PrimeraDrakafesta.jpg': '',
   '2019/Cruyff.jpg': 'Leo Messi',
   '2019/llavatraka.jpg': '',
-  '2021/IMG-20211122-WA0025.jpg': '',
   '2021/PrimeraDrakacasa.jpg': '',
+  '2021/TabaladaNocturna.jpg': '',
+  '2022/a611be30-2b2f-4352-a492-d33a6ba36342.jpg': '',
+  '2022/ce8f1911-f9c3-4180-9045-fc2d4c1feb52.jpg': '',
   '2022/Amb el Drac.jpg': '',
   '2022/Cercavila.jpg': '',
   '2022/IMG-20220327-WA0073.jpg': '',
@@ -46,15 +50,21 @@ const credits: Record<string, string> = {
   '2023/231012_Tabalada_107.JPG': '',
   '2023/231012_Tabalada_471.JPG': '',
   '2023/231015_Cercavila_83.JPG': '',
+  '2023/cercavilaColles.jpg': '',
   '2023/Concurs1.jpg': '',
   '2023/Concurs2.jpg': '',
+  '2024/241013_Cercavila_165_Original.JPG': '',
   '2024/BeDisco.jpg': '',
+  '2024/Cabalgata.jpg': '',
   '2024/ConcursRojos.jpg': '',
   '2024/IMG-20240104-WA0028.jpg': '',
   '2024/IMG-20240311-WA0007.jpg': '',
   '2024/IMG-20240317-WA0029.jpg': '',
   '2024/IMG-20241009-WA0043.jpg': '',
   '2024/Perculliga.jpg': '',
+  // El nombre del archivo ya dice de quién es
+  '2024/Vermut Joan Maragall 2024 - @AlexMiroFoto--56.jpeg': '@AlexMiroFoto',
+  '2025/cabalgata.JPG': '',
   '2025/Calçotada.jpg': '',
   '2025/Correfoc.jpg': '',
   '2025/IMG-20250719-WA0000.jpg': '',
@@ -80,15 +90,18 @@ const photographerLinks: Record<string, string> = {
 
 type Caption = string | Record<Lang, string>;
 
-// Imágenes de la carpeta de fotos que no son para la galería (los logos de 2020).
-const notInGallery = new Set(['2020/logo1.jpg', '2020/logo2.jpg']);
+// Imágenes de la carpeta de fotos que no son para la galería (los logos).
+const notInGallery = new Set(['2013/LogoOriginalDKS.jpeg', '2020/logo1.jpg', '2020/logo2.jpg']);
 
 // Descripción de cada foto ("año/archivo"). En la galería no se ve: es el texto
 // que leen los lectores de pantalla. Una foto sin descripción usa «Drakaris · año».
 const captions: Record<string, Caption> = {
+  '2013/2013a2017.jpg': 'Festa de Tardor',
+  '2018/PrimeraDrakafesta.jpg': 'Primera Drakafesta',
   '2019/Cruyff.jpg': 'Estadi Johan Cruyff',
   '2019/llavatraka.jpg': 'Llavatraka',
   '2021/PrimeraDrakacasa.jpg': { ca: 'Primera Drakacasa', es: 'Primera Drakacasa', en: 'First Drakacasa' },
+  '2021/TabaladaNocturna.jpg': 'Tabalada nocturna',
   '2022/Amb el Drac.jpg': { ca: 'Amb el Drac de Sant Feliu', es: 'Con el Drac de Sant Feliu', en: 'With the Drac de Sant Feliu' },
   '2022/Cercavila.jpg': 'Cercavila',
   '2022/Tardor.jpg': 'Festa de Tardor',
@@ -100,12 +113,17 @@ const captions: Record<string, Caption> = {
   '2023/231012_Tabalada_107.JPG': 'Tabalada',
   '2023/231012_Tabalada_471.JPG': 'Tabalada',
   '2023/231015_Cercavila_83.JPG': 'Cercavila',
+  '2023/cercavilaColles.jpg': 'Cercavila de colles',
   '2023/Concurs1.jpg': 'Concurs de Percussió de Barcelona',
   '2023/Concurs2.jpg': 'Concurs de Percussió de Barcelona',
+  '2024/241013_Cercavila_165_Original.JPG': 'Cercavila',
   '2024/BeDisco.jpg': 'Be Disco',
+  '2024/Cabalgata.jpg': { ca: 'Cavalcada de Reis', es: 'Cabalgata de Reyes', en: 'Three Kings parade' },
   '2024/ConcursRojos.jpg': 'Concurs de Diables Rojos',
   '2024/IMG-20241009-WA0043.jpg': 'Festa de Tardor',
   '2024/Perculliga.jpg': 'Perculliga',
+  '2024/Vermut Joan Maragall 2024 - @AlexMiroFoto--56.jpeg': 'Vermut de colles',
+  '2025/cabalgata.JPG': { ca: 'Cavalcada de Reis', es: 'Cabalgata de Reyes', en: 'Three Kings parade' },
   '2025/Calçotada.jpg': 'Calçotada',
   '2025/Correfoc.jpg': 'Correfoc',
   '2025/IMG-20250719-WA0000.jpg': { ca: "Sopar d'estiu", es: 'Cena de verano', en: 'Summer dinner' },

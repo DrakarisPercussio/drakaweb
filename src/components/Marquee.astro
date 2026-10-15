@@ -1,4 +1,12 @@
 ---
+import { Image } from 'astro:assets';
+import surdo from '../assets/brand/instruments/surdo.webp';
+import caixa from '../assets/brand/instruments/caixa.webp';
+import tambori from '../assets/brand/instruments/tambori.webp';
+import agogo from '../assets/brand/instruments/agogo.webp';
+import xequere from '../assets/brand/instruments/xequere.webp';
+import xiulet from '../assets/brand/instruments/xiulet.webp';
+import baquetes from '../assets/brand/instruments/baquetes.webp';
 import { useTranslations, type Lang } from '../i18n/ui';
 
 interface Props {
@@ -10,6 +18,10 @@ const t = useTranslations(lang);
 
 // Dos grupos idénticos: cuando el primero sale entero, el segundo ocupa su sitio.
 const group = [...t.marquee, ...t.marquee];
+
+// Entre palabra y palabra, un instrumento de la colla (sacados de los iconos de
+// src/assets/icons y recortados en src/assets/brand/instruments).
+const instruments = [surdo, caixa, tambori, agogo, xequere, xiulet, baquetes];
 ---
 
 <div class="marquee-wrap" aria-hidden="true">
@@ -18,8 +30,11 @@ const group = [...t.marquee, ...t.marquee];
       {
         [0, 1].map(() => (
           <ul class="marquee-group">
-            {group.map((item) => (
-              <li>{item}</li>
+            {group.map((item, i) => (
+              <li>
+                {item}
+                <Image src={instruments[i % instruments.length]} alt="" height={72} class="marquee-icon" />
+              </li>
             ))}
           </ul>
         ))
@@ -68,13 +83,11 @@ const group = [...t.marquee, ...t.marquee];
     white-space: nowrap;
   }
 
-  .marquee-group li::after {
-    content: '';
-    width: 0.4em;
-    height: 0.4em;
-    margin-inline: 0.9em;
-    border-radius: 50%;
-    background: var(--ink);
+  .marquee-icon {
+    flex: none;
+    width: auto;
+    height: 0.95em;
+    margin-inline: 0.7em;
   }
 
   @keyframes marquee {

@@ -41,8 +41,9 @@ const policy = [
   ["script-src 'self'", ...inlineScripts.map(fingerprint)].join(' ') + ga.script,
   // 'unsafe-inline' permite los atributos style="…" que usan las animaciones
   "style-src 'self' 'unsafe-inline'",
-  // Imágenes propias, las dibujadas en el CSS (data:) y las miniaturas de YouTube
-  `img-src 'self' data: https://i.ytimg.com${ga.img}`,
+  // Imágenes propias y las dibujadas en el CSS (data:). Las miniaturas de los
+  // vídeos también son propias: así YouTube no sabe nada hasta que se pulsa play.
+  `img-src 'self' data:${ga.img}`,
   "font-src 'self'",
   // Lo único que se puede incrustar: el reproductor de YouTube sin cookies
   'frame-src https://www.youtube-nocookie.com',

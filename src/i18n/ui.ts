@@ -75,6 +75,9 @@ const ca = {
       chest: 'Al pit, DKS',
       logoAlt: 'Logo de Drakaris: un drac blanc i verd en cercle',
       chestAlt: 'Logo DKS: una urpa verda amb les lletres DKS',
+      // El logo de los inicios, en el hito de 2013
+      first: 'El primer logo',
+      firstAlt: 'El primer logo de Drakaris: una K negra feta amb una baqueta i un tambor, sobre fons verd',
     },
     // Un texto por hito, en el mismo orden que `milestones` en src/data/site.ts
     milestones: [
@@ -85,8 +88,20 @@ const ca = {
         photoAlt: '',
       },
       {
+        title: 'Els primers ritmes',
+        text: "A base de molt d'esforç i moltes ganes, anem creant els primers ritmes. Arriben noves incorporacions i les primeres actuacions.",
+        badges: [],
+        photoAlt: 'La colla, amb samarretes verdes i mocadors de la Festa de Tardor, tocant en una cercavila amb el Drac de Sant Feliu al fons',
+      },
+      {
+        title: 'La primera Drakafesta',
+        text: 'Celebrem el cinquè aniversari amb la primera Drakafesta: una jornada plena de percussió i festa.',
+        badges: [],
+        photoAlt: 'La colla, amb samarretes blaves, al costat del Drac de Sant Feliu a la primera Drakafesta',
+      },
+      {
         title: 'Un estadi i un primer títol',
-        text: "Toquem a la inauguració de l'Estadi Johan Cruyff del FC Barcelona i quedem tercers a la Kabronada: el primer títol de Drakaris.",
+        text: "Toquem a la inauguració de l'Estadi Johan Cruyff del FC Barcelona i quedem tercers a la Kabronada: el primer títol de Drakaris. I muntem la segona Drakafesta.",
         badges: ['3r · Kabronada'],
         photoAlt: "Drakaris tocant sota una pluja de confeti a la inauguració de l'Estadi Johan Cruyff",
       },
@@ -104,7 +119,7 @@ const ca = {
       },
       {
         title: 'Deu anys i un concurs',
-        text: "L'any del desè aniversari: torneig de pitxi intercolles, primer Korrebars, bingo de Drakaris i tercera Drakafesta. I, per rematar-ho, guanyem el Concurs de Percussió de Barcelona.",
+        text: "L'any del desè aniversari ens constituïm com a entitat pròpia i ho celebrem amb un torneig de pitxi intercolles, el primer Korrebars, un bingo de Drakaris i la tercera Drakafesta. I, per rematar-ho, guanyem el Concurs de Percussió de Barcelona.",
         badges: ['1r · Concurs de Percussió de Barcelona'],
         photoAlt: "La colla a l'escenari del Concurs de Percussió de Barcelona del 2023",
       },
@@ -113,6 +128,12 @@ const ca = {
         text: 'Guanyem la Perculliga, la lliga de batucades de Catalunya, i el concurs de Diables Rojos.',
         badges: ['1r · Perculliga', '1r · Concurs Diables Rojos'],
         photoAlt: 'La colla celebra la victòria a la Perculliga 2024 amb la copa',
+      },
+      {
+        title: 'Una nit màgica',
+        text: 'Toquem a la Cavalcada de Reis de Sant Feliu: una nit màgica que ens feia molta il·lusió.',
+        badges: [],
+        photoAlt: 'Drakaris tocant de nit a la Cavalcada de Reis de Sant Feliu, entre llums i confeti',
       },
       {
         title: 'I amb ganes de més',
@@ -135,6 +156,8 @@ const ca = {
       rounds: { final: 'Final', semifinal: 'Semifinal' },
       play: 'Reprodueix el vídeo',
       credit: 'Vídeos de {author} a YouTube',
+      // Aviso junto a los vídeos: al pulsar play, YouTube puede guardar cookies
+      privacy: 'En prémer play, el vídeo es carrega des de YouTube, que pot desar galetes al teu navegador.',
     },
     // Los seis instrumentos que toca la colla
     items: [
@@ -143,7 +166,7 @@ const ca = {
       { name: 'Repenic', text: 'La veu que crida i marca les entrades.' },
       { name: 'Tamborí', text: 'Petit, agut i descarat.' },
       { name: 'Agogó', text: "Dues campanes i una melodia que s'enganxa." },
-      { name: 'Xequeré o xocalho', text: 'La brillantor que ho lliga tot.' },
+      { name: 'Xequeré', text: 'La brillantor que ho lliga tot.' },
     ],
   },
   events: {
@@ -207,12 +230,15 @@ const ca = {
     text: 'Samarretes, mocadors, gots i bosses de la colla. Les comandes es fan per missatge directe a Instagram.',
     order: 'Fes la comanda per Instagram',
     orderShort: 'Fes la comanda',
+    // Bajo los productos: la ley pide decir si el precio lleva impuestos y envío
+    note: "Preus finals, amb impostos inclosos. Si cal enviament, te'n direm el cost abans de confirmar la comanda.",
+    terms: 'Condicions de compra',
     products: {
       adult: "Samarreta d'adult",
       kids: 'Samarreta infantil',
       cup: 'Got de Drakaris',
       tote: 'Tote bag de Drakaris',
-      bag: 'Bossa de Drakaris',
+      bag: 'Motxilla de cordes de Drakaris',
       scarf: 'Mocador de Drakaris',
     },
   },
@@ -235,11 +261,12 @@ const ca = {
   // Página «Informació legal» (los textos largos están en src/i18n/legal.ts)
   legal: {
     title: 'Informació legal',
-    lead: "Qui hi ha darrere d'aquest web, què fem amb les dades i quines galetes fem servir.",
+    lead: "Qui hi ha darrere d'aquest web, com funcionen les comandes, què fem amb les dades i quines galetes fem servir.",
     updated: 'Darrera actualització',
     back: "Torna a l'inici",
     // Enlaces del pie de página
     notice: 'Avís legal',
+    purchases: 'Condicions de compra',
     privacy: 'Privacitat',
     cookies: 'Galetes',
     cookieSettings: 'Configuració de galetes',
@@ -316,6 +343,8 @@ const es: Dictionary = {
       chest: 'En el pecho, DKS',
       logoAlt: 'Logo de Drakaris: un dragón blanco y verde en círculo',
       chestAlt: 'Logo DKS: una garra verde con las letras DKS',
+      first: 'El primer logo',
+      firstAlt: 'El primer logo de Drakaris: una K negra hecha con una baqueta y un tambor, sobre fondo verde',
     },
     milestones: [
       {
@@ -325,8 +354,20 @@ const es: Dictionary = {
         photoAlt: '',
       },
       {
+        title: 'Los primeros ritmos',
+        text: 'A base de mucho esfuerzo y muchas ganas, vamos creando los primeros ritmos. Llegan nuevas incorporaciones y las primeras actuaciones.',
+        badges: [],
+        photoAlt: 'La colla, con camisetas verdes y pañuelos de la Festa de Tardor, tocando en un pasacalles con el Drac de Sant Feliu al fondo',
+      },
+      {
+        title: 'La primera Drakafesta',
+        text: 'Celebramos el quinto aniversario con la primera Drakafesta: una jornada llena de percusión y fiesta.',
+        badges: [],
+        photoAlt: 'La colla, con camisetas azules, junto al Drac de Sant Feliu en la primera Drakafesta',
+      },
+      {
         title: 'Un estadio y un primer título',
-        text: 'Tocamos en la inauguración del Estadi Johan Cruyff del FC Barcelona y quedamos terceros en la Kabronada: el primer título de Drakaris.',
+        text: 'Tocamos en la inauguración del Estadi Johan Cruyff del FC Barcelona y quedamos terceros en la Kabronada: el primer título de Drakaris. Y montamos la segunda Drakafesta.',
         badges: ['3.º · Kabronada'],
         photoAlt: 'Drakaris tocando bajo una lluvia de confeti en la inauguración del Estadi Johan Cruyff',
       },
@@ -344,7 +385,7 @@ const es: Dictionary = {
       },
       {
         title: 'Diez años y un concurso',
-        text: 'El año del décimo aniversario: torneo de pitxi intercolles, primer Korrebars, bingo de Drakaris y tercera Drakafesta. Y, para rematar, ganamos el Concurs de Percussió de Barcelona.',
+        text: 'El año del décimo aniversario nos constituimos como entidad propia y lo celebramos con un torneo de pitxi intercolles, el primer Korrebars, un bingo de Drakaris y la tercera Drakafesta. Y, para rematar, ganamos el Concurs de Percussió de Barcelona.',
         badges: ['1.º · Concurs de Percussió de Barcelona'],
         photoAlt: 'La colla en el escenario del Concurs de Percussió de Barcelona de 2023',
       },
@@ -353,6 +394,12 @@ const es: Dictionary = {
         text: 'Ganamos la Perculliga, la liga de batucadas de Catalunya, y el concurso de Diables Rojos.',
         badges: ['1.º · Perculliga', '1.º · Concurso Diables Rojos'],
         photoAlt: 'La colla celebra la victoria en la Perculliga 2024 con la copa',
+      },
+      {
+        title: 'Una noche mágica',
+        text: 'Tocamos en la Cabalgata de Reyes de Sant Feliu: una noche mágica que nos hacía mucha ilusión.',
+        badges: [],
+        photoAlt: 'Drakaris tocando de noche en la Cabalgata de Reyes de Sant Feliu, entre luces y confeti',
       },
       {
         title: 'Y con ganas de más',
@@ -374,6 +421,7 @@ const es: Dictionary = {
       rounds: { final: 'Final', semifinal: 'Semifinal' },
       play: 'Reproducir el vídeo',
       credit: 'Vídeos de {author} en YouTube',
+      privacy: 'Al pulsar play, el vídeo se carga desde YouTube, que puede guardar cookies en tu navegador.',
     },
     items: [
       { name: 'Surdo', text: 'El latido de la colla, en tres medidas: 18, 20 y 22 pulgadas.' },
@@ -381,7 +429,7 @@ const es: Dictionary = {
       { name: 'Repenique', text: 'La voz que grita y marca las entradas.' },
       { name: 'Tamborín', text: 'Pequeño, agudo y descarado.' },
       { name: 'Agogó', text: 'Dos campanas y una melodía que se pega.' },
-      { name: 'Chequeré o xocalho', text: 'El brillo que lo une todo.' },
+      { name: 'Chequeré', text: 'El brillo que lo une todo.' },
     ],
   },
   events: {
@@ -441,12 +489,14 @@ const es: Dictionary = {
     text: 'Camisetas, pañuelos, vasos y bolsas de la colla. Los pedidos se hacen por mensaje directo en Instagram.',
     order: 'Haz tu pedido por Instagram',
     orderShort: 'Haz tu pedido',
+    note: 'Precios finales, con impuestos incluidos. Si hace falta envío, te diremos su coste antes de confirmar el pedido.',
+    terms: 'Condiciones de compra',
     products: {
       adult: 'Camiseta de adulto',
       kids: 'Camiseta infantil',
       cup: 'Vaso de Drakaris',
       tote: 'Tote bag de Drakaris',
-      bag: 'Bolsa de cuerdas de Drakaris',
+      bag: 'Mochila de cuerdas de Drakaris',
       scarf: 'Pañuelo de Drakaris',
     },
   },
@@ -467,10 +517,11 @@ const es: Dictionary = {
   },
   legal: {
     title: 'Información legal',
-    lead: 'Quién hay detrás de esta web, qué hacemos con los datos y qué cookies usamos.',
+    lead: 'Quién hay detrás de esta web, cómo funcionan los pedidos, qué hacemos con los datos y qué cookies usamos.',
     updated: 'Última actualización',
     back: 'Volver al inicio',
     notice: 'Aviso legal',
+    purchases: 'Condiciones de compra',
     privacy: 'Privacidad',
     cookies: 'Cookies',
     cookieSettings: 'Configuración de cookies',
@@ -543,6 +594,8 @@ const en: Dictionary = {
       chest: 'On the chest, DKS',
       logoAlt: 'Drakaris logo: a white and green dragon in a circle',
       chestAlt: 'DKS logo: a green claw with the letters DKS',
+      first: 'Our first logo',
+      firstAlt: 'The first Drakaris logo: a black K made from a drumstick and a drum, on a green background',
     },
     milestones: [
       {
@@ -552,8 +605,20 @@ const en: Dictionary = {
         photoAlt: '',
       },
       {
+        title: 'The first rhythms',
+        text: 'With a lot of effort and plenty of drive, we create our first rhythms. New members join and our first gigs arrive.',
+        badges: [],
+        photoAlt: 'The crew, in green T-shirts and Festa de Tardor neckerchiefs, playing in a parade with the Drac de Sant Feliu behind them',
+      },
+      {
+        title: 'The first Drakafesta',
+        text: 'We celebrate our fifth anniversary with the first Drakafesta: a day packed with percussion and partying.',
+        badges: [],
+        photoAlt: 'The crew, in blue T-shirts, next to the Drac de Sant Feliu at the first Drakafesta',
+      },
+      {
         title: 'A stadium and a first title',
-        text: "We play at the opening of FC Barcelona's Estadi Johan Cruyff and finish third at the Kabronada: the first title for Drakaris.",
+        text: "We play at the opening of FC Barcelona's Estadi Johan Cruyff and finish third at the Kabronada: the first title for Drakaris. And we throw the second Drakafesta.",
         badges: ['3rd · Kabronada'],
         photoAlt: 'Drakaris playing under a shower of confetti at the opening of the Estadi Johan Cruyff',
       },
@@ -571,7 +636,7 @@ const en: Dictionary = {
       },
       {
         title: 'Ten years and a contest',
-        text: 'Our tenth anniversary year: an inter-crew pitxi tournament, the first Korrebars, the Drakaris bingo and the third Drakafesta. And to top it off, we win the Concurs de Percussió de Barcelona.',
+        text: 'In our tenth anniversary year we become a registered association of our own, and we celebrate with an inter-crew pitxi tournament, the first Korrebars, a Drakaris bingo and the third Drakafesta. And to top it off, we win the Concurs de Percussió de Barcelona.',
         badges: ['1st · Concurs de Percussió de Barcelona'],
         photoAlt: 'The crew on stage at the 2023 Concurs de Percussió de Barcelona',
       },
@@ -580,6 +645,12 @@ const en: Dictionary = {
         text: "We win the Perculliga, Catalonia's batucada league, and the Diables Rojos contest.",
         badges: ['1st · Perculliga', '1st · Diables Rojos contest'],
         photoAlt: 'The crew celebrating their 2024 Perculliga win with the cup',
+      },
+      {
+        title: 'A magical night',
+        text: 'We play at the Three Kings parade in Sant Feliu: a magical night we had been looking forward to.',
+        badges: [],
+        photoAlt: 'Drakaris playing at night in the Three Kings parade in Sant Feliu, among lights and confetti',
       },
       {
         title: 'Still hungry',
@@ -601,6 +672,7 @@ const en: Dictionary = {
       rounds: { final: 'Final', semifinal: 'Semi-final' },
       play: 'Play video',
       credit: 'Videos by {author} on YouTube',
+      privacy: 'When you press play, the video loads from YouTube, which may store cookies in your browser.',
     },
     items: [
       { name: 'Surdo', text: "The crew's heartbeat, in three sizes: 18, 20 and 22 inches." },
@@ -608,7 +680,7 @@ const en: Dictionary = {
       { name: 'Repinique', text: 'The voice that calls out and cues every entrance.' },
       { name: 'Tamborim', text: 'Small, sharp and cheeky.' },
       { name: 'Agogô', text: 'Two bells and a melody that sticks.' },
-      { name: 'Shekere or chocalho', text: 'The shimmer that ties it all together.' },
+      { name: 'Shekere', text: 'The shimmer that ties it all together.' },
     ],
   },
   events: {
@@ -668,12 +740,14 @@ const en: Dictionary = {
     text: 'Crew T-shirts, neckerchiefs, cups and bags. Orders are placed by direct message on Instagram.',
     order: 'Order on Instagram',
     orderShort: 'Order',
+    note: "Final prices, taxes included. If your order needs shipping, we'll tell you the cost before confirming it.",
+    terms: 'Purchase terms',
     products: {
       adult: 'Adult T-shirt',
       kids: 'Kids T-shirt',
       cup: 'Drakaris cup',
       tote: 'Drakaris tote bag',
-      bag: 'Drakaris drawstring bag',
+      bag: 'Drakaris drawstring backpack',
       scarf: 'Drakaris neckerchief',
     },
   },
@@ -694,10 +768,11 @@ const en: Dictionary = {
   },
   legal: {
     title: 'Legal information',
-    lead: 'Who is behind this website, what we do with data and which cookies we use.',
+    lead: 'Who is behind this website, how orders work, what we do with data and which cookies we use.',
     updated: 'Last updated',
     back: 'Back to the home page',
     notice: 'Legal notice',
+    purchases: 'Purchase terms',
     privacy: 'Privacy',
     cookies: 'Cookies',
     cookieSettings: 'Cookie settings',

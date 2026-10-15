@@ -231,6 +231,19 @@ for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-lang-link
 }
 
 /* -------------------------------------------------------------------------
+   Correo: en el ordenador se abre Gmail en una pestaña; en el móvil, la app
+   de correo del teléfono (mailto:), que siempre está y abre el mensaje listo.
+   ------------------------------------------------------------------------- */
+
+if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('a[data-mail]')) {
+    if (!link.dataset.mail) continue;
+    link.href = link.dataset.mail;
+    link.removeAttribute('target');
+  }
+}
+
+/* -------------------------------------------------------------------------
    Años que se ponen al día solos: el del copyright y los que lleva la colla
    («13 anys fent tremolar els carrers» pasa a 14 en 2027). El HTML lleva los
    del día en que se publicó; aquí solo se corrigen hacia delante.

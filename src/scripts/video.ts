@@ -1,22 +1,12 @@
 // Vídeos de YouTube sin su peso: en la página solo hay una miniatura con un
 // botón. El reproductor de YouTube (más de 1 MB de scripts) no se carga hasta
 // que alguien pulsa play. Sin este script, el botón es un enlace normal al vídeo.
+//
+// Privacidad: hasta que se pulsa play, el navegador no se conecta con YouTube
+// ni con Google (ni siquiera para adelantar la conexión al pasar el ratón), así
+// que no reciben la IP de nadie que no haya querido ver el vídeo.
 
 const frames = [...document.querySelectorAll<HTMLElement>('[data-video-frame]')];
-
-// En cuanto el visitante da señales de ir a pulsar (pasa el ratón, enfoca o
-// apoya el dedo) se abre ya la conexión con YouTube: el vídeo arranca antes.
-let warmedUp = false;
-function warmUp() {
-  if (warmedUp) return;
-  warmedUp = true;
-  for (const origin of ['https://www.youtube-nocookie.com', 'https://www.google.com', 'https://i.ytimg.com']) {
-    const link = document.createElement('link');
-    link.rel = 'preconnect';
-    link.href = origin;
-    document.head.append(link);
-  }
-}
 
 // Vuelve a dejar la miniatura (y, con ello, para el vídeo)
 function reset(frame: HTMLElement) {
@@ -27,10 +17,6 @@ function reset(frame: HTMLElement) {
 for (const frame of frames) {
   const link = frame.querySelector<HTMLAnchorElement>('[data-video]');
   if (!link) continue;
-
-  link.addEventListener('pointerenter', warmUp, { once: true });
-  link.addEventListener('focus', warmUp, { once: true });
-  link.addEventListener('touchstart', warmUp, { once: true, passive: true });
 
   link.addEventListener('click', (event) => {
     // Ctrl/Cmd + clic o botón central: se respeta abrir YouTube en otra pestaña

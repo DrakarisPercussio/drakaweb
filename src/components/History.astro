@@ -19,6 +19,9 @@ const t = useTranslations(lang);
 const age = new Date().getFullYear() - site.founded;
 const [titleStart, titleEnd] = t.history.title.split('{years}');
 
+// El logo de los inicios (hito de 2013)
+const firstLogo = photo('2013/LogoOriginalDKS.jpeg');
+
 // Los dos logos del cambio de imagen de 2020
 const rebrand = [
   { image: dragonRing, alt: t.history.rebrand.logoAlt, label: t.history.rebrand.logo },
@@ -70,7 +73,7 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
                 <li class="milestone" data-milestone data-year={milestone.year}>
                   <span class="milestone-dot" aria-hidden="true" />
                   <div data-reveal>
-                    <p class="milestone-year">{milestone.year}</p>
+                    <p class="milestone-year">{milestone.label ?? milestone.year}</p>
                     <h3 class="milestone-title display">{copy.title}</h3>
                     <p class="milestone-text">{copy.text}</p>
                     {copy.badges.length > 0 && (
@@ -81,6 +84,16 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
                       </ul>
                     )}
                   </div>
+                  {milestone.firstLogo && firstLogo && (
+                    <div class="rebrand" data-reveal style="--i:1">
+                      <figure class="rebrand-item">
+                        <div class="rebrand-tile rebrand-tile--full">
+                          <Image src={firstLogo} alt={t.history.rebrand.firstAlt} width={480} widths={[240, 480]} sizes="14rem" loading="lazy" />
+                        </div>
+                        <figcaption>{t.history.rebrand.first}</figcaption>
+                      </figure>
+                    </div>
+                  )}
                   {milestone.rebrand && (
                     <div class="rebrand" data-reveal style="--i:1">
                       {rebrand.map((logo) => (
@@ -288,6 +301,18 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
     width: 74%;
     height: 74%;
     object-fit: contain;
+  }
+
+  /* El primer logo ya viene con su fondo: llena el cuadro y se recorta con él */
+  .rebrand-tile--full {
+    overflow: hidden;
+  }
+
+  .rebrand-tile--full img {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .rebrand-item figcaption {
