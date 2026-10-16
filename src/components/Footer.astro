@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import ring from '../assets/brand/dragon-ring.webp';
+import ring from '../assets/brand/LOGODKS.webp';
 import Icon from './Icon.astro';
 import LangSwitcher from './LangSwitcher.astro';
 import { analyticsEnabled, sections, site } from '../data/site';
@@ -29,6 +29,9 @@ const legalLinks = [
 // Año en que se publica la web; el script de la página lo pone al día cada 1 de enero
 const year = new Date().getFullYear();
 
+// Las diseñadoras de los logos y los productos, «Nom A i Nom B» con la conjunción del idioma
+const designers = new Intl.ListFormat(lang, { type: 'conjunction' }).formatToParts(site.designers.map((d) => d.name));
+
 const links = [
   { id: sections.about, label: t.nav.about },
   { id: sections.history, label: t.nav.history },
@@ -46,6 +49,23 @@ const links = [
       <div class="footer-brand">
         <Image src={ring} alt="" width={112} height={130} loading="lazy" class="footer-mark" />
         <p class="footer-tagline">{t.footer.tagline}</p>
+        {
+          site.designers.length > 0 && (
+            <p class="footer-credits">
+              {t.footer.design}:{' '}
+              {designers.map((part) => {
+                const link = part.type === 'element' && site.designers.find((d) => d.name === part.value)?.url;
+                return link ? (
+                  <a href={link} target="_blank" rel="noopener noreferrer">
+                    {part.value}
+                  </a>
+                ) : (
+                  part.value
+                );
+              })}
+            </p>
+          )
+        }
       </div>
 
       <nav class="footer-col" aria-label={t.footer.sections}>
@@ -148,6 +168,19 @@ const links = [
     color: var(--fg-muted);
   }
 
+  .footer-credits {
+    margin-top: 0.75rem;
+    max-width: 17rem;
+    font-size: 0.875rem;
+    color: var(--fg-muted);
+  }
+
+  .footer-credits a {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    transition: color 150ms ease;
+  }
+
   .footer-heading {
     margin-bottom: 1rem;
     font-size: 0.75rem;
@@ -230,6 +263,7 @@ const links = [
 
   @media (hover: hover) and (pointer: fine) {
     .footer-links a:hover,
+    .footer-credits a:hover,
     .footer-legal a:hover,
     .footer-legal button:hover,
     .footer-top-link:hover {

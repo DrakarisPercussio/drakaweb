@@ -1,12 +1,12 @@
 // Datos de la colla que no dependen del idioma (enlaces, fechas, productos).
 // Los textos traducibles viven en src/i18n/ui.ts.
 
-import drumClaw from '../assets/brand/drum-claw.webp';
-import dragonRing from '../assets/brand/dragon-ring.webp';
-import dksClaw from '../assets/brand/dks-claw.webp';
-import dragonRingMono from '../assets/brand/dragon-ring-mono.webp';
+import drumClaw from '../assets/brand/drakarisFront.webp';
+import dragonRing from '../assets/brand/LOGODKS.webp';
+import dksClaw from '../assets/brand/logo1.webp';
+import scarfLogo from '../assets/LOGOS/logoblancinegredrakaris.webp';
 import adultTee from '../assets/shop/CamisetaAdultoArticulo.jpeg';
-import kidsTee from '../assets/shop/infantil.jpeg';
+import kidsTee from '../assets/shop/infantil.webp';
 import korrebarsPoster from '../assets/LOGOS/Korrebars2026.png';
 
 const instagramHandle = 'drakaris_percussio';
@@ -60,6 +60,16 @@ export const site = {
   // GOOGLE SEARCH CONSOLE: el código de la etiqueta de verificación (lo que va
   // dentro de content="…" en la etiqueta <meta name="google-site-verification">).
   searchConsoleVerification: '',
+
+  // DISEÑO: quien ha dibujado los logos y los diseños de los productos. Sale en
+  // el pie de página («Logos i il·lustracions: Nom A i Nom B»). Vacío = no sale.
+  // `url` (opcional): su Instagram o web, para que el nombre sea un enlace.
+  designers: [
+    { name: 'Mariona Sans', url: 'https://www.instagram.com/m.art.i.ona/' },
+    { name: 'Núria Sedó', url: 'https://www.instagram.com/lamagrana.ilustra/' },
+    { name: 'Alba Suadas', url: 'https://www.instagram.com/albasuadas/' },
+    { name: 'Fruit del Caos', url: 'https://www.instagram.com/fruitdelcaos/' },
+  ] as { name: string; url?: string }[],
 } as const;
 
 /** ¿Hay un identificador de Analytics completo? (un «G-» a medias no cuenta) */
@@ -126,9 +136,11 @@ export const events = [
 // samarreta d'adult amb models, CamisetaAdultoModelos.jpeg, por si se prefiere).
 export const products = [
   { id: 'adult', price: 12, image: adultTee, tile: '#c9cbc4', photo: true },
-  { id: 'kids', price: 10, image: kidsTee, tile: '#000000' },
+  { id: 'kids', price: 10, image: kidsTee, tile: '#ffffff' },
   { id: 'cup', price: 1.5, image: drumClaw, tile: '#141a15' },
   { id: 'tote', price: 7, image: dragonRing, tile: '#141a15' },
   { id: 'bag', price: 10, image: dksClaw, tile: '#000000' },
-  { id: 'scarf', price: 6, image: dragonRingMono, tile: '#0c100c' },
+  // El logo del mocador va tal cual lo entregó la diseñadora (un A4 con mucho margen):
+  // `zoom` lo amplía dentro del cuadro sin tocar el archivo
+  { id: 'scarf', price: 6, image: scarfLogo, tile: '#ffffff', zoom: 1.75 },
 ] as const;

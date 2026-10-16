@@ -106,6 +106,11 @@ const ca = (f: LegalFacts): LegalSection[] => {
       title: 'Condicions de compra',
       parts: [
         {
+          blocks: [
+            `${f.name} és una entitat sense ànim de lucre. Els beneficis de la venda d’articles es destinen íntegrament al manteniment dels instruments, a finançar els nostres actes i a les activitats internes de la colla.`,
+          ],
+        },
+        {
           heading: 'Comandes',
           blocks: [
             `Les comandes es fan ${write}. Abans de confirmar-les et direm la disponibilitat, el preu total, la forma de pagament i com i quan es lliuren.`,
@@ -217,6 +222,11 @@ const es = (f: LegalFacts): LegalSection[] => {
       title: 'Condiciones de compra',
       parts: [
         {
+          blocks: [
+            `${f.name} es una entidad sin ánimo de lucro. Los beneficios de la venta de artículos se destinan íntegramente al mantenimiento de los instrumentos, a financiar nuestros actos y a las actividades internas de la colla.`,
+          ],
+        },
+        {
           heading: 'Pedidos',
           blocks: [
             `Los pedidos se hacen ${write}. Antes de confirmarlos te diremos la disponibilidad, el precio total, la forma de pago y cómo y cuándo se entregan.`,
@@ -327,6 +337,11 @@ const en = (f: LegalFacts): LegalSection[] => {
       id: 'compres',
       title: 'Purchase terms',
       parts: [
+        {
+          blocks: [
+            `${f.name} is a non-profit association. All profits from merchandise sales go towards maintaining our instruments, funding our events and the group’s internal activities.`,
+          ],
+        },
         {
           heading: 'Orders',
           blocks: [

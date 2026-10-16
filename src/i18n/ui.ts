@@ -252,6 +252,7 @@ const ca = {
     sections: 'Seccions',
     social: 'Xarxes',
     rights: 'Tots els drets reservats.',
+    design: 'Logos i il·lustracions',
   },
   // Página «Informació legal» (los textos largos están en src/i18n/legal.ts)
   legal: {
@@ -513,6 +514,7 @@ const es: Dictionary = {
     sections: 'Secciones',
     social: 'Redes',
     rights: 'Todos los derechos reservados.',
+    design: 'Logos e ilustraciones',
   },
   legal: {
     title: 'Información legal',
@@ -767,6 +769,7 @@ const en: Dictionary = {
     sections: 'Sections',
     social: 'Social',
     rights: 'All rights reserved.',
+    design: 'Logos and illustrations',
   },
   legal: {
     title: 'Legal information',

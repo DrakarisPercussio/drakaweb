@@ -7,7 +7,7 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import '@fontsource/anton/latin-400.css';
 import '@fontsource-variable/plus-jakarta-sans/wght.css';
 import '../styles/global.css';
-import ring from '../assets/brand/dragon-ring.webp';
+import ring from '../assets/brand/LOGODKS.webp';
 import Csp from '../components/Csp.astro';
 import { languages, useTranslations, type Lang } from '../i18n/ui';
 
@@ -24,7 +24,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <meta name="theme-color" content="#0c100c" />
     <meta name="robots" content="noindex" />
     <title>404 · Drakaris Percussió</title>
-    <link rel="icon" type="image/png" href={`${base}/favicon.png`} />
+    <link rel="icon" href={`${base}/favicon.ico`} sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="192x192" href={`${base}/icon-192.png`} />
   </head>
   <body data-tone="ink">
     <main class="lost">
