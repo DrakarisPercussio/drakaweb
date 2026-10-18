@@ -66,8 +66,6 @@ export const site = {
   // `url` (opcional): su Instagram o web, para que el nombre sea un enlace.
   designers: [
     { name: 'Mariona Sans', url: 'https://www.instagram.com/m.art.i.ona/' },
-    { name: 'Núria Sedó', url: 'https://www.instagram.com/lamagrana.ilustra/' },
-    { name: 'Alba Suadas', url: 'https://www.instagram.com/albasuadas/' },
     { name: 'Fruit del Caos', url: 'https://www.instagram.com/fruitdelcaos/' },
   ] as { name: string; url?: string }[],
 } as const;
@@ -97,7 +95,7 @@ export const sections = {
 // `firstLogo` enseña el logo de los inicios y `rebrand`, los dos logos de 2020.
 export const milestones: { year: number; label?: string; photo?: string; firstLogo?: boolean; rebrand?: boolean }[] = [
   { year: 2013, firstLogo: true },
-  { year: 2017, label: '2013–2017', photo: '2013/2013a2017.jpg' },
+  { year: 2017, label: '2013-2017', photo: '2013/2013a2017.jpg' },
   { year: 2018, photo: '2018/PrimeraDrakafesta.jpg' },
   { year: 2019, photo: '2019/Cruyff.jpg' },
   { year: 2020, rebrand: true },

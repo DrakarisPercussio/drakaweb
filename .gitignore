@@ -28,3 +28,6 @@ pnpm-debug.log*
 
 # archivos temporales de Excel mientras está abierto
 ~$*
+
+# Excel para validar la autoría de las fotos (se comparte por Drive, no va en la web)
+autoria-fotos.xlsx

@@ -176,7 +176,7 @@ const ca = {
         name: 'La Festa de Tardor',
         tags: ['Tardor', 'Sant Feliu de Llobregat'],
         text: 'Les festes del nostre poble, i les vivim des de dins, colze a colze amb la resta de colles de la ciutat. Seguici, correfocs, tabalades, cercaviles… Vaja, que no ens avorrim.',
-        note: '08980: el codi postal que qualsevol santfeliuenc reconeix a la primera.',
+        note: '',
         imageAlt: 'La colla amb mocadors vermells al coll el dia del correfoc',
       },
       {
@@ -442,7 +442,7 @@ const es: Dictionary = {
         name: 'La Festa de Tardor',
         tags: ['Otoño', 'Sant Feliu de Llobregat'],
         text: 'Las fiestas de nuestro pueblo, y las vivimos desde dentro, codo con codo con el resto de collas de la ciudad. Seguici, correfocs, tabalades, pasacalles… Vamos, que no nos aburrimos.',
-        note: '08980: el código postal que cualquier santfeliuense reconoce a la primera.',
+        note: '',
         imageAlt: 'La colla con pañuelos rojos al cuello el día del correfoc',
       },
       {
@@ -697,7 +697,7 @@ const en: Dictionary = {
         name: 'La Festa de Tardor',
         tags: ['Autumn', 'Sant Feliu de Llobregat'],
         text: "Our home town's festival, and we live it from the inside, shoulder to shoulder with the city's other crews. Processions, fire runs, drum parades, street parades… In short, we never get bored.",
-        note: '08980: the postcode every local recognises at first sight.',
+        note: '',
         imageAlt: 'The crew wearing red neckerchiefs on the day of the fire run',
       },
       {

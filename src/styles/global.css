@@ -37,6 +37,15 @@
   color-scheme: dark;
 }
 
+/* Algunos navegadores (Samsung Internet) oscurecen por su cuenta las webs que
+   no responden al modo oscuro del móvil. Esta regla les dice que la web ya está
+   preparada; no cambia ningún color: se ve igual en modo claro y en oscuro. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
 /* --------------------------------------------------------------------------
    Base
    -------------------------------------------------------------------------- */
