@@ -121,7 +121,7 @@ const restoreScrollScript = `(function(){try{var raw=sessionStorage.getItem('dk:
     <!-- La web ya tiene sus propios colores (fondo oscuro con secciones claras). Esto
          avisa al navegador para que no la «oscurezca» por su cuenta en los móviles con
          modo oscuro (Samsung Internet, Chrome…): se ve igual en todos los dispositivos. -->
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="only dark" />
     <meta name="generator" content={Astro.generator} />
     {site.searchConsoleVerification && <meta name="google-site-verification" content={site.searchConsoleVerification} />}
 

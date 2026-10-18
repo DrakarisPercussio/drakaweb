@@ -34,7 +34,8 @@
   /* Escamas de dragón (como la lona), dibujadas en SVG */
   --scales: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='40' viewBox='0 0 48 40' fill='none' stroke='%23e8e8e2' stroke-opacity='.075' stroke-width='1.2'%3E%3Cpath d='M0 0c1 14 10 24 24 30c14-6 23-16 24-30M-24 20c1 14 10 24 24 30c14-6 23-16 24-30M24 20c1 14 10 24 24 30c14-6 23-16 24-30M-24-20c1 14 10 24 24 30c14-6 23-16 24-30M24-20c1 14 10 24 24 30c14-6 23-16 24-30'/%3E%3C/svg%3E");
 
-  color-scheme: dark;
+  /* «only»: según el estándar, el navegador no puede cambiar los colores de la web */
+  color-scheme: only dark;
 }
 
 /* Algunos navegadores (Samsung Internet) oscurecen por su cuenta las webs que
@@ -42,7 +43,7 @@
    preparada; no cambia ningún color: se ve igual en modo claro y en oscuro. */
 @media (prefers-color-scheme: dark) {
   :root {
-    color-scheme: dark;
+    color-scheme: only dark;
   }
 }
 
