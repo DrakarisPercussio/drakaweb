@@ -4,7 +4,7 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import ring from '../assets/brand/LOGODKS.webp';
 import Icon from './Icon.astro';
 import LangSwitcher from './LangSwitcher.astro';
-import { analyticsEnabled, sections, site } from '../data/site';
+import { sections, site } from '../data/site';
 import { useTranslations, type Lang } from '../i18n/ui';
 
 interface Props {
@@ -127,16 +127,12 @@ const links = [
           </li>
         ))
       }
-      {/* Solo aparece si hay analítica: lo muestra el script que gestiona el aviso de cookies */}
-      {
-        analyticsEnabled && (
-          <li>
-            <button type="button" data-consent-open hidden>
-              {t.legal.cookieSettings}
-            </button>
-          </li>
-        )
-      }
+      {/* Lo muestra el script del aviso de cookies (sin JavaScript no serviría de nada) */}
+      <li>
+        <button type="button" data-consent-open hidden>
+          {t.legal.cookieSettings}
+        </button>
+      </li>
     </ul>
     <a class="footer-top-link" href="#inici">
       {t.a11y.backTop}

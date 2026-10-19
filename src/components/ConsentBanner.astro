@@ -1,7 +1,7 @@
 ---
-// Aviso de cookies. Solo existe si hay Google Analytics configurado (un
-// `site.analyticsId` completo): sin analítica la web no guarda cookies y no hay
-// nada que consentir.
+// Aviso de cookies. Está en todas las páginas: los vídeos de YouTube siempre
+// piden permiso y, si hay Google Analytics configurado (`site.analyticsId`
+// completo), también la analítica.
 //
 // Sigue el criterio de la AEPD: no se carga nada hasta que se acepta, y
 // «Rebutja» y «Accepta» tienen el mismo tamaño y están al mismo nivel.
@@ -21,64 +21,67 @@ const { categories } = t.consent;
 
 const options = [
   { id: 'necessary', ...categories.necessary, locked: true },
-  { id: 'analytics', ...categories.analytics, locked: false },
+  ...(analyticsEnabled ? [{ id: 'analytics', ...categories.analytics, locked: false }] : []),
+  { id: 'videos', ...categories.videos, locked: false },
 ];
 ---
 
-{
-  analyticsEnabled && (
-    <section class="consent" aria-label={t.consent.label} data-consent data-ga-id={site.analyticsId} hidden>
-      <p class="consent-text">
-        {t.consent.text}{' '}
-        <a href={`${getRelativeLocaleUrl(lang, 'legal/')}#galetes`}>{t.consent.more}</a>
-      </p>
+<section
+  class="consent"
+  aria-label={t.consent.label}
+  data-consent
+  data-ga-id={analyticsEnabled ? site.analyticsId : undefined}
+  hidden
+>
+  <p class="consent-text">
+    {analyticsEnabled ? t.consent.text : t.consent.textVideos}{' '}
+    <a href={`${getRelativeLocaleUrl(lang, 'legal/')}#galetes`}>{t.consent.more}</a>
+  </p>
 
-      <ul class="consent-options" id="consent-options" data-consent-options hidden>
-        {
-          options.map((option) => (
-            <li>
-              <label class="consent-option">
-                <span class="consent-option-copy">
-                  <span class="consent-option-title">{option.title}</span>
-                  <span class="consent-option-text">{option.text}</span>
-                </span>
-                <input
-                  class="consent-switch"
-                  type="checkbox"
-                  role="switch"
-                  checked={option.locked}
-                  disabled={option.locked}
-                  data-consent-toggle={option.locked ? undefined : option.id}
-                />
-              </label>
-            </li>
-          ))
-        }
-      </ul>
+  <ul class="consent-options" id="consent-options" data-consent-options hidden>
+    {
+      options.map((option) => (
+        <li>
+          <label class="consent-option">
+            <span class="consent-option-copy">
+              <span class="consent-option-title">{option.title}</span>
+              <span class="consent-option-text">{option.text}</span>
+            </span>
+            <input
+              class="consent-switch"
+              type="checkbox"
+              role="switch"
+              checked={option.locked}
+              disabled={option.locked}
+              data-consent-toggle={option.locked ? undefined : option.id}
+            />
+          </label>
+        </li>
+      ))
+    }
+  </ul>
 
-      <div class="consent-actions">
-        <button class="btn btn--sm consent-btn" type="button" data-consent-reject>
-          {t.consent.reject}
-        </button>
-        <button
-          class="btn btn--sm consent-btn"
-          type="button"
-          aria-expanded="false"
-          aria-controls="consent-options"
-          data-consent-customize
-        >
-          {t.consent.customize}
-        </button>
-        <button class="btn btn--sm consent-btn" type="button" data-consent-save hidden>
-          {t.consent.save}
-        </button>
-        <button class="btn btn--sm consent-btn consent-btn--accept" type="button" data-consent-accept>
-          {t.consent.accept}
-        </button>
-      </div>
-    </section>
-  )
-}
+  <div class="consent-actions">
+    <button class="btn btn--sm consent-btn" type="button" data-consent-reject>
+      {t.consent.reject}
+    </button>
+    <button
+      class="btn btn--sm consent-btn"
+      type="button"
+      aria-expanded="false"
+      aria-controls="consent-options"
+      data-consent-customize
+    >
+      {t.consent.customize}
+    </button>
+    <button class="btn btn--sm consent-btn" type="button" data-consent-save hidden>
+      {t.consent.save}
+    </button>
+    <button class="btn btn--sm consent-btn consent-btn--accept" type="button" data-consent-accept>
+      {t.consent.accept}
+    </button>
+  </div>
+</section>
 
 <style>
   .consent {

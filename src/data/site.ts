@@ -1,12 +1,12 @@
 // Datos de la colla que no dependen del idioma (enlaces, fechas, productos).
 // Los textos traducibles viven en src/i18n/ui.ts.
 
-import drumClaw from '../assets/brand/drakarisFront.webp';
-import dragonRing from '../assets/brand/LOGODKS.webp';
-import dksClaw from '../assets/brand/logo1.webp';
-import scarfLogo from '../assets/LOGOS/logoblancinegredrakaris.webp';
 import adultTee from '../assets/shop/CamisetaAdultoArticulo.jpeg';
 import kidsTee from '../assets/shop/infantil.webp';
+import cup from '../assets/shop/Got.webp';
+import tote from '../assets/shop/tote.webp';
+import backpack from '../assets/shop/motxilla.webp';
+import scarf from '../assets/shop/mocador.webp';
 import korrebarsPoster from '../assets/LOGOS/Korrebars2026.png';
 
 const instagramHandle = 'drakaris_percussio';
@@ -44,14 +44,14 @@ export const site = {
     registered: '2023-03-22',
     address: "Carrer de l'Ateneu, 23-25, 08980 Sant Feliu de Llobregat (Barcelona)",
     /** Fecha de la última revisión de los textos legales, AAAA-MM-DD */
-    updated: '2026-10-16',
+    updated: '2026-10-19',
   },
 
   // GOOGLE ANALYTICS: el identificador de la propiedad, entero («G-» seguido
   // de unas diez letras y números, p. ej. G-AB12CD34EF). Mientras esté vacío o
   // a medias no hay analítica ni aviso de cookies. Al ponerlo, aparecen el
   // aviso y la configuración de cookies, y solo se mide si se acepta.
-  analyticsId: 'G-',
+  analyticsId: 'G-6NVLXQRLD0',
 
   // AGENDA: el enlace de la hoja de Google con las próximas actuaciones.
   // Vacío = se lee el Excel del proyecto, src/data/agenda.xlsx. Ver src/data/agenda.ts.
@@ -135,10 +135,9 @@ export const events = [
 export const products = [
   { id: 'adult', price: 12, image: adultTee, tile: '#c9cbc4', photo: true },
   { id: 'kids', price: 10, image: kidsTee, tile: '#ffffff' },
-  { id: 'cup', price: 1.5, image: drumClaw, tile: '#141a15' },
-  { id: 'tote', price: 7, image: dragonRing, tile: '#141a15' },
-  { id: 'bag', price: 10, image: dksClaw, tile: '#000000' },
-  // El logo del mocador va tal cual lo entregó la diseñadora (un A4 con mucho margen):
-  // `zoom` lo amplía dentro del cuadro sin tocar el archivo
-  { id: 'scarf', price: 6, image: scarfLogo, tile: '#ffffff', zoom: 1.75 },
+  // Fotos del producto recortadas sobre fondo blanco (originales en .originals/shop)
+  { id: 'cup', price: 1.5, image: cup, tile: '#ffffff', photo: true },
+  { id: 'tote', price: 7, image: tote, tile: '#ffffff', photo: true },
+  { id: 'bag', price: 10, image: backpack, tile: '#ffffff', photo: true },
+  { id: 'scarf', price: 6, image: scarf, tile: '#ffffff', photo: true },
 ] as const;

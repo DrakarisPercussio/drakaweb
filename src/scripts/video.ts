@@ -2,10 +2,12 @@
 // botón. El reproductor de YouTube (más de 1 MB de scripts) no se carga hasta
 // que alguien pulsa play. Sin este script, el botón es un enlace normal al vídeo.
 //
-// Privacidad: hasta que se pulsa play, el navegador no se conecta con YouTube
-// ni con Google, así que no reciben la IP de nadie que no haya querido ver el
-// vídeo. Al reproducirlo, YouTube guarda sus propias cookies (lo explica la
-// política de cookies de la página legal).
+// Privacidad: el reproductor de YouTube guarda sus propias cookies, así que
+// solo se carga aquí si el visitante ha aceptado las de vídeos en el aviso de
+// cookies. Si no, el botón abre el vídeo en YouTube, en otra pestaña. Hasta
+// entonces el navegador no se conecta con YouTube ni con Google.
+
+import { getConsent, onConsent } from './consent';
 
 const frames = [...document.querySelectorAll<HTMLElement>('[data-video-frame]')];
 
@@ -22,6 +24,8 @@ for (const frame of frames) {
   link.addEventListener('click', (event) => {
     // Ctrl/Cmd + clic o botón central: se respeta abrir YouTube en otra pestaña
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    // Sin permiso para las cookies de YouTube, el enlace hace lo suyo: abre YouTube
+    if (!getConsent()?.videos) return;
     event.preventDefault();
     if (frame.dataset.state) return;
 
@@ -43,3 +47,8 @@ for (const frame of frames) {
     frame.append(player);
   });
 }
+
+// Si el visitante retira el permiso, el vídeo que estuviera sonando se quita
+onConsent((consent) => {
+  if (!consent.videos) for (const frame of frames) reset(frame);
+});

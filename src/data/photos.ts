@@ -45,8 +45,8 @@ const credits: Record<string, string> = {
   '2023/230916_Drakafesta_323.JPG': 'Paula Paniagua',
   '2023/230916_Drakafesta_341.JPG': 'Paula Paniagua',
   '2023/230916_Drakafesta_380.JPG': 'Paula Paniagua',
-  '2023/231012_Tabalada_107.JPG': 'Guillem Mendoza',
-  '2023/231012_Tabalada_471.JPG': 'Guillem Mendoza',
+  '2023/231012_Tabalada_107.JPG': 'Paula Paniagua',
+  '2023/231012_Tabalada_471.JPG': 'Paula Paniagua',
   '2023/231015_Cercavila_83.JPG': 'Paula Paniagua',
   '2023/cercavilaColles.jpg': 'Paula Paniagua',
   '2023/Concurs1.jpg': '',
@@ -60,6 +60,11 @@ const credits: Record<string, string> = {
   '2024/IMG-20240317-WA0029.jpg': '',
   '2024/IMG-20241009-WA0043.jpg': '',
   '2024/Perculliga.jpg': '',
+  '2024/Mendoza1.jpg': 'Guillem Mendoza',
+  '2024/Mendoza2.jpg': 'Guillem Mendoza',
+  '2024/Mendoza3.jpg': 'Guillem Mendoza',
+  '2024/Mendoza4.jpg': 'Guillem Mendoza',
+  '2024/Mendoza5.jpg': 'Guillem Mendoza',
   '2024/Vermut Joan Maragall 2024 - @AlexMiroFoto--56.jpeg': 'Alex Miró',
   '2025/cabalgata.JPG': 'Raül Clemente',
   '2025/Calçotada.jpg': '',
@@ -73,11 +78,21 @@ const credits: Record<string, string> = {
   '2026/IMG-20261009-WA0140.jpg': '',
   '2026/IMG-20261009-WA0354.jpg': '',
   '2026/SantJordi.jpg': '',
+  // Festa de Tardor 2026, fotos de Nina
+  '2026/BateriaCorrefoc.jpg': 'Nina',
+  '2026/IMG-20261016-WA0071.jpg': 'Nina',
+  '2026/IMG-20261016-WA0075.jpg': 'Nina',
+  '2026/IMG-20261016-WA0089.jpg': 'Nina',
+  '2026/Laura.jpg': 'Nina',
+  '2026/distorsio.jpg': 'Nina',
+  '2026/novatos.jpg': 'Nina',
+  '2026/tabaladaCorrefoc.jpg': 'Nina',
 };
 
 // (Opcional) El Instagram o la web de cada fotógrafo: con esto su nombre pasa
 // a ser un enlace. El nombre tiene que estar escrito igual que arriba.
 const photographerLinks: Record<string, string> = {
+  Nina: 'https://www.instagram.com/ninaadamhausmann/',
   'Paula Paniagua': 'https://www.instagram.com/ppaulens/',
   'Raül Clemente': 'https://www.instagram.com/raulclementemolina/',
   'Alex Miró': 'https://www.instagram.com/alexmirofoto/',
@@ -122,6 +137,11 @@ const captions: Record<string, Caption> = {
   '2024/ConcursRojos.jpg': 'Concurs de Diables Rojos',
   '2024/IMG-20241009-WA0043.jpg': 'Festa de Tardor',
   '2024/Perculliga.jpg': 'Perculliga',
+  '2024/Mendoza1.jpg': 'Cercavila de la Festa de Tardor',
+  '2024/Mendoza2.jpg': 'Cercavila de la Festa de Tardor',
+  '2024/Mendoza3.jpg': 'Tabalada de la Festa de Tardor',
+  '2024/Mendoza4.jpg': 'Tabalada de la Festa de Tardor',
+  '2024/Mendoza5.jpg': 'Tabalada de la Festa de Tardor',
   '2024/Vermut Joan Maragall 2024 - @AlexMiroFoto--56.jpeg': 'Vermut de colles',
   '2025/cabalgata.JPG': { ca: 'Cavalcada de Reis', es: 'Cabalgata de Reyes', en: 'Three Kings parade' },
   '2025/Calçotada.jpg': 'Calçotada',
@@ -134,6 +154,14 @@ const captions: Record<string, Caption> = {
   '2026/IMG-20261009-WA0140.jpg': 'Festa de Tardor',
   '2026/IMG-20261009-WA0354.jpg': 'Festa de Tardor',
   '2026/SantJordi.jpg': 'Sant Jordi',
+  '2026/BateriaCorrefoc.jpg': 'Correfoc de la Festa de Tardor',
+  '2026/IMG-20261016-WA0071.jpg': 'Festa de Tardor',
+  '2026/IMG-20261016-WA0075.jpg': 'Festa de Tardor',
+  '2026/IMG-20261016-WA0089.jpg': 'Festa de Tardor',
+  '2026/Laura.jpg': 'Festa de Tardor',
+  '2026/distorsio.jpg': 'Festa de Tardor',
+  '2026/novatos.jpg': 'Festa de Tardor',
+  '2026/tabaladaCorrefoc.jpg': 'Tabalada i correfoc',
 };
 
 export interface Credit {
@@ -201,5 +229,6 @@ export function photo(key: string): ImageMetadata | undefined {
 export function captionFor(item: Photo, lang: Lang): string {
   const caption = captions[item.key];
   const text = typeof caption === 'string' ? caption : caption?.[lang];
-  return text ? `${text} · ${item.year}` : `Drakaris · ${item.year}`;
+  // Empieza por «Drakaris»: también es lo que lee Google Imágenes
+  return text ? `Drakaris · ${text} · ${item.year}` : `Drakaris · ${item.year}`;
 }

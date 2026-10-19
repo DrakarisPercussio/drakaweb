@@ -59,9 +59,25 @@ const group = {
     addressCountry: 'ES',
   },
   ...(site.email && { email: site.email }),
-  areaServed: 'Catalunya',
+  // Dónde se la puede contratar: ayuda a salir en búsquedas como «batucada Barcelona»
+  areaServed: [
+    { '@type': 'City', name: 'Sant Feliu de Llobregat' },
+    { '@type': 'City', name: 'Barcelona' },
+    { '@type': 'AdministrativeArea', name: 'Baix Llobregat' },
+    { '@type': 'AdministrativeArea', name: 'Catalunya' },
+  ],
   genre: ['Batucada', 'Percussió', 'Samba'],
   sameAs: site.socials.map((social) => social.url),
+};
+
+// Hora de España de cada fecha (+01:00 en invierno, +02:00 en verano), para
+// que Google no tenga que adivinar la zona horaria de las actuaciones
+const madridOffset = (date: string) => {
+  const name = new Intl.DateTimeFormat('en-US', { timeZone: 'Europe/Madrid', timeZoneName: 'shortOffset' })
+    .formatToParts(new Date(`${date}T12:00:00Z`))
+    .find((part) => part.type === 'timeZoneName')?.value;
+  const hours = Number(name?.replace('GMT', '') || 1);
+  return `+${String(hours).padStart(2, '0')}:00`;
 };
 
 const upcoming = agenda
@@ -73,7 +89,13 @@ const upcoming = agenda
     return {
       '@type': 'Event',
       name: `${gig.title[lang]} · Drakaris Percussió`,
-      startDate: gig.time ? `${gig.date}T${gig.time}` : gig.date,
+      description: t.agenda.eventDescription.replace('{title}', gig.title[lang]).replace('{place}', gig.place!),
+      image: absolute(`${base}/og.jpg`),
+      startDate: gig.time ? `${gig.date}T${gig.time}${madridOffset(gig.date)}` : gig.date,
+      // La agenda no tiene hora de fin: el acto acaba el mismo día
+      endDate: gig.time ? `${gig.date}T23:59${madridOffset(gig.date)}` : gig.date,
+      // Sin `offers` a propósito: las actuaciones son casi siempre gratuitas y en
+      // la calle, y Google solo lo pide para eventos con entrada
       eventStatus: 'https://schema.org/EventScheduled',
       eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
       location: {
@@ -110,7 +132,7 @@ const restoreScrollScript = `(function(){try{var raw=sessionStorage.getItem('dk:
   <head>
     <meta charset="UTF-8" />
     <Csp inlineScripts={[skipIntroScript, restoreScrollScript]} analytics={analyticsEnabled} />
-    <!-- Activa la transición entre páginas. Va aquí y no en el CSS: ver la nota en global.css -->
+    {/* Activa la transición entre páginas. Va aquí y no en el CSS: ver la nota en global.css */}
     <style is:inline>
       @view-transition {
         navigation: auto;
@@ -118,9 +140,9 @@ const restoreScrollScript = `(function(){try{var raw=sessionStorage.getItem('dk:
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0c100c" />
-    <!-- La web ya tiene sus propios colores (fondo oscuro con secciones claras). Esto
+    {/* La web ya tiene sus propios colores (fondo oscuro con secciones claras). Esto
          avisa al navegador para que no la «oscurezca» por su cuenta en los móviles con
-         modo oscuro (Samsung Internet, Chrome…): se ve igual en todos los dispositivos. -->
+         modo oscuro (Samsung Internet, Chrome…): se ve igual en todos los dispositivos. */}
     <meta name="color-scheme" content="only dark" />
     <meta name="generator" content={Astro.generator} />
     {site.searchConsoleVerification && <meta name="google-site-verification" content={site.searchConsoleVerification} />}
@@ -132,8 +154,8 @@ const restoreScrollScript = `(function(){try{var raw=sessionStorage.getItem('dk:
     <link rel="alternate" hreflang="x-default" href={absolute(getRelativeLocaleUrl(defaultLang, path))} />
     <link rel="sitemap" href={`${base}/sitemap.xml`} />
 
-    <!-- Icono: el .ico es el que buscan Google y los navegadores antiguos; el de
-         192 px, el que usa Google en los resultados de búsqueda (pide 48 px o más) -->
+    {/* Icono: el .ico es el que buscan Google y los navegadores antiguos; el de
+         192 px, el que usa Google en los resultados de búsqueda (pide 48 px o más) */}
     <link rel="icon" href={`${base}/favicon.ico`} sizes="48x48" />
     <link rel="icon" type="image/png" sizes="192x192" href={`${base}/icon-192.png`} />
     <link rel="apple-touch-icon" href={`${base}/apple-touch-icon.png`} />

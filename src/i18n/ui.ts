@@ -17,11 +17,13 @@ export const defaultLang: Lang = 'ca';
 
 const ca = {
   meta: {
-    title: 'Drakaris Percussió',
-    // Lo que enseña Google bajo el título. Lleva las palabras por las que se
-    // busca una colla así: percussió, batucada, tambors, el nombre del pueblo.
+    // El título y la descripción son lo que enseña Google en cada resultado. El
+    // título empieza por el nombre (es lo que se ve en la pestaña) y sigue con lo
+    // que la gente busca: batucada + el pueblo. La descripción, por debajo de
+    // ~155 caracteres para que Google no la corte.
+    title: "Drakaris Percussió · Batucada a Sant Feliu de Llobregat",
     description:
-      "Drakaris (DKS): colla de percussió i batucada de Sant Feliu de Llobregat. Des del 2013 portem tambors i rakatà a cercaviles, correfocs i festes majors. Contracta'ns o vine a tocar.",
+      "Colla de percussió de Sant Feliu de Llobregat. Batucada a Barcelona i arreu de Catalunya: festes majors, cercaviles, correfocs i casaments. Contracta'ns.",
   },
   a11y: {
     skip: 'Salta al contingut',
@@ -203,6 +205,8 @@ const ca = {
     follow: 'Totes les novetats, a Instagram',
     map: 'Mapa',
     mapLabel: 'Com arribar-hi',
+    // Descripción de cada actuación para Google (datos estructurados; no se ve en la página)
+    eventDescription: 'Drakaris Percussió, colla de percussió i batucada de Sant Feliu de Llobregat, toca a «{title}», a {place}.',
     empty:
       "Ara mateix no tenim cap data anunciada. Segueix-nos a Instagram i te n'assabentaràs abans que ningú.",
   },
@@ -240,7 +244,7 @@ const ca = {
   booking: {
     label: 'Contractació',
     title: 'Posa ritme a la teva festa.',
-    text: "Batucada per a festes majors, cercaviles, inauguracions, casaments… Explica'ns què tens al cap i et direm com ho fem sonar.",
+    text: "Batucada per a festes majors, cercaviles, inauguracions, casaments… a Sant Feliu, a Barcelona i arreu de Catalunya. Explica'ns què tens al cap i et direm com ho fem sonar.",
     primary: 'Escriu-nos per Instagram',
     email: "Envia'ns un correu",
     // Asunto con el que se abre el correo: ayuda a distinguir las contrataciones
@@ -270,7 +274,9 @@ const ca = {
   // Aviso de cookies: solo sale si hay Google Analytics configurado
   consent: {
     label: 'Galetes',
-    text: "Fem servir galetes d'analítica (Google Analytics) per saber com es fa servir el web. Només s'activen si les acceptes.",
+    // `text` si la web tiene Google Analytics; `textVideos` si solo hay vídeos
+    text: "Fem servir galetes d'analítica (Google Analytics) per saber com es fa servir el web, i les de YouTube per veure-hi els vídeos. Només s'activen si les acceptes.",
+    textVideos: "Els vídeos de YouTube desen galetes al navegador. Només es reprodueixen aquí si les acceptes; si no, s'obren a YouTube.",
     more: 'Més informació',
     accept: 'Accepta',
     reject: 'Rebutja',
@@ -280,6 +286,7 @@ const ca = {
     categories: {
       necessary: { title: 'Necessàries', text: 'Recorden la teva elecció. Sempre actives.' },
       analytics: { title: 'Analítiques', text: "Google Analytics: quantes visites rep el web i d'on arriben." },
+      videos: { title: 'Vídeos', text: "YouTube: per veure els vídeos aquí mateix. Si no les acceptes, s'obren a YouTube." },
     },
   },
   // Página de error (dirección que no existe)
@@ -294,9 +301,9 @@ export type Dictionary = typeof ca;
 
 const es: Dictionary = {
   meta: {
-    title: 'Drakaris Percussió',
+    title: 'Drakaris Percussió · Batucada en Sant Feliu de Llobregat',
     description:
-      'Drakaris (DKS): colla de percusión y batucada de Sant Feliu de Llobregat (Barcelona). Desde 2013 llevamos tambores y rakatà a pasacalles, correfocs y fiestas mayores. Contrátanos o ven a tocar.',
+      'Colla de percusión y batucada de Sant Feliu de Llobregat. Batucada para fiestas en Barcelona y toda Cataluña: pasacalles, correfocs y bodas. Contrátanos.',
   },
   a11y: {
     skip: 'Saltar al contenido',
@@ -468,6 +475,7 @@ const es: Dictionary = {
     follow: 'Todas las novedades, en Instagram',
     map: 'Mapa',
     mapLabel: 'Cómo llegar',
+    eventDescription: 'Drakaris Percussió, colla de percusión y batucada de Sant Feliu de Llobregat, toca en «{title}», en {place}.',
     empty: 'Ahora mismo no tenemos ninguna fecha anunciada. Síguenos en Instagram y te enterarás antes que nadie.',
   },
   join: {
@@ -503,7 +511,7 @@ const es: Dictionary = {
   booking: {
     label: 'Contratación',
     title: 'Pon ritmo a tu fiesta.',
-    text: 'Batucada para fiestas mayores, pasacalles, inauguraciones, bodas… Cuéntanos qué tienes en mente y te diremos cómo lo hacemos sonar.',
+    text: 'Batucada para fiestas mayores, pasacalles, inauguraciones, bodas… en Sant Feliu, en Barcelona y en toda Cataluña. Cuéntanos qué tienes en mente y te diremos cómo lo hacemos sonar.',
     primary: 'Escríbenos por Instagram',
     email: 'Envíanos un correo',
     emailSubject: 'Contratación de Drakaris',
@@ -529,7 +537,8 @@ const es: Dictionary = {
   },
   consent: {
     label: 'Cookies',
-    text: 'Usamos cookies de analítica (Google Analytics) para saber cómo se usa la web. Solo se activan si las aceptas.',
+    text: 'Usamos cookies de analítica (Google Analytics) para saber cómo se usa la web, y las de YouTube para ver los vídeos en ella. Solo se activan si las aceptas.',
+    textVideos: 'Los vídeos de YouTube guardan cookies en el navegador. Solo se reproducen aquí si las aceptas; si no, se abren en YouTube.',
     more: 'Más información',
     accept: 'Aceptar',
     reject: 'Rechazar',
@@ -538,6 +547,7 @@ const es: Dictionary = {
     categories: {
       necessary: { title: 'Necesarias', text: 'Recuerdan tu elección. Siempre activas.' },
       analytics: { title: 'Analíticas', text: 'Google Analytics: cuántas visitas recibe la web y de dónde llegan.' },
+      videos: { title: 'Vídeos', text: 'YouTube: para ver los vídeos aquí mismo. Si no las aceptas, se abren en YouTube.' },
     },
   },
   notFound: {
@@ -549,9 +559,9 @@ const es: Dictionary = {
 
 const en: Dictionary = {
   meta: {
-    title: 'Drakaris Percussió',
+    title: 'Drakaris Percussió · Batucada group in Sant Feliu de Llobregat',
     description:
-      'Drakaris (DKS): percussion and batucada drum group from Sant Feliu de Llobregat, Barcelona. Since 2013 we bring drums and rakatà to street parades, fire runs and festivals. Book us or come and play.',
+      'Batucada and percussion group from Sant Feliu de Llobregat. We play festivals, parades and weddings in Barcelona and across Catalonia. Book us.',
   },
   a11y: {
     skip: 'Skip to content',
@@ -723,6 +733,7 @@ const en: Dictionary = {
     follow: 'All the news, on Instagram',
     map: 'Map',
     mapLabel: 'Directions',
+    eventDescription: 'Drakaris Percussió, a percussion and batucada group from Sant Feliu de Llobregat, plays at “{title}” in {place}.',
     empty: "No dates announced right now. Follow us on Instagram and you'll be the first to know.",
   },
   join: {
@@ -758,7 +769,7 @@ const en: Dictionary = {
   booking: {
     label: 'Bookings',
     title: 'Bring the rhythm to your party.',
-    text: "Batucada for town festivals, parades, openings, weddings… Tell us what you have in mind and we'll tell you how we make it sound.",
+    text: "Batucada for town festivals, parades, openings, weddings… in Sant Feliu, Barcelona and all over Catalonia. Tell us what you have in mind and we'll tell you how we make it sound.",
     primary: 'Message us on Instagram',
     email: 'Send us an email',
     emailSubject: 'Booking Drakaris',
@@ -784,7 +795,8 @@ const en: Dictionary = {
   },
   consent: {
     label: 'Cookies',
-    text: 'We use analytics cookies (Google Analytics) to learn how the site is used. They are only activated if you accept.',
+    text: 'We use analytics cookies (Google Analytics) to learn how the site is used, and YouTube cookies to play the videos here. They are only activated if you accept.',
+    textVideos: 'YouTube videos store cookies in your browser. They only play here if you accept; otherwise they open on YouTube.',
     more: 'More information',
     accept: 'Accept',
     reject: 'Reject',
@@ -793,6 +805,7 @@ const en: Dictionary = {
     categories: {
       necessary: { title: 'Necessary', text: 'Remember your choice. Always on.' },
       analytics: { title: 'Analytics', text: 'Google Analytics: how many visits the site gets and where they come from.' },
+      videos: { title: 'Videos', text: 'YouTube: to watch the videos right here. If you decline, they open on YouTube.' },
     },
   },
   notFound: {

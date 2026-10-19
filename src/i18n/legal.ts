@@ -8,7 +8,7 @@
 // Al cambiar algo aquí, actualizar también `site.legal.updated`.
 //
 // La web no guarda cookies propias: la política de cookies explica las de
-// YouTube al reproducir un vídeo. Las partes sobre Google Analytics solo
+// YouTube (solo con permiso, desde el aviso de cookies). Las partes sobre Google Analytics solo
 // aparecen si hay un identificador en `site.analyticsId`, y las líneas de NIF y
 // correo, solo si están rellenos.
 
@@ -51,7 +51,7 @@ const google = (lang: Lang, f: LegalFacts) =>
 /**
  * La política de cookies. La web no guarda cookies propias: las únicas son las
  * del reproductor de YouTube al ver un vídeo y, si hay Google Analytics, las suyas.
- * No se pide permiso por las de YouTube: solo se cargan si alguien pulsa play.
+ * Las de YouTube solo se cargan si se aceptan en el aviso de cookies.
  */
 function cookiePolicy(
   f: LegalFacts,
@@ -151,6 +151,7 @@ const ca = (f: LegalFacts): LegalSection[] => {
               'Contacte: respondre els teus missatges i gestionar el que ens demanis (comandes, contractacions o unir-te a la colla). Base legal: la teva sol·licitud o el contracte (art. 6.1.b del RGPD).',
               f.analytics &&
                 'Analítica: saber com es fa servir el web, amb Google Analytics, només si ho acceptes. Base legal: el teu consentiment (art. 6.1.a del RGPD).',
+              'Vídeos: reproduir els vídeos de YouTube al web, només si ho acceptes. Base legal: el teu consentiment (art. 6.1.a del RGPD).',
               'Fotografies: donar a conèixer l’activitat de la colla. Base legal: el consentiment dels membres i, per al públic que hi surt de manera secundària en actes públics, l’interès legítim de l’associació (art. 6.1.a i 6.1.f del RGPD).',
             ]),
           ],
@@ -184,13 +185,13 @@ const ca = (f: LegalFacts): LegalSection[] => {
       none: 'Aquest web no fa servir galetes pròpies.',
       heading: 'Galetes que s’hi poden desar',
       youtube:
-        'Vídeos (YouTube): en reproduir un vídeo, el reproductor de YouTube (Google) desa les seves pròpies galetes al navegador per funcionar i comptar reproduccions. Detall a policies.google.com/technologies/cookies.',
+        'Vídeos (YouTube), només si les acceptes: el reproductor de YouTube (Google) desa les seves pròpies galetes al navegador per funcionar i comptar reproduccions. Detall a policies.google.com/technologies/cookies.',
       analytics:
-        'Analítiques (Google Analytics): _ga i _ga_<ID>, només si les acceptes, per distingir visitants i sessions. Caduquen als 2 anys.',
+        'Analítiques (Google Analytics), només si les acceptes: _ga i _ga_<ID>, que instal·la Google Ireland Limited per encàrrec de l’associació per distingir visitants i sessions. Caduquen als 2 anys.',
       howHeading: 'Com gestionar-les',
-      how: 'Les pots esborrar o bloquejar des de la configuració del navegador.',
+      how: 'Les pots acceptar, rebutjar o triar quan vulguis des de «Configuració de galetes», al peu de pàgina. Si no acceptes les de YouTube, els vídeos s’obren a YouTube.',
       howAnalytics:
-        'Les d’analítica les pots acceptar o rebutjar quan vulguis des de «Configuració de galetes», al peu de pàgina. Totes les pots esborrar o bloquejar des de la configuració del navegador.',
+        'Les pots acceptar, rebutjar o triar quan vulguis des de «Configuració de galetes», al peu de pàgina. Si no acceptes les de YouTube, els vídeos s’obren a YouTube.',
     }),
   ];
 };
@@ -267,6 +268,7 @@ const es = (f: LegalFacts): LegalSection[] => {
               'Contacto: responder a tus mensajes y gestionar lo que nos pidas (pedidos, contrataciones o unirte a la colla). Base legal: tu solicitud o el contrato (art. 6.1.b del RGPD).',
               f.analytics &&
                 'Analítica: saber cómo se usa la web, con Google Analytics, solo si lo aceptas. Base legal: tu consentimiento (art. 6.1.a del RGPD).',
+              'Vídeos: reproducir los vídeos de YouTube en la web, solo si lo aceptas. Base legal: tu consentimiento (art. 6.1.a del RGPD).',
               'Fotografías: dar a conocer la actividad de la colla. Base legal: el consentimiento de los miembros y, para el público que sale de forma secundaria en actos públicos, el interés legítimo de la asociación (art. 6.1.a y 6.1.f del RGPD).',
             ]),
           ],
@@ -300,13 +302,13 @@ const es = (f: LegalFacts): LegalSection[] => {
       none: 'Esta web no usa cookies propias.',
       heading: 'Cookies que se pueden guardar',
       youtube:
-        'Vídeos (YouTube): al reproducir un vídeo, el reproductor de YouTube (Google) guarda sus propias cookies en el navegador para funcionar y contar reproducciones. Detalle en policies.google.com/technologies/cookies.',
+        'Vídeos (YouTube), solo si las aceptas: el reproductor de YouTube (Google) guarda sus propias cookies en el navegador para funcionar y contar reproducciones. Detalle en policies.google.com/technologies/cookies.',
       analytics:
-        'Analíticas (Google Analytics): _ga y _ga_<ID>, solo si las aceptas, para distinguir visitantes y sesiones. Caducan a los 2 años.',
+        'Analíticas (Google Analytics), solo si las aceptas: _ga y _ga_<ID>, que instala Google Ireland Limited por encargo de la asociación para distinguir visitantes y sesiones. Caducan a los 2 años.',
       howHeading: 'Cómo gestionarlas',
-      how: 'Puedes borrarlas o bloquearlas desde la configuración del navegador.',
+      how: 'Puedes aceptarlas, rechazarlas o elegirlas cuando quieras desde «Configuración de cookies», en el pie de página. Si no aceptas las de YouTube, los vídeos se abren en YouTube.',
       howAnalytics:
-        'Las de analítica puedes aceptarlas o rechazarlas cuando quieras desde «Configuración de cookies», en el pie de página. Todas puedes borrarlas o bloquearlas desde la configuración del navegador.',
+        'Puedes aceptarlas, rechazarlas o elegirlas cuando quieras desde «Configuración de cookies», en el pie de página. Si no aceptas las de YouTube, los vídeos se abren en YouTube.',
     }),
   ];
 };
@@ -383,6 +385,7 @@ const en = (f: LegalFacts): LegalSection[] => {
               'Contact: replying to your messages and handling what you ask for (orders, bookings or joining the group). Legal basis: your request or the contract (Art. 6(1)(b) GDPR).',
               f.analytics &&
                 'Analytics: learning how the website is used, with Google Analytics, only if you accept. Legal basis: your consent (Art. 6(1)(a) GDPR).',
+              'Videos: playing YouTube videos on the website, only if you accept. Legal basis: your consent (Art. 6(1)(a) GDPR).',
               'Photographs: showing what the group does. Legal basis: the consent of members and, for members of the public who appear incidentally at public events, the association’s legitimate interest (Art. 6(1)(a) and 6(1)(f) GDPR).',
             ]),
           ],
@@ -416,13 +419,13 @@ const en = (f: LegalFacts): LegalSection[] => {
       none: 'This website does not use its own cookies.',
       heading: 'Cookies that may be stored',
       youtube:
-        'Videos (YouTube): when you play a video, the YouTube (Google) player stores its own cookies in your browser to work and count views. Details at policies.google.com/technologies/cookies.',
+        'Videos (YouTube), only if you accept: the YouTube (Google) player stores its own cookies in your browser to work and count views. Details at policies.google.com/technologies/cookies.',
       analytics:
-        'Analytics (Google Analytics): _ga and _ga_<ID>, only if you accept, to tell visitors and sessions apart. They expire after 2 years.',
+        'Analytics (Google Analytics), only if you accept: _ga and _ga_<ID>, set by Google Ireland Limited on behalf of the association to tell visitors and sessions apart. They expire after 2 years.',
       howHeading: 'How to manage them',
-      how: 'You can delete or block them in your browser settings.',
+      how: 'You can accept, reject or choose them at any time from “Cookie settings” in the footer. If you decline YouTube cookies, videos open on YouTube.',
       howAnalytics:
-        'You can accept or reject analytics cookies at any time from “Cookie settings” in the footer. You can delete or block any of them in your browser settings.',
+        'You can accept, reject or choose them at any time from “Cookie settings” in the footer. If you decline YouTube cookies, videos open on YouTube.',
     }),
   ];
 };
