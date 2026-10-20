@@ -2,6 +2,13 @@
 import { Image } from 'astro:assets';
 import dragonRing from '../assets/brand/LOGODKS.webp';
 import dksClaw from '../assets/brand/logo1.webp';
+import surdo from '../assets/brand/instruments/AmarilloSurdo.webp';
+import caixa from '../assets/brand/instruments/AmarilloCaja.webp';
+import tambori from '../assets/brand/instruments/amarilloTambori.webp';
+import agogo from '../assets/brand/instruments/AmarilloAgogo.webp';
+import xequere from '../assets/brand/instruments/verdeChequere.webp';
+import xiulet from '../assets/brand/instruments/amarilloSilbato.webp';
+import baquetes from '../assets/brand/instruments/AmarilloMazas.webp';
 import PhotoCredit from './PhotoCredit.astro';
 import { creditsFor, photo } from '../data/photos';
 import { milestones, sections, site } from '../data/site';
@@ -28,6 +35,10 @@ const rebrand = [
   { image: dksClaw, alt: t.history.rebrand.chestAlt, label: t.history.rebrand.chest },
 ];
 const firstYear = String(milestones[0].year);
+
+// La formación de la colla, debajo del año (solo en ordenador): los instrumentos
+// se encienden uno a uno a medida que avanza la historia (src/scripts/timeline.ts)
+const kit = [surdo, caixa, tambori, agogo, xequere, xiulet, baquetes];
 const digits = Array.from({ length: 10 }, (_, n) => n);
 ---
 
@@ -60,6 +71,11 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
             ))
           }
         </div>
+        <ul class="history-kit" data-kit>
+          {kit.map((icon) => (
+            <li style={`--icon:url(${icon.src});aspect-ratio:${icon.width}/${icon.height}`} />
+          ))}
+        </ul>
       </div>
 
       <div class="milestones" data-timeline>
@@ -177,6 +193,34 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
 
   .odo-strip span {
     height: 1em;
+  }
+
+  /* Los instrumentos, como siluetas del color de la página: apagados en un tono
+     un paso por encima del fondo, encendidos en verde. Sin JavaScript, todos
+     encendidos. */
+  .history-kit {
+    display: flex;
+    align-items: flex-end;
+    gap: clamp(0.9rem, 1.6vw, 1.5rem);
+    margin: clamp(1.5rem, 3vw, 2.5rem) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .history-kit li {
+    height: clamp(2.5rem, 4vw, 3.75rem);
+    background: var(--green);
+    mask: var(--icon) center / contain no-repeat;
+    -webkit-mask: var(--icon) center / contain no-repeat;
+    transition: background-color 450ms var(--ease-out);
+  }
+
+  .history-kit[data-js] li {
+    background: color-mix(in srgb, var(--bone) 13%, var(--ink));
+  }
+
+  .history-kit[data-js] li[data-lit] {
+    background: var(--green);
   }
 
   .milestones {
@@ -368,7 +412,8 @@ const digits = Array.from({ length: 10 }, (_, n) => n);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .odo-strip {
+    .odo-strip,
+    .history-kit li {
       transition: none;
     }
 

@@ -1,5 +1,6 @@
 // Línea del tiempo de «Història»: la línea se pinta con el scroll, los puntos
-// se encienden al pasar y el año gigante rueda hasta el hito que se está leyendo.
+// se encienden al pasar, el año gigante rueda hasta el hito que se está leyendo
+// y, debajo, los instrumentos de la colla se van encendiendo uno a uno.
 
 const timeline = document.querySelector<HTMLElement>('[data-timeline]');
 
@@ -7,6 +8,10 @@ if (timeline && 'IntersectionObserver' in window) {
   const fill = timeline.querySelector<HTMLElement>('[data-rail-fill]');
   const items = [...timeline.querySelectorAll<HTMLElement>('[data-milestone]')];
   const strips = [...document.querySelectorAll<HTMLElement>('[data-odo-strip]')];
+  const kit = document.querySelector<HTMLElement>('[data-kit]');
+  const instruments = kit ? [...kit.children] : [];
+  // Con el script en marcha empiezan apagados (sin él se quedan todos encendidos)
+  kit?.setAttribute('data-js', '');
 
   let shownYear = '';
   let frame = 0;
@@ -22,11 +27,19 @@ if (timeline && 'IntersectionObserver' in window) {
     if (fill) fill.style.transform = `scaleY(${progress.toFixed(4)})`;
 
     let current = items[0];
+    let passedCount = 0;
     for (const item of items) {
       const passed = item.getBoundingClientRect().top <= needle;
       item.toggleAttribute('data-passed', passed);
-      if (passed) current = item;
+      if (passed) {
+        current = item;
+        passedCount++;
+      }
     }
+
+    // Tantos instrumentos encendidos como parte de la historia leída
+    const lit = Math.ceil((passedCount / items.length) * instruments.length);
+    instruments.forEach((instrument, i) => instrument.toggleAttribute('data-lit', i < lit));
 
     const year = current?.dataset.year ?? '';
     if (year !== shownYear) {
