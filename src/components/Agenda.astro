@@ -169,8 +169,10 @@ const gigs = [...agenda]
     font-size: clamp(1.0625rem, 1.6vw, 1.3125rem);
     font-weight: 700;
     line-height: 1.25;
-    /* Una palabra muy larga se parte antes que salirse de su columna */
-    overflow-wrap: anywhere;
+    /* Las palabras se mantienen enteras; solo se partiría una que no cupiera
+       sola en toda la línea (antes que salirse de la fila) */
+    overflow-wrap: break-word;
+    hyphens: manual;
   }
 
   .gig-meta {
@@ -260,31 +262,18 @@ const gigs = [...agenda]
     }
   }
 
-  /* En móvil la fila se reordena para no crecer: título y mapa arriba, y el
-     día y el lugar debajo, a todo el ancho. (`display: contents` deja que el
-     título y el lugar se coloquen por separado en la rejilla de la fila.) */
+  /* En móvil, el título tiene todo el ancho al lado de la fecha (así las
+     palabras no se parten) y la hora y el mapa bajan debajo del lugar */
   @media (max-width: 30rem) {
     .gig {
-      grid-template-columns: 4.25rem minmax(0, 1fr) auto;
+      grid-template-columns: 4.25rem minmax(0, 1fr);
       align-items: start;
-      gap: 0.2rem 0.75rem;
+      gap: 0 0.9rem;
     }
 
     .gig-date {
       grid-row: span 2;
-    }
-
-    .gig-main {
-      display: contents;
-    }
-
-    .gig-title {
-      align-self: center;
-    }
-
-    .gig-meta {
-      grid-column: 2 / -1;
-      margin-top: 0;
+      padding-top: 0.1rem;
     }
 
     /* El día de la semana, abreviado: así día y lugar caben en una línea */
@@ -297,19 +286,9 @@ const gigs = [...agenda]
     }
 
     .gig-side {
-      grid-column: 3;
-      grid-row: 1;
+      grid-column: 2;
+      margin-top: 0.6rem;
     }
   }
 
-  /* En los móviles más estrechos el chip del mapa se queda solo con el icono */
-  @media (max-width: 22rem) {
-    .gig-map-text {
-      display: none;
-    }
-
-    .gig-map-chip {
-      padding: 0.5rem;
-    }
-  }
 </style>

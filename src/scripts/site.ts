@@ -64,7 +64,10 @@ function setMenu(open: boolean) {
 
 if (menu && menuButton) {
   menuButton.addEventListener('click', () => setMenu(!menu.hasAttribute('data-open')));
-  menu.querySelectorAll('[data-menu-link]').forEach((link) => link.addEventListener('click', () => setMenu(false)));
+  // Un enlace del menú, o el logo de la cabecera, lleva a su sitio y cierra el menú
+  document
+    .querySelectorAll('[data-menu-link], [data-menu-close]')
+    .forEach((link) => link.addEventListener('click', () => setMenu(false)));
 
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && menu.hasAttribute('data-open')) {

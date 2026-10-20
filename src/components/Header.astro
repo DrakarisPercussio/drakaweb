@@ -29,12 +29,12 @@ const links = [
   { id: sections.gallery, label: t.nav.gallery },
   { id: sections.shop, label: t.nav.shop },
 ];
-const menuLinks = [...links, { id: sections.contact, label: t.nav.contact }];
+const menuLinks = links;
 ---
 
 <header class="site-header" data-header>
   <div class="bar container">
-    <a class="brand" href={path === '' ? '#inici' : home} aria-label={t.a11y.home}>
+    <a class="brand" href={path === '' ? '#inici' : home} aria-label={t.a11y.home} data-menu-close>
       <Image src={ring} alt="" width={72} height={84} loading="eager" class="brand-mark" />
       <span class="brand-name">Drakaris</span>
     </a>
@@ -93,8 +93,21 @@ const menuLinks = [...links, { id: sections.contact, label: t.nav.contact }];
         ))
       }
     </ul>
+    <div class="menu-cta" style={`--i:${menuLinks.length}`}>
+      <a
+        class="btn btn--primary"
+        href={to(sections.contact)}
+        data-menu-link
+        data-track="nav_cta"
+        data-track-detail="booking"
+        data-track-place="menu"
+      >
+        {t.nav.cta}
+        <Icon name="arrow" size={18} />
+      </a>
+    </div>
   </nav>
-  <div class="menu-foot" style={`--i:${menuLinks.length}`}>
+  <div class="menu-foot" style={`--i:${menuLinks.length + 1}`}>
     <ul class="menu-social">
       {
         site.socials.map((social) => (
@@ -319,6 +332,7 @@ const menuLinks = [...links, { id: sections.contact, label: t.nav.contact }];
   }
 
   .menu-links li,
+  .menu-cta,
   .menu-foot {
     opacity: 0;
     transform: translateY(14px);
@@ -328,6 +342,7 @@ const menuLinks = [...links, { id: sections.contact, label: t.nav.contact }];
   }
 
   .menu[data-open] .menu-links li,
+  .menu[data-open] .menu-cta,
   .menu[data-open] .menu-foot {
     opacity: 1;
     transform: none;
@@ -335,6 +350,10 @@ const menuLinks = [...links, { id: sections.contact, label: t.nav.contact }];
       opacity 500ms var(--ease-out),
       transform 500ms var(--ease-out);
     transition-delay: calc(90ms + var(--i) * 40ms);
+  }
+
+  .menu-cta {
+    margin-top: 1.5rem;
   }
 
   .menu-foot {
