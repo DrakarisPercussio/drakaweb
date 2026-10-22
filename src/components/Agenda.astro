@@ -31,6 +31,14 @@ const gigs = [...agenda]
       weekdayShort: format(date, { weekday: 'short' }),
     };
   });
+
+// Los rangos de números («2026-2027», «10-12») no se parten por el guion
+const unbreakable = (text: string) =>
+  text
+    .trim()
+    .split(/(\d+[-–]\d+)/)
+    .map((part, i) => (i % 2 ? `<span class="nowrap">${part}</span>` : part.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`)))
+    .join('');
 ---
 
 <section class="section agenda" id={sections.agenda} data-tone="ink">
@@ -66,7 +74,7 @@ const gigs = [...agenda]
                 </span>
               </time>
               <div class="gig-main">
-                <h3 class="gig-title">{gig.title[lang]}</h3>
+                <h3 class="gig-title" set:html={unbreakable(gig.title[lang])} />
                 <p class="gig-meta">
                   <span class="gig-weekday">
                     <span class="gig-weekday-long">{gig.weekday}</span>
@@ -173,6 +181,10 @@ const gigs = [...agenda]
        sola en toda la línea (antes que salirse de la fila) */
     overflow-wrap: break-word;
     hyphens: manual;
+  }
+
+  .gig-title :global(.nowrap) {
+    white-space: nowrap;
   }
 
   .gig-meta {
